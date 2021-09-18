@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2007 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -41,6 +41,9 @@
 #define AS_TYPEINFO_H
 
 #include "as_config.h"
+
+#ifndef AS_NO_COMPILER
+
 #include "as_datatype.h"
 
 BEGIN_AS_NAMESPACE
@@ -57,16 +60,20 @@ struct asCTypeInfo
 	void SetConstantF(const asCDataType &dataType, float value);
 	void SetConstantD(const asCDataType &dataType, double value);
 	void SetNullConstant();
+	void SetVoidExpression();
 	void SetDummy();
 
-	bool IsNullConstant();
+	bool IsNullConstant() const;
+	bool IsVoidExpression() const;
 
 	asCDataType dataType;
+	bool  isLValue         :  1; // Can this value be updated in assignment, or increment operators, etc
 	bool  isTemporary      :  1;
 	bool  isConstant       :  1;
 	bool  isVariable       :  1;
 	bool  isExplicitHandle :  1;
-	short dummy            : 12;
+	bool  isVoidExpression :  1;
+	short dummy            : 10;
 	short stackOffset;
 	union
 	{
@@ -81,5 +88,7 @@ struct asCTypeInfo
 };
 
 END_AS_NAMESPACE
+
+#endif // AS_NO_COMPILER
 
 #endif

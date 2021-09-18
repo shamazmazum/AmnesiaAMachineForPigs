@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2008 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -52,7 +52,7 @@ asCScriptCode::asCScriptCode()
 
 asCScriptCode::~asCScriptCode()
 {
-	if( !sharedCode && code )
+	if( !sharedCode && code ) 
 	{
 		asDELETEARRAY(code);
 	}
@@ -60,24 +60,26 @@ asCScriptCode::~asCScriptCode()
 
 int asCScriptCode::SetCode(const char *name, const char *code, bool makeCopy)
 {
-	return SetCode(name, code, strlen(code), makeCopy);
+	return SetCode(name, code, 0, makeCopy);
 }
 
 int asCScriptCode::SetCode(const char *name, const char *code, size_t length, bool makeCopy)
 {
-	this->name = name;
-	if( !sharedCode && this->code )
-	{
+	if( !code ) return asINVALID_ARG;
+	this->name = name ? name : "";
+	if( !sharedCode && this->code ) 
 		asDELETEARRAY(this->code);
-	}
+
 	if( length == 0 )
 		length = strlen(code);
 	if( makeCopy )
 	{
-		this->code = asNEWARRAY(char,length);
-		memcpy((char*)this->code, code, length);
 		codeLength = length;
 		sharedCode = false;
+		this->code = asNEWARRAY(char,length);
+		if( this->code == 0 )
+			return asOUT_OF_MEMORY;
+		memcpy((char*)this->code, code, length);
 	}
 	else
 	{
@@ -92,12 +94,12 @@ int asCScriptCode::SetCode(const char *name, const char *code, size_t length, bo
 		if( code[n] == '\n' ) linePositions.PushLast(n+1);
 	linePositions.PushLast(length);
 
-	return 0;
+	return asSUCCESS;
 }
 
 void asCScriptCode::ConvertPosToRowCol(size_t pos, int *row, int *col)
 {
-	if( linePositions.GetLength() == 0 )
+	if( linePositions.GetLength() == 0 ) 
 	{
 		if( row ) *row = lineOffset;
 		if( col ) *col = 1;
@@ -136,6 +138,14 @@ void asCScriptCode::ConvertPosToRowCol(size_t pos, int *row, int *col)
 
 	if( row ) *row = i + 1 + lineOffset;
 	if( col ) *col = (int)(pos - linePositions[i]) + 1;
+}
+
+bool asCScriptCode::TokenEquals(size_t pos, size_t len, const char *str)
+{
+	if( pos + len > codeLength ) return false;
+	if( strncmp(code + pos, str, len) == 0 && strlen(str) == len )
+		return true;
+	return false;
 }
 
 END_AS_NAMESPACE

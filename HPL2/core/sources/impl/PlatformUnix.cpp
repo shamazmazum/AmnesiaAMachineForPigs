@@ -34,10 +34,7 @@
 #include "SDL/SDL.h"
 #endif
 
-#ifdef __linux__
-#include <FL/fl_ask.H>
-#include "binreloc.h"
-
+#if defined(__linux__) || defined(__FreeBSD__)
 #include <sys/types.h>
 #endif
 #include <unistd.h>
@@ -365,25 +362,12 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-#ifdef __linux__
     tString cPlatform::GetDataDir()
     {
-        tString temp;
-        BrInitError error;
-		if (!br_init (&error)) {
-			// Log non-fatal error
-			printf("*** BinReloc failed to initialize. Error: %d\n", error);
-		} else {
-			char *exedir;
-			exedir = br_find_exe_dir(NULL);
-			if (exedir) {
-				temp = exedir;
-				free(exedir);
-			}
-		}
-        return temp;
+        char buff[MAXPATHLEN];
+		getcwd(buff, MAXPATHLEN);
+		return tString(buff);
     }
-#endif
 
 	//-----------------------------------------------------------------------
 
@@ -471,7 +455,7 @@ namespace hpl {
 
 	ePlatform cPlatform::GetPlatform()
 	{
-#if defined(__linux__)
+#if defined(__linux__) || defined(__FreeBSD__)
 		return ePlatform_Linux;
 #elif defined(__APPLE__)
         return ePlatform_Mac;
@@ -485,6 +469,8 @@ namespace hpl {
 	tString cPlatform::msName = "Linux x86_64";
 #elif defined(__linux__)
     tString cPlatform::msName = "Linux x86";
+#elif defined(__FreeBSD__)
+    tString cPlatform::msName = "FreeBSD x86-64";
 #elif defined(__APPLE__) && (defined(__PPC__) || defined(__ppc__))
     tString cPlatform::msName = "Mac OS X PowerPC";
 #elif defined(__APPLE__) && defined(__LP64__)

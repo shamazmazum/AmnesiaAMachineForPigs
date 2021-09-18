@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2010 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -37,19 +37,20 @@
 
 BEGIN_AS_NAMESPACE
 
-asCGlobalProperty::asCGlobalProperty()
-{
-	memory = 0;
-	memoryAllocated = false;
-	realAddress = 0;
-	initFunc = 0;
+asCGlobalProperty::asCGlobalProperty() 
+{ 
+	memory          = &storage; 
+	memoryAllocated = false; 
+	realAddress     = 0; 
+	initFunc        = 0;
+	accessMask      = 0xFFFFFFFF;
 
 	refCount.set(1);
 }
 
 asCGlobalProperty::~asCGlobalProperty()
-{
-	if( memoryAllocated ) { asDELETEARRAY(memory); }
+{ 
+	if( memoryAllocated ) { asDELETEARRAY(memory); } 
 	if( initFunc )
 		initFunc->Release();
 }
@@ -64,14 +65,14 @@ void asCGlobalProperty::Release()
 {
 	gcFlag = false;
 
-	// The property doesn't delete itself. The
+	// The property doesn't delete itself. The  
 	// engine will do that at a later time
 	if( refCount.atomicDec() == 2 && initFunc )
 	{
 		// Since the initFunc holds references to the property,
 		// we'll release it when we reach refCount 2. This will
 		// break the circle and allow the engine to free the property
-		// without the need for the GC to attempt finding circular
+		// without the need for the GC to attempt finding circular 
 		// references.
 		initFunc->Release();
 		initFunc = 0;
@@ -79,33 +80,33 @@ void asCGlobalProperty::Release()
 }
 
 void *asCGlobalProperty::GetAddressOfValue()
-{
-	return (memoryAllocated || realAddress) ? memory : &storage;
+{ 
+	return memory;
 }
 
 // The global property structure is responsible for allocating the storage
 // method for script declared variables. Each allocation is independent of
 // other global properties, so that variables can be added and removed at
 // any time.
-void asCGlobalProperty::AllocateMemory()
-{
-	if( type.GetSizeOnStackDWords() > 2 )
-	{
-		memory = asNEWARRAY(asDWORD, type.GetSizeOnStackDWords());
-		memoryAllocated = true;
-	}
+void asCGlobalProperty::AllocateMemory() 
+{ 
+	if( type.GetSizeOnStackDWords() > 2 ) 
+	{ 
+		memory = asNEWARRAY(asDWORD, type.GetSizeOnStackDWords()); 
+		memoryAllocated = true; 
+	} 
 }
 
-void asCGlobalProperty::SetRegisteredAddress(void *p)
-{
-	realAddress = p;
+void asCGlobalProperty::SetRegisteredAddress(void *p) 
+{ 
+	realAddress = p; 	
 	if( type.IsObject() && !type.IsReference() && !type.IsObjectHandle() )
 	{
-		// The global property is a pointer to a pointer
+		// The global property is a pointer to a pointer 
 		memory = &realAddress;
-	}
+	} 
 	else
-		memory = p;
+		memory = p; 
 }
 
 void *asCGlobalProperty::GetRegisteredAddress() const
@@ -142,6 +143,24 @@ void asCGlobalProperty::ReleaseAllHandles(asIScriptEngine *)
 	}
 }
 
+void asCGlobalProperty::Orphan(asCModule *module)
+{
+	if( initFunc && initFunc->module == module )
+	{
+		// The owning module is releasing the property, so we need to notify 
+		// the GC in order to resolve any circular references that may exists
+
+		// This will add the property
+		initFunc->engine->gc.AddScriptObjectToGC(this, &initFunc->engine->globalPropertyBehaviours);
+
+		// This will add the function
+		initFunc->AddRef();
+		initFunc->Orphan(module);
+	}
+
+	Release();
+}
+
 void asCGlobalProperty::SetInitFunc(asCScriptFunction *initFunc)
 {
 	// This should only be done once
@@ -149,11 +168,6 @@ void asCGlobalProperty::SetInitFunc(asCScriptFunction *initFunc)
 
 	this->initFunc = initFunc;
 	this->initFunc->AddRef();
-
-	// When there is an initialization function there is a chance that
-	// a circular reference is created, so it is necessary to notify the
-	// GC of this property.
-	initFunc->engine->gc.AddScriptObjectToGC(this, &initFunc->engine->globalPropertyBehaviours);
 }
 
 asCScriptFunction *asCGlobalProperty::GetInitFunc()
@@ -214,26 +228,27 @@ static void GlobalProperty_ReleaseAllHandles_Generic(asIScriptGeneric *gen)
 void asCGlobalProperty::RegisterGCBehaviours(asCScriptEngine *engine)
 {
 	// Register the gc behaviours for the global properties
-	int r;
+	int r = 0;
+	UNUSED_VAR(r); // It is only used in debug mode
 	engine->globalPropertyBehaviours.engine = engine;
 	engine->globalPropertyBehaviours.flags = asOBJ_REF | asOBJ_GC;
 	engine->globalPropertyBehaviours.name = "_builtin_globalprop_";
 #ifndef AS_MAX_PORTABILITY
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCGlobalProperty,AddRef), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCGlobalProperty,Release), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCGlobalProperty,GetRefCount), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCGlobalProperty,SetGCFlag), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCGlobalProperty,GetGCFlag), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCGlobalProperty,EnumReferences), asCALL_THISCALL); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCGlobalProperty,ReleaseAllHandles), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCGlobalProperty,AddRef), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCGlobalProperty,Release), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCGlobalProperty,GetRefCount), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCGlobalProperty,SetGCFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCGlobalProperty,GetGCFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCGlobalProperty,EnumReferences), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCGlobalProperty,ReleaseAllHandles), asCALL_THISCALL, 0); asASSERT( r >= 0 );
 #else
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(GlobalProperty_AddRef_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(GlobalProperty_Release_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(GlobalProperty_GetRefCount_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(GlobalProperty_SetGCFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(GlobalProperty_GetGCFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(GlobalProperty_EnumReferences_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(GlobalProperty_ReleaseAllHandles_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(GlobalProperty_AddRef_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(GlobalProperty_Release_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(GlobalProperty_GetRefCount_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(GlobalProperty_SetGCFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(GlobalProperty_GetGCFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(GlobalProperty_EnumReferences_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->globalPropertyBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(GlobalProperty_ReleaseAllHandles_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
 #endif
 }
 

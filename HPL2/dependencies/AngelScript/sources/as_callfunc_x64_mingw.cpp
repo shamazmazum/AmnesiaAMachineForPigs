@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2012 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -28,13 +28,16 @@
    andreas@angelcode.com
 */
 
+//
+// This code was adapted from as_callfunc_x64_msvc by _Vicious_ on August 20th, 2011.
+//
 
 #include <stdio.h>
 
 #include "as_config.h"
 
 #ifndef AS_MAX_PORTABILITY
-#ifdef AS_X64_MSVC
+#ifdef AS_X64_MINGW
 
 #include "as_callfunc.h"
 #include "as_scriptengine.h"
@@ -42,10 +45,124 @@
 
 BEGIN_AS_NAMESPACE
 
-// These functions are implemented in as_callfunc_x64_msvc.asm
-extern "C" asQWORD CallX64(const asQWORD *args, const asQWORD *floatArgs, int paramSize, asQWORD func);
-extern "C" asDWORD GetReturnedFloat();
-extern "C" asQWORD GetReturnedDouble();
+static asQWORD __attribute__((noinline)) CallX64(const asQWORD *args, const asQWORD *floatArgs, const int paramSize, asQWORD func)
+{
+	volatile asQWORD ret = 0;
+
+	__asm__ __volatile__ (
+		"# Move the parameters into registers before the rsp is modified\n"
+		"mov %1, %%r10\n" // r10 = args
+		"mov %2, %%r11\n" // r11 = floatArgs
+		"xor %%r12, %%r12\n"
+		"mov %3, %%r12d\n"
+		"mov %4, %%r14\n" // r14 = func
+
+        "# Store the stack pointer in r15 since it is guaranteed not to change over a function call\n"
+        "mov %%rsp, %%r15\n"
+
+		"# Allocate space on the stack for the arguments\n"
+		"# Make room for at least 4 arguments even if there are less. When\n"
+		"# the compiler does optimizations for speed it may use these for \n"
+		"# temporary storage.\n"
+		"mov %%r12, %%rdi\n"
+		"add $32,%%edi\n"
+
+		"# Make sure the stack pointer is 16byte aligned so the\n"
+		"# whole program optimizations will work properly\n"
+		"# TODO: runtime optimize: Can this be optimized with fewer instructions?\n"
+		"mov %%rsp,%%rsi\n"
+		"sub %%rdi,%%rsi\n"
+		"and $0x8,%%rsi\n"
+		"add %%rsi,%%rdi\n"
+		"sub %%rdi,%%rsp\n"
+
+		"# Jump straight to calling the function if no parameters\n"
+		"cmp $0,%%r12 # Compare paramSize with 0\n"
+		"je callfunc # Jump to call funtion if (paramSize == 0)\n"
+
+		"# Copy arguments from script stack to application stack\n"
+		"# Order is (first to last):\n"
+		"# rcx, rdx, r8, r9 & everything else goes on stack\n"
+		"movq   (%%r10),%%rcx\n"
+		"movq  8(%%r10),%%rdx\n"
+		"movq 16(%%r10),%%r8\n"
+		"movq 24(%%r10),%%r9\n"
+
+		"# Negate the 4 params from the size to be copied\n"
+		"sub $32,%%r12d\n"
+		"js copyfloat # Jump if negative result\n"
+		"jz copyfloat # Jump if zero result\n"
+
+		"# Now copy all remaining params onto stack allowing space for first four\n"
+		"# params to be flushed back to the stack if required by the callee.\n"
+		"add $32,%%r10 # Position input pointer 4 args ahead\n"
+		"mov %%rsp,%%r13 # Put the stack pointer into r13\n"
+		"add $32,%%r13 # Leave space for first 4 args on stack\n"
+
+	"copyoverflow:\n"
+		"movq (%%r10),%%rdi # Read param from source stack into rdi\n"
+		"movq %%rdi,(%%r13) # Copy param to real stack\n"
+		"add $8,%%r13 # Move virtual stack pointer\n"
+		"add $8,%%r10 # Move source stack pointer\n"
+		"sub $8,%%r12d # Decrement remaining count\n"
+		"jnz copyoverflow # Continue if more params\n"
+
+	"copyfloat:\n"
+		"# Any floating point params?\n"
+		"cmp $0,%%r11\n"
+		"je callfunc\n"
+
+		"movlpd   (%%r11),%%xmm0\n"
+		"movlpd  8(%%r11),%%xmm1\n"
+		"movlpd 16(%%r11),%%xmm2\n"
+		"movlpd 24(%%r11),%%xmm3\n"
+
+	"callfunc:\n"
+		"call *%%r14\n"
+
+        "# restore stack pointer\n"
+        "mov %%r15, %%rsp\n"
+
+		"lea  %0, %%rbx\n"     // Load the address of the ret variable into rbx
+		"movq %%rax,(%%rbx)\n" // Copy the returned value into the ret variable
+
+ 		: // no output
+		: "m" (ret), "r" (args), "r" (floatArgs), "r" (paramSize), "r" (func)
+		: "rdi", "rsi", "rsp", "rbx", "r10", "r11", "%r12", "r13", "r14", "r15"
+	);
+
+	return ret;
+}
+
+static asDWORD GetReturnedFloat()
+{
+	volatile asDWORD ret = 0;
+
+	__asm__ __volatile__ (
+		"lea      %0, %%rax\n"
+		"movss    %%xmm0, (%%rax)"
+		: /* no output */
+		: "m" (ret)
+		: "%rax"
+	);
+
+	return ret;
+}
+
+static asQWORD GetReturnedDouble()
+{
+	volatile asQWORD ret = 0;
+
+	__asm__ __volatile__ (
+		"lea     %0, %%rax\n"
+		"movlpd  %%xmm0, (%%rax)"
+		: /* no optput */
+		: "m" (ret)
+		: "%rax"
+	);
+
+	return ret;
+}
 
 asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, void *obj, asDWORD *args, void *retPointer, asQWORD &/*retQW2*/)
 {
@@ -61,14 +178,6 @@ asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, 
 	asQWORD  floatArgBuffer[4];
 
 	int callConv = sysFunc->callConv;
-	if( callConv == ICC_THISCALL ||
-		callConv == ICC_THISCALL_RETURNINMEM ||
-		callConv == ICC_VIRTUAL_THISCALL || 
-		callConv == ICC_VIRTUAL_THISCALL_RETURNINMEM )
-	{
-		// Add the object pointer as the first parameter
-		allArgBuffer[paramSize++] = (asQWORD)obj;
-	}
 
 	if( sysFunc->hostReturnInMemory )
 	{
@@ -79,19 +188,27 @@ asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, 
 		allArgBuffer[paramSize++] = (asQWORD)retPointer;
 	}
 
+	if( callConv == ICC_THISCALL ||
+		callConv == ICC_THISCALL_RETURNINMEM ||
+		callConv == ICC_VIRTUAL_THISCALL ||
+		callConv == ICC_VIRTUAL_THISCALL_RETURNINMEM )
+	{
+		// Add the object pointer as the first parameter
+		allArgBuffer[paramSize++] = (asQWORD)obj;
+	}
+
 	if( callConv == ICC_CDECL_OBJFIRST ||
 		callConv == ICC_CDECL_OBJFIRST_RETURNINMEM )
 	{
 		// Add the object pointer as the first parameter
 		allArgBuffer[paramSize++] = (asQWORD)obj;
 	}
-
 	if( callConv == ICC_VIRTUAL_THISCALL ||
 		callConv == ICC_VIRTUAL_THISCALL_RETURNINMEM )
 	{
 		// Get the true function pointer from the virtual function table
 		vftable = *(void***)obj;
-		func = vftable[asPWORD(func)>>2];
+		func = vftable[asPWORD(func)>>3];
 	}
 
 	// Move the arguments to the buffer
@@ -154,7 +271,7 @@ asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, 
 				// though this is only done for first 4 arguments, the rest are placed on the stack
 				if( paramSize < 4 && descr->parameterTypes[n].IsFloatType() )
 					floatArgBuffer[dpos] = args[spos];
-				
+
 				dpos++;
 				spos++;
 			}

@@ -158,10 +158,10 @@ namespace hpl {
 		wglQueryPbufferARB(mPBuffer, WGL_PBUFFER_HEIGHT_ARB, &mlHeight);
 
 		//Init some GL stuff with the Buffer.
-		#ifdef WIN32
+#ifdef WIN32
 		HDC OldHDC = wglGetCurrentDC();
 		HGLRC OldGLRC = wglGetCurrentContext();
-		#endif
+#endif
 		MakeCurrentContext();
 
 		if(mbShareObjects)
@@ -174,9 +174,9 @@ namespace hpl {
 		mpLowLevelGraphics->ClearFrameBuffer(eClearFrameBufferFlag_Color);
 
 		wglMakeCurrent(OldHDC,OldGLRC);
-		#elif defined(__linux__)
+#elif defined(__linux__) || defined(__FreeBSD__)
 		return false;
-		#endif
+#endif
 
 		return true;
 	}

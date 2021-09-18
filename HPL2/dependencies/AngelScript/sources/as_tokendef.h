@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2010 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -47,7 +47,7 @@ enum eTokenType
 {
 	ttUnrecognizedToken,
 
-	ttEnd,				   // End of file
+	ttEnd,                 // End of file
 
 	// White space and comments
 	ttWhiteSpace,          // ' ', '\t', '\r', '\n', UTF8 byte-order-mark
@@ -110,8 +110,8 @@ enum eTokenType
 	ttBitNot,              // ~
 	ttBitXor,              // ^
 	ttBitShiftLeft,        // <<
-	ttBitShiftRight,       // >>
-	ttBitShiftRightArith,  // >>>
+	ttBitShiftRight,       // >>     // TODO: In Java this is the arithmetical shift
+	ttBitShiftRightArith,  // >>>    // TODO: In Java this is the logical shift
 
 	// Compare operators
 	ttEqual,               // ==
@@ -127,7 +127,7 @@ enum eTokenType
 	// Reserved keywords
 	ttIf,                  // if
 	ttElse,                // else
-	ttFor,				   // for
+	ttFor,                 // for
 	ttWhile,               // while
 	ttBool,                // bool
 	ttFuncDef,             // funcdef
@@ -149,12 +149,12 @@ enum eTokenType
 	ttFalse,               // false
 	ttReturn,              // return
 	ttNot,                 // not
-	ttAnd,				   // and
-	ttOr,				   // or
+	ttAnd,                 // and
+	ttOr,                  // or
 	ttXor,                 // xor
 	ttBreak,               // break
 	ttContinue,            // continue
-	ttConst,			   // const
+	ttConst,               // const
 	ttDo,                  // do
 	ttDouble,              // double
 	ttSwitch,              // switch
@@ -168,7 +168,9 @@ enum eTokenType
 	ttTypedef,             // typedef
 	ttEnum,                // enum
 	ttCast,                // cast
-	ttPrivate              // private
+	ttPrivate,             // private
+	ttNamespace,           // namespace
+	ttMixin                // mixin
 };
 
 struct sTokenWord
@@ -180,29 +182,40 @@ struct sTokenWord
 sTokenWord const tokenWords[] =
 {
 	{"+"         , ttPlus},
-	{"-"         , ttMinus},
-	{"*"         , ttStar},
-	{"/"         , ttSlash},
-	{"%"         , ttPercent},
-	{"="         , ttAssignment},
-	{"."         , ttDot},
 	{"+="        , ttAddAssign},
+	{"++"        , ttInc},
+	{"-"         , ttMinus},
 	{"-="        , ttSubAssign},
+	{"--"        , ttDec},
+	{"*"         , ttStar},
 	{"*="        , ttMulAssign},
+	{"/"         , ttSlash},
 	{"/="        , ttDivAssign},
+	{"%"         , ttPercent},
 	{"%="        , ttModAssign},
-	{"|="        , ttOrAssign},
-	{"&="        , ttAndAssign},
-	{"^="        , ttXorAssign},
-	{"<<="       , ttShiftLeftAssign},
-	{">>="       , ttShiftRightLAssign},
-	{">>>="      , ttShiftRightAAssign},
+	{"="         , ttAssignment},
+	{"=="        , ttEqual},
+	{"."         , ttDot},
 	{"|"         , ttBitOr},
-	{"~"         , ttBitNot},
+	{"|="        , ttOrAssign},
+	{"||"        , ttOr},
+	{"&"         , ttAmp},
+	{"&="        , ttAndAssign},
+	{"&&"        , ttAnd},
 	{"^"         , ttBitXor},
+	{"^="        , ttXorAssign},
+	{"^^"        , ttXor},
+	{"<"         , ttLessThan},
+	{"<="        , ttLessThanOrEqual},
 	{"<<"        , ttBitShiftLeft},
+	{"<<="       , ttShiftLeftAssign},
+	{">"         , ttGreaterThan},
+	{">="        , ttGreaterThanOrEqual},
 	{">>"        , ttBitShiftRight},
+	{">>="       , ttShiftRightLAssign},
 	{">>>"       , ttBitShiftRightArith},
+	{">>>="      , ttShiftRightAAssign},
+	{"~"         , ttBitNot},
 	{";"         , ttEndStatement},
 	{","         , ttListSeparator},
 	{"{"         , ttStartStatementBlock},
@@ -214,26 +227,19 @@ sTokenWord const tokenWords[] =
 	{"?"         , ttQuestion},
 	{":"         , ttColon},
 	{"::"        , ttScope},
-	{"=="        , ttEqual},
-	{"!="        , ttNotEqual},
-	{"<"         , ttLessThan},
-	{">"         , ttGreaterThan},
-	{"<="        , ttLessThanOrEqual},
-	{">="        , ttGreaterThanOrEqual},
-	{"++"        , ttInc},
-	{"--"        , ttDec},
-	{"&"         , ttAmp},
 	{"!"         , ttNot},
-	{"||"        , ttOr},
-	{"&&"        , ttAnd},
-	{"^^"        , ttXor},
+	{"!="        , ttNotEqual},
+	{"!is"       , ttNotIs},
 	{"@"         , ttHandle},
 	{"and"       , ttAnd},
 	{"bool"      , ttBool},
 	{"break"     , ttBreak},
+	{"case"      , ttCase}, 
 	{"cast"      , ttCast},
+	{"class"     , ttClass},
 	{"const"     , ttConst},
 	{"continue"  , ttContinue},
+	{"default"   , ttDefault},
 	{"do"        , ttDo},
 #ifdef  AS_USE_DOUBLE_AS_FLOAT
 	{"double"    , ttFloat},
@@ -241,43 +247,41 @@ sTokenWord const tokenWords[] =
 	{"double"    , ttDouble},
 #endif
 	{"else"      , ttElse},
+	{"enum"      , ttEnum},
 	{"false"     , ttFalse},
 	{"float"     , ttFloat},
 	{"for"       , ttFor},
 	{"funcdef"   , ttFuncDef},
 	{"if"        , ttIf},
+	{"import"    , ttImport},
 	{"in"        , ttIn},
 	{"inout"     , ttInOut},
-	{"import"    , ttImport},
 	{"int"       , ttInt},
 	{"int8"      , ttInt8},
 	{"int16"     , ttInt16},
-	{"int32"     , ttInt},
+	{"int32"     , ttInt},  
 	{"int64"     , ttInt64},
 	{"interface" , ttInterface},
 	{"is"        , ttIs},
-	{"!is"       , ttNotIs},
+	{"mixin"     , ttMixin},
+	{"namespace" , ttNamespace},
 	{"not"       , ttNot},
 	{"null"      , ttNull},
 	{"or"        , ttOr},
 	{"out"       , ttOut},
+	{"private"   , ttPrivate},
 	{"return"    , ttReturn},
+	{"switch"    , ttSwitch},
 	{"true"      , ttTrue},
-	{"void"      , ttVoid},
-	{"while"     , ttWhile},
+	{"typedef"   , ttTypedef},
 	{"uint"      , ttUInt},
 	{"uint8"     , ttUInt8},
 	{"uint16"    , ttUInt16},
 	{"uint32"    , ttUInt},
 	{"uint64"    , ttUInt64},
-	{"switch"    , ttSwitch},
-	{"class"     , ttClass},
-	{"case"      , ttCase},
-	{"default"   , ttDefault},
+	{"void"      , ttVoid},
+	{"while"     , ttWhile},
 	{"xor"       , ttXor},
-	{"typedef"   , ttTypedef},
-	{"enum"      , ttEnum},
-	{"private"   , ttPrivate}
 };
 
 const unsigned int numTokenWords = sizeof(tokenWords)/sizeof(sTokenWord);
@@ -285,9 +289,16 @@ const unsigned int numTokenWords = sizeof(tokenWords)/sizeof(sTokenWord);
 const char * const whiteSpace = " \t\r\n";
 
 // Some keywords that are not considered tokens by the parser
-const char * const THIS_TOKEN = "this";
-const char * const FROM_TOKEN = "from";
-const char * const SUPER_TOKEN = "super";
+// These only have meaning in specific situations. Outside these
+// situations they are treated as normal identifiers.
+const char * const THIS_TOKEN     = "this";
+const char * const FROM_TOKEN     = "from";
+const char * const SUPER_TOKEN    = "super";
+const char * const SHARED_TOKEN   = "shared";
+const char * const FINAL_TOKEN    = "final";
+const char * const OVERRIDE_TOKEN = "override";
+const char * const GET_TOKEN      = "get";
+const char * const SET_TOKEN      = "set";
 
 END_AS_NAMESPACE
 

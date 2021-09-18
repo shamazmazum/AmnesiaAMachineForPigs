@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -38,6 +38,10 @@
 
 #include <stdlib.h>
 
+#if !defined(__APPLE__) && !defined( __SNC__ ) && !defined( __ghs__ ) && !defined(__FreeBSD__)
+#include <malloc.h>
+#endif
+
 #include "as_config.h"
 #include "as_memory.h"
 #include "as_scriptnode.h"
@@ -46,8 +50,22 @@
 BEGIN_AS_NAMESPACE
 
 // By default we'll use the standard memory management functions
+
+// Make sure these globals are initialized first. Otherwise the
+// library may crash in case the application initializes the engine
+// as a global variable.
+
+#ifdef _MSC_VER
+// MSVC let's us choose between a couple of different initialization orders.
+#pragma warning(disable: 4073)
+#pragma init_seg(lib)
 asALLOCFUNC_t userAlloc = malloc;
 asFREEFUNC_t  userFree  = free;
+#else
+// Other compilers will just have to rely on luck.
+asALLOCFUNC_t userAlloc = malloc;
+asFREEFUNC_t  userFree  = free;
+#endif
 
 extern "C"
 {
@@ -83,7 +101,7 @@ asCMemoryMgr::~asCMemoryMgr()
 
 void asCMemoryMgr::FreeUnusedMemory()
 {
-	// It's necessary to protect the scriptNodePool from multiple
+	// It's necessary to protect the scriptNodePool from multiple 
 	// simultaneous accesses, as the parser is used by several methods
 	// that can be executed simultaneously.
 	ENTERCRITICALSECTION(cs);
@@ -95,8 +113,8 @@ void asCMemoryMgr::FreeUnusedMemory()
 
 	LEAVECRITICALSECTION(cs);
 
-	// The engine already protects against multiple threads
-	// compiling scripts simultaneously so this pool doesn't have
+	// The engine already protects against multiple threads 
+	// compiling scripts simultaneously so this pool doesn't have 
 	// to be protected again.
 	for( n = 0; n < (signed)byteInstructionPool.GetLength(); n++ )
 		userFree(byteInstructionPool[n]);
@@ -116,7 +134,7 @@ void *asCMemoryMgr::AllocScriptNode()
 
 	LEAVECRITICALSECTION(cs);
 
-#if defined(AS_DEBUG)
+#if defined(AS_DEBUG) 
 	return ((asALLOCFUNCDEBUG_t)(userAlloc))(sizeof(asCScriptNode), __FILE__, __LINE__);
 #else
 	return userAlloc(sizeof(asCScriptNode));
@@ -136,15 +154,17 @@ void asCMemoryMgr::FreeScriptNode(void *ptr)
 	LEAVECRITICALSECTION(cs);
 }
 
+#ifndef AS_NO_COMPILER
+
 void *asCMemoryMgr::AllocByteInstruction()
 {
 	if( byteInstructionPool.GetLength() )
 		return byteInstructionPool.PopLast();
 
-#if defined(AS_DEBUG)
-	return ((asALLOCFUNCDEBUG_t)(userAlloc))(sizeof(cByteInstruction), __FILE__, __LINE__);
+#if defined(AS_DEBUG) 
+	return ((asALLOCFUNCDEBUG_t)(userAlloc))(sizeof(asCByteInstruction), __FILE__, __LINE__);
 #else
-	return userAlloc(sizeof(cByteInstruction));
+	return userAlloc(sizeof(asCByteInstruction));
 #endif
 }
 
@@ -156,6 +176,8 @@ void asCMemoryMgr::FreeByteInstruction(void *ptr)
 
 	byteInstructionPool.PushLast(ptr);
 }
+
+#endif // AS_NO_COMPILER
 
 END_AS_NAMESPACE
 

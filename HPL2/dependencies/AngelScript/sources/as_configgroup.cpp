@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2010 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -40,13 +40,13 @@
 #include "as_config.h"
 #include "as_configgroup.h"
 #include "as_scriptengine.h"
+#include "as_texts.h"
 
 BEGIN_AS_NAMESPACE
 
 asCConfigGroup::asCConfigGroup()
 {
 	refCount = 0;
-	defaultAccess = true;
 }
 
 asCConfigGroup::~asCConfigGroup()
@@ -97,7 +97,7 @@ bool asCConfigGroup::HasLiveObjects()
 	return false;
 }
 
-void asCConfigGroup::RemoveConfiguration(asCScriptEngine *engine)
+void asCConfigGroup::RemoveConfiguration(asCScriptEngine *engine, bool notUsed)
 {
 	asASSERT( refCount == 0 );
 
@@ -106,15 +106,16 @@ void asCConfigGroup::RemoveConfiguration(asCScriptEngine *engine)
 	// Remove global variables
 	for( n = 0; n < globalProps.GetLength(); n++ )
 	{
-		int index = engine->registeredGlobalProps.IndexOf(globalProps[n]);
+		int index = engine->registeredGlobalProps.GetIndex(globalProps[n]);
 		if( index >= 0 )
 		{
 			globalProps[n]->Release();
 
 			// TODO: global: Should compact the registeredGlobalProps array
-			engine->registeredGlobalProps[index] = 0;
+			engine->registeredGlobalProps.Erase(index);
 		}
 	}
+	globalProps.SetLength(0);
 
 	// Remove global functions
 	for( n = 0; n < scriptFunctions.GetLength(); n++ )
@@ -140,29 +141,36 @@ void asCConfigGroup::RemoveConfiguration(asCScriptEngine *engine)
 		engine->registeredFuncDefs.RemoveValue(funcDefs[n]);
 		funcDefs[n]->Release();
 	}
+	funcDefs.SetLength(0);
 
-	// Remove object types
-	for( n = 0; n < objTypes.GetLength(); n++ )
+	// Remove object types (skip this if it is possible other groups are still using the types)
+	if( !notUsed )
 	{
-		asCObjectType *t = objTypes[n];
-		int idx = engine->objectTypes.IndexOf(t);
-		if( idx >= 0 )
+		for( n = 0; n < objTypes.GetLength(); n++ )
 		{
+			asCObjectType *t = objTypes[n];
+			int idx = engine->objectTypes.IndexOf(t);
+			if( idx >= 0 )
+			{
 #ifdef AS_DEBUG
-			ValidateNoUsage(engine, t);
+				ValidateNoUsage(engine, t);
 #endif
 
-			engine->objectTypes.RemoveIndex(idx);
+				engine->objectTypes.RemoveIndex(idx);
+				if( engine->defaultArrayObjectType == t )
+					engine->defaultArrayObjectType = 0;
 
-			if( t->flags & asOBJ_TYPEDEF )
-				engine->registeredTypeDefs.RemoveValue(t);
-			else if( t->flags & asOBJ_ENUM )
-				engine->registeredEnums.RemoveValue(t);
-			else
-				engine->registeredObjTypes.RemoveValue(t);
+				if( t->flags & asOBJ_TYPEDEF )
+					engine->registeredTypeDefs.RemoveValue(t);
+				else if( t->flags & asOBJ_ENUM )
+					engine->registeredEnums.RemoveValue(t);
+				else
+					engine->registeredObjTypes.RemoveValue(t);
 
-			asDELETE(t, asCObjectType);
+				asDELETE(t, asCObjectType);
+			}
 		}
+		objTypes.SetLength(0);
 	}
 
 	// Release other config groups
@@ -183,15 +191,34 @@ void asCConfigGroup::ValidateNoUsage(asCScriptEngine *engine, asCObjectType *typ
 		if( func->name == "_beh_2_" || func->name == "_beh_3_" || func->objectType == type )
 			continue;
 
-		asASSERT( func->returnType.GetObjectType() != type );
+		// Ignore function definitions too, as they aren't released until the engine is destroyed
+		if( func->funcType == asFUNC_FUNCDEF )
+			continue;
 
-		for( asUINT p = 0; p < func->parameterTypes.GetLength(); p++ )
+		if( func->returnType.GetObjectType() == type )
 		{
-			asASSERT(func->parameterTypes[p].GetObjectType() != type);
+			asCString msg;
+			// We can only use the function name here, because the types used by the function may have been deleted already
+			msg.Format(TXT_TYPE_s_IS_STILL_USED_BY_FUNC_s, type->name.AddressOf(), func->GetName());
+			engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, msg.AddressOf());
 		}
+		else
+		{
+			for( asUINT p = 0; p < func->parameterTypes.GetLength(); p++ )
+			{
+				if( func->parameterTypes[p].GetObjectType() == type )
+				{
+					asCString msg;
+					// We can only use the function name here, because the types used by the function may have been deleted already
+					msg.Format(TXT_TYPE_s_IS_STILL_USED_BY_FUNC_s, type->name.AddressOf(), func->GetName());
+					engine->WriteMessage("", 0, 0, asMSGTYPE_ERROR, msg.AddressOf());
+					break;
+				}
+			}
+		}	
 	}
 
-	// TODO: Check also usage of the type in global variables
+	// TODO: Check also usage of the type in global variables 
 
 	// TODO: Check also usage of the type in local variables in script functions
 
@@ -200,39 +227,5 @@ void asCConfigGroup::ValidateNoUsage(asCScriptEngine *engine, asCObjectType *typ
 	// TODO: Check also usage of the type as sub types in other types
 }
 #endif
-
-int asCConfigGroup::SetModuleAccess(const char *module, bool hasAccess)
-{
-	if( module == asALL_MODULES )
-	{
-		// Set default module access
-		defaultAccess = hasAccess;
-	}
-	else
-	{
-		asCString mod(module ? module : "");
-		asSMapNode<asCString,bool> *cursor = 0;
-		if( moduleAccess.MoveTo(&cursor, mod) )
-		{
-			moduleAccess.GetValue(cursor) = hasAccess;
-		}
-		else
-		{
-			moduleAccess.Insert(mod, hasAccess);
-		}
-	}
-
-	return 0;
-}
-
-bool asCConfigGroup::HasModuleAccess(const char *module)
-{
-	asCString mod(module ? module : "");
-	asSMapNode<asCString,bool> *cursor = 0;
-	if( moduleAccess.MoveTo(&cursor, mod) )
-		return moduleAccess.GetValue(cursor);
-
-	return defaultAccess;
-}
 
 END_AS_NAMESPACE

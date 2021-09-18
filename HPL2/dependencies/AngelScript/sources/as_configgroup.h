@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2010 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -44,7 +44,6 @@
 #include "as_string.h"
 #include "as_array.h"
 #include "as_objecttype.h"
-#include "as_map.h"
 
 BEGIN_AS_NAMESPACE
 
@@ -62,10 +61,7 @@ public:
 	void RefConfigGroup(asCConfigGroup *group);
 
 	bool HasLiveObjects();
-	void RemoveConfiguration(asCScriptEngine *engine);
-
-	int SetModuleAccess(const char *module, bool hasAccess);
-	bool HasModuleAccess(const char *module);
+	void RemoveConfiguration(asCScriptEngine *engine, bool notUsed = false);
 
 #ifdef AS_DEBUG
 	void ValidateNoUsage(asCScriptEngine *engine, asCObjectType *type);
@@ -79,10 +75,6 @@ public:
 	asCArray<asCGlobalProperty*> globalProps;
 	asCArray<asCConfigGroup*>    referencedConfigGroups;
 	asCArray<asCScriptFunction*> funcDefs;
-
-	// Module access
-	bool defaultAccess;
-	asCMap<asCString, bool> moduleAccess;
 };
 
 END_AS_NAMESPACE

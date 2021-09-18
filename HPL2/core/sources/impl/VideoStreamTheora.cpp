@@ -28,9 +28,6 @@
 #include <cstdio>
 #include <cstring>
 
-#pragma comment(lib, "libogg.lib")
-#pragma comment(lib, "libtheora.lib")
-
 namespace hpl {
 
 	//////////////////////////////////////////////////////////////////////////

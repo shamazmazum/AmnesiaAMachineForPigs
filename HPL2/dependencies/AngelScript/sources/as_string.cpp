@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -39,6 +39,7 @@
 #endif
 
 #include "as_string.h"
+#include "as_string_util.h"
 
 asCString::asCString()
 {
@@ -113,7 +114,7 @@ void asCString::Allocate(size_t len, bool keepData)
 {
 	// If we stored the capacity of the dynamically allocated buffer it would be possible
 	// to save some memory allocations if a string decreases in size then increases again,
-	// but this would require extra bytes in the string object itself, or a decrease of
+	// but this would require extra bytes in the string object itself, or a decrease of 
 	// the static buffer, which in turn would mean extra memory is needed. I've tested each
 	// of these options, and it turned out that the current choice is what best balanced
 	// the number of allocations against the size of the allocations.
@@ -122,6 +123,11 @@ void asCString::Allocate(size_t len, bool keepData)
 	{
 		// Allocate a new dynamic buffer if the new one is larger than the old
 		char *buf = asNEWARRAY(char,len+1);
+		if( buf == 0 )
+		{
+			// Out of memory. Return without modifying anything
+			return;
+		}
 
 		if( keepData )
 		{
@@ -253,7 +259,7 @@ size_t asCString::Format(const char *format, ...)
 	return length;
 }
 
-char &asCString::operator [](size_t index)
+char &asCString::operator [](size_t index) 
 {
 	asASSERT(index < length);
 
@@ -282,43 +288,17 @@ asCString asCString::SubString(size_t start, size_t length) const
 
 int asCString::Compare(const char *str) const
 {
-	return Compare(str, strlen(str));
+	return asCompareStrings(AddressOf(), length, str, strlen(str));
 }
 
 int asCString::Compare(const asCString &str) const
 {
-	return Compare(str.AddressOf(), str.GetLength());
+	return asCompareStrings(AddressOf(), length, str.AddressOf(), str.GetLength());
 }
 
 int asCString::Compare(const char *str, size_t len) const
 {
-	if( length == 0 )
-	{
-		if( str == 0 || len == 0 ) return 0; // Equal
-
-		return 1; // The other string is larger than this
-	}
-
-	if( str == 0 )
-	{
-		if( length == 0 )
-			return 0; // Equal
-
-		return -1; // The other string is smaller than this
-	}
-
-	if( len < length )
-	{
-		int result = memcmp(AddressOf(), str, len);
-		if( result == 0 ) return -1; // The other string is smaller than this
-
-		return result;
-	}
-
-	int result = memcmp(AddressOf(), str, length);
-	if( result == 0 && length < len ) return 1; // The other string is larger than this
-
-	return result;
+	return asCompareStrings(AddressOf(), length, str, len);
 }
 
 size_t asCString::RecalculateLength()
@@ -326,6 +306,30 @@ size_t asCString::RecalculateLength()
 	SetLength(strlen(AddressOf()));
 
 	return length;
+}
+
+int asCString::FindLast(const char *str, int *count) const
+{
+	// There is no strstr that starts from the end, so 
+	// we'll iterate until we find the last occurrance.
+	// This shouldn't cause a performance problem because
+	// it is not expected that this will be done very often,
+	// and then only on quite short strings anyway.
+
+	if( count ) *count = 0;
+
+	const char *last = 0;
+	const char *curr = AddressOf()-1;
+	while( (curr = strstr(curr+1, str)) != 0 )
+	{
+		if( count ) (*count)++;
+		last = curr;
+	}
+
+	if( last )
+		return int(last - AddressOf());
+
+	return -1;
 }
 
 //-----------------------------------------------------------------------------
@@ -390,3 +394,39 @@ asCString operator +(const asCString &a, const char *b)
 	return res;
 }
 
+// wrapper class
+
+asCStringPointer::asCStringPointer()
+	: string(0), length(0), cstring(0)
+{
+}
+
+asCStringPointer::asCStringPointer(const char *str, size_t len)
+	: string(str), length(len), cstring(0)
+{
+}
+
+asCStringPointer::asCStringPointer(asCString *cstr)
+	: string(0), length(0), cstring(cstr)
+{
+}
+
+const char *asCStringPointer::AddressOf() const
+{
+	return string ? string : cstring->AddressOf();
+}
+
+size_t asCStringPointer::GetLength() const
+{
+	return string ? length : cstring->GetLength();
+}
+
+bool asCStringPointer::operator==(const asCStringPointer& other) const
+{
+	return asCompareStrings(AddressOf(), GetLength(), other.AddressOf(), other.GetLength()) == 0;
+}
+
+bool asCStringPointer::operator<(const asCStringPointer& other) const
+{
+	return asCompareStrings(AddressOf(), GetLength(), other.AddressOf(), other.GetLength()) < 0;
+}

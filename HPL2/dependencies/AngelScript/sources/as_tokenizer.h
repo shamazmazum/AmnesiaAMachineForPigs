@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2010 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -42,36 +42,36 @@
 
 #include "as_config.h"
 #include "as_tokendef.h"
+#include "as_map.h"
+#include "as_string.h"
 
 BEGIN_AS_NAMESPACE
-
-const char *asGetTokenDefinition(int tokenType);
-
-class asCScriptEngine;
 
 class asCTokenizer
 {
 public:
-	asCTokenizer(asCScriptEngine *engine);
-	~asCTokenizer();
-
-	eTokenType GetToken(const char *source, size_t sourceLength, size_t *tokenLength, asETokenClass *tc = 0);
+	eTokenType GetToken(const char *source, size_t sourceLength, size_t *tokenLength, asETokenClass *tc = 0) const;
+	
+	static const char *GetDefinition(int tokenType);
 
 protected:
-	asETokenClass ParseToken();
-	bool IsWhiteSpace();
-	bool IsComment();
-	bool IsConstant();
-	bool IsKeyWord();
-	bool IsIdentifier();
+	friend class asCScriptEngine;
 
-	const char *source;
-	size_t sourceLength;
+	asCTokenizer();
+	~asCTokenizer();
 
-	eTokenType tokenType;
-	size_t tokenLength;
+	asETokenClass ParseToken(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsWhiteSpace(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsComment(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsConstant(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsKeyWord(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsIdentifier(const char *source, size_t sourceLength, size_t &tokenLength, eTokenType &tokenType) const;
+	bool IsDigitInRadix(char ch, int radix) const;
 
-	asCScriptEngine *engine;
+	const asCScriptEngine *engine;
+
+	asCMap<asCStringPointer, eTokenType> alphaKeywordMap;
+	asCMap<asCStringPointer, eTokenType> nonAlphaKeywordMap;
 };
 
 END_AS_NAMESPACE

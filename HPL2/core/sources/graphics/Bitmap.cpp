@@ -146,11 +146,12 @@ namespace hpl {
 
 		unsigned char *pPixelData = GetData(alImage, alMipMap)->mpData;
 
-		unsigned char vClearColor[] = {	FloatColorToUChar(aColor.r),
-										FloatColorToUChar(aColor.g),
-										FloatColorToUChar(aColor.b),
-										FloatColorToUChar(aColor.a)
-										};
+		unsigned char vClearColor[] = {
+			(unsigned char)FloatColorToUChar(aColor.r),
+			(unsigned char)FloatColorToUChar(aColor.g),
+			(unsigned char)FloatColorToUChar(aColor.b),
+			(unsigned char)FloatColorToUChar(aColor.a)
+		};
 		unsigned char *pClearData = ConvertDataToFormat(vClearColor,ePixelFormat_RGBA,mPixelFormat);
 
 		while(lDataCount)

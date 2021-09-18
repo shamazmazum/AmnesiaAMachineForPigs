@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -53,16 +53,16 @@ public:
 // asIScriptGeneric
 //------------------------------
 	// Miscellaneous
-	asIScriptEngine *GetEngine();
-	int              GetFunctionId();
+	asIScriptEngine   *GetEngine() const;
+	asIScriptFunction *GetFunction() const;
 
 	// Object
 	void   *GetObject();
-	int     GetObjectTypeId();
+	int     GetObjectTypeId() const;
 
 	// Arguments
-	int     GetArgCount();
-	int     GetArgTypeId(asUINT arg);
+	int     GetArgCount() const;
+	int     GetArgTypeId(asUINT arg, asDWORD *flags = 0) const;
 	asBYTE  GetArgByte(asUINT arg);
 	asWORD  GetArgWord(asUINT arg);
 	asDWORD GetArgDWord(asUINT arg);
@@ -74,7 +74,7 @@ public:
 	void   *GetAddressOfArg(asUINT arg);
 
 	// Return value
-	int     GetReturnTypeId();
+	int     GetReturnTypeId(asDWORD *flags = 0) const;
 	int     SetReturnByte(asBYTE val);
 	int     SetReturnWord(asWORD val);
 	int     SetReturnDWord(asDWORD val);

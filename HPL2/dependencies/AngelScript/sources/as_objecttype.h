@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -54,46 +54,45 @@ BEGIN_AS_NAMESPACE
 // TODO: The type id should have flags for diferenciating between value types and reference types. It should also have a flag for differenciating interface types.
 
 // Additional flag to the class object type
-const asDWORD asOBJ_IMPLICIT_HANDLE  = 0x40000;
+const asDWORD asOBJ_IMPLICIT_HANDLE  = 0x00400000;
 const asDWORD asOBJ_TYPEDEF          = 0x40000000;
 const asDWORD asOBJ_ENUM             = 0x10000000;
 const asDWORD asOBJ_TEMPLATE_SUBTYPE = 0x20000000;
 
 
 
-
-// asOBJ_GC is used to indicate that the type can potentially
+// asOBJ_GC is used to indicate that the type can potentially 
 // form circular references, thus is garbage collected.
 
-// The fact that an object is garbage collected doesn't imply that an object that
-// can references it also must be garbage collected, only if the garbage collected
-// object can reference it as well.
+// The fact that an object is garbage collected doesn't imply that an other object  
+// that can reference it also must be garbage collected, only if the garbage collected 
+// object can reference the other object as well.
 
-// For registered types however, we set the flag asOBJ_GC if the GC
-// behaviours are registered. For script types that contain any such type we
+// For registered types however, we set the flag asOBJ_GC if the GC 
+// behaviours are registered. For script types that contain any such type we 
 // automatically make garbage collected as well, because we cannot know what type
 // of references that object can contain, and must assume the worst.
 
-
 struct asSTypeBehaviour
 {
-	asSTypeBehaviour()
+	asSTypeBehaviour() 
 	{
 		factory = 0;
 		listFactory = 0;
 		copyfactory = 0;
-		construct = 0;
+		construct = 0; 
 		copyconstruct = 0;
-		destruct = 0;
-		copy = 0;
-		addref = 0;
-		release = 0;
-		gcGetRefCount = 0;
-		gcSetFlag = 0;
-		gcGetFlag = 0;
-		gcEnumReferences = 0;
+		destruct = 0; 
+		copy = 0; 
+		addref = 0; 
+		release = 0; 
+		gcGetRefCount = 0; 
+		gcSetFlag = 0; 
+		gcGetFlag = 0; 
+		gcEnumReferences = 0; 
 		gcReleaseAllReferences = 0;
 		templateCallback = 0;
+		getWeakRefFlag = 0;
 	}
 
 	int factory;
@@ -114,6 +113,9 @@ struct asSTypeBehaviour
 	int gcEnumReferences;
 	int gcReleaseAllReferences;
 
+	// Weakref behaviours
+	int getWeakRefFlag;
+
 	asCArray<int> factories;
 	asCArray<int> constructors;
 	asCArray<int> operators;
@@ -126,6 +128,7 @@ struct asSEnumValue
 };
 
 class asCScriptEngine;
+struct asSNameSpace;
 
 void RegisterObjectTypeGCBehaviours(asCScriptEngine *engine);
 
@@ -137,53 +140,62 @@ public:
 //=====================================
 	asIScriptEngine *GetEngine() const;
 	const char      *GetConfigGroup() const;
+	asDWORD          GetAccessMask() const;
+	asIScriptModule *GetModule() const;
 
 	// Memory management
-	int AddRef();
-	int Release();
+	int AddRef() const;
+	int Release() const;
 
 	// Type info
 	const char      *GetName() const;
+	const char      *GetNamespace() const;
 	asIObjectType   *GetBaseType() const;
+	bool             DerivesFrom(const asIObjectType *objType) const;
 	asDWORD          GetFlags() const;
 	asUINT           GetSize() const;
 	int              GetTypeId() const;
-	int              GetSubTypeId() const;
-
-	// Behaviours
-	int GetBehaviourCount() const;
-	int GetBehaviourByIndex(asUINT index, asEBehaviours *outBehaviour) const;
+	int              GetSubTypeId(asUINT subtypeIndex = 0) const;
+	asIObjectType   *GetSubType(asUINT subtypeIndex = 0) const;
+	asUINT			 GetSubTypeCount() const;
 
 	// Interfaces
-	int              GetInterfaceCount() const;
+	asUINT           GetInterfaceCount() const;
 	asIObjectType   *GetInterface(asUINT index) const;
+	bool             Implements(const asIObjectType *objType) const;
 
 	// Factories
-	int                GetFactoryCount() const;
-	int                GetFactoryIdByIndex(int index) const;
-	int                GetFactoryIdByDecl(const char *decl) const;
+	asUINT             GetFactoryCount() const;
+	asIScriptFunction *GetFactoryByIndex(asUINT index) const;
+	asIScriptFunction *GetFactoryByDecl(const char *decl) const;
 
 	// Methods
-	int                GetMethodCount() const;
-	int                GetMethodIdByIndex(int index) const;
-	int                GetMethodIdByName(const char *name) const;
-	int                GetMethodIdByDecl(const char *decl) const;
-	asIScriptFunction *GetMethodDescriptorByIndex(int index) const;
+	asUINT             GetMethodCount() const;
+	asIScriptFunction *GetMethodByIndex(asUINT index, bool getVirtual) const;
+	asIScriptFunction *GetMethodByName(const char *name, bool getVirtual) const;
+	asIScriptFunction *GetMethodByDecl(const char *decl, bool getVirtual) const;
 
 	// Properties
-	int         GetPropertyCount() const;
-	int         GetPropertyTypeId(asUINT prop) const;
-	const char *GetPropertyName(asUINT prop) const;
-	int         GetPropertyOffset(asUINT prop) const;
+	asUINT      GetPropertyCount() const;
+	int         GetProperty(asUINT index, const char **name, int *typeId, bool *isPrivate, int *offset, bool *isReference, asDWORD *accessMask) const;
+	const char *GetPropertyDeclaration(asUINT index) const;
+
+	// Behaviours
+	asUINT             GetBehaviourCount() const;
+	asIScriptFunction *GetBehaviourByIndex(asUINT index, asEBehaviours *outBehaviour) const;
+
+	// User data
+	void *SetUserData(void *data, asPWORD type);
+	void *GetUserData(asPWORD type) const;
 
 //===========================================
 // Internal
 //===========================================
 public:
-	asCObjectType();
 	asCObjectType(asCScriptEngine *engine);
 	~asCObjectType();
 
+	void Orphan(asCModule *module);
 	int  GetRefCount();
 	void SetGCFlag();
 	bool GetGCFlag();
@@ -192,14 +204,15 @@ public:
 
 	void ReleaseAllFunctions();
 
-	bool Implements(const asCObjectType *objType) const;
-	bool DerivesFrom(const asCObjectType *objType) const;
 	bool IsInterface() const;
+	bool IsShared() const;
 
 	asCObjectProperty *AddPropertyToClass(const asCString &name, const asCDataType &dt, bool isPrivate);
+	void ReleaseAllProperties();
 
-	asCString   name;
-	int         size;
+	asCString                    name;
+	asSNameSpace                *nameSpace;
+	int                          size;
 	asCArray<asCObjectProperty*> properties;
 	asCArray<int>                methods;
 	asCArray<asCObjectType*>     interfaces;
@@ -208,19 +221,25 @@ public:
 	asCArray<asCScriptFunction*> virtualFunctionTable;
 
 	asDWORD flags;
+	asDWORD accessMask;
 
 	asSTypeBehaviour beh;
 
 	// Used for template types
-	asCDataType    templateSubType;
-	bool           acceptValueSubType;
-	bool           acceptRefSubType;
+	asCArray<asCDataType> templateSubTypes;
+	bool                  acceptValueSubType;
+	bool                  acceptRefSubType;
 
-	asCScriptEngine *engine;
+	asCScriptEngine  *engine;
+	asCModule        *module;
+	asCArray<asPWORD> userData;
 
 protected:
-	asCAtomic refCount;
-	bool      gcFlag;
+	friend class asCScriptEngine;
+	asCObjectType();
+
+	mutable asCAtomic refCount;
+	mutable bool      gcFlag;
 };
 
 END_AS_NAMESPACE

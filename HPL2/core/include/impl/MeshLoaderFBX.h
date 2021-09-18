@@ -19,6 +19,7 @@
 
 #ifndef HPL_MESH_LOADER_FBX_H
 #define HPL_MESH_LOADER_FBX_H
+#if 0
 
 #define K_PLUGIN
 #define K_FBXSDK
@@ -168,4 +169,5 @@ namespace hpl {
 	};
 
 };
+#endif
 #endif // HPL_MESH_LOADER_FBX_H

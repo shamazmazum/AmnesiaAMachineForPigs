@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -31,11 +31,8 @@
 
 #include "as_config.h"
 
-#include <stdarg.h>     // va_list, va_start(), etc
-#include <stdlib.h>     // strtod(), strtol()
-#include <stdio.h>      // _vsnprintf()
 #include <string.h>     // some compilers declare memcpy() here
-#include <locale.h>     // setlocale()
+#include <math.h>       // pow()
 
 #if !defined(AS_NO_MEMORY_H)
 #include <memory.h>
@@ -46,35 +43,137 @@
 
 BEGIN_AS_NAMESPACE
 
-double asStringScanDouble(const char *string, size_t *numScanned)
+int asCompareStrings(const char *str1, size_t len1, const char *str2, size_t len2)
 {
-	char *end;
+	if( len1 == 0 ) 
+	{
+		if( str2 == 0 || len2 == 0 ) return 0; // Equal
 
-    // WinCE doesn't have setlocale. Some quick testing on my current platform
-    // still manages to parse the numbers such as "3.14" even if the decimal for the
-    // locale is ",".
-#if !defined(_WIN32_WCE) && !defined(ANDROID)
-	// Set the locale to C so that we are guaranteed to parse the float value correctly
-	asCString orig = setlocale(LC_NUMERIC, 0);
-	setlocale(LC_NUMERIC, "C");
-#endif
+		return 1; // The other string is larger than this
+	}
 
-	double res = strtod(string, &end);
+	if( str2 == 0 )
+	{
+		if( len1 == 0 ) 
+			return 0; // Equal
 
-#if !defined(_WIN32_WCE) && !defined(ANDROID)
-	// Restore the locale
-	setlocale(LC_NUMERIC, orig.AddressOf());
-#endif
+		return -1; // The other string is smaller than this
+	}
 
-	if( numScanned )
-		*numScanned = end - string;
+	if( len2 < len1 )
+	{
+		int result = memcmp(str1, str2, len2);
+		if( result == 0 ) return -1; // The other string is smaller than this
 
-	return res;
+		return result;
+	}
+
+	int result = memcmp(str1, str2, len1);
+	if( result == 0 && len1 < len2 ) return 1; // The other string is larger than this
+
+	return result;
 }
 
+double asStringScanDouble(const char *string, size_t *numScanned)
+{
+	// I decided to do my own implementation of strtod() because this function
+	// doesn't seem to be present on all systems. iOS 5 for example doesn't appear 
+	// to include the function in the standard lib. 
+	
+	// Another reason is that the standard implementation of strtod() is dependent
+	// on the locale on some systems, i.e. it may use comma instead of dot for 
+	// the decimal indicator. This can be avoided by forcing the locale to "C" with
+	// setlocale(), but this is another thing that is highly platform dependent.
+
+	double value = 0;
+	double fraction = 0.1;
+	int exponent = 0;
+	bool negativeExponent = false;
+	int c = 0;
+
+	// The tokenizer separates the sign from the number in   
+	// two tokens so we'll never have a sign to parse here
+
+	// Parse the integer value
+	for( ;; )
+	{
+		if( string[c] >= '0' && string[c] <= '9' )
+			value = value*10 + double(string[c] - '0');
+		else 
+			break;
+
+		c++;
+	}
+
+	if( string[c] == '.' )
+	{
+		c++;
+
+		// Parse the fraction
+		for( ;; )
+		{
+			if( string[c] >= '0' && string[c] <= '9' )
+				value += fraction * double(string[c] - '0');
+			else
+				break;
+
+			c++;
+			fraction *= 0.1;
+		}
+	}
+
+	if( string[c] == 'e' || string[c] == 'E' )
+	{
+		c++;
+
+		// Parse the sign of the exponent
+		if( string[c] == '-' )
+		{
+			negativeExponent = true;
+			c++;
+		}
+		else if( string[c] == '+' )
+			c++;
+
+		// Parse the exponent value
+		for( ;; )
+		{
+			if( string[c] >= '0' && string[c] <= '9' )
+				exponent = exponent*10 + int(string[c] - '0');
+			else
+				break;
+
+			c++;
+		}
+	}
+
+	if( exponent )
+	{
+		if( negativeExponent )
+			exponent = -exponent;
+		value *= pow(10.0, exponent);
+	}
+
+	if( numScanned )
+		*numScanned = c;
+
+	return value;
+}
+
+// Converts a character to the decimal number based on the radix
+// Returns -1 if the character is not valid for the radix
+static int asCharToNbr(char ch, int radix)
+{
+	if( ch >= '0' && ch <= '9' ) return ((ch -= '0') < radix ? ch : -1);
+	if( ch >= 'A' && ch <= 'Z' ) return ((ch -= 'A'-10) < radix ? ch : -1);
+	if( ch >= 'a' && ch <= 'z' ) return ((ch -= 'a'-10) < radix ? ch : -1);
+	return -1;
+}
+
+// If base is 0 the string should be prefixed by 0x, 0d, 0o, or 0b to allow the function to automatically determine the radix
 asQWORD asStringScanUInt64(const char *string, int base, size_t *numScanned)
 {
-	asASSERT(base == 10 || base == 16);
+	asASSERT(base == 10 || base == 16 || base == 0);
 
 	const char *end = string;
 
@@ -87,19 +186,27 @@ asQWORD asStringScanUInt64(const char *string, int base, size_t *numScanned)
 			res += *end++ - '0';
 		}
 	}
-	else if( base == 16 )
+	else
 	{
-		while( (*end >= '0' && *end <= '9') ||
-		       (*end >= 'a' && *end <= 'f') ||
-		       (*end >= 'A' && *end <= 'F') )
+		if( base == 0 && string[0] == '0')
 		{
-			res *= 16;
-			if( *end >= '0' && *end <= '9' )
-				res += *end++ - '0';
-			else if( *end >= 'a' && *end <= 'f' )
-				res += *end++ - 'a' + 10;
-			else if( *end >= 'A' && *end <= 'F' )
-				res += *end++ - 'A' + 10;
+			// Determine the radix from the prefix
+			switch( string[1] )
+			{
+			case 'b': case 'B': base = 2; break;
+			case 'o': case 'O': base = 8; break;
+			case 'd': case 'D': base = 10; break;
+			case 'x': case 'X': base = 16; break;
+			}
+			end += 2;
+		}
+
+		asASSERT( base );
+
+		if( base )
+		{
+			for( int nbr; (nbr = asCharToNbr(*end, base)) >= 0; end++ )
+				res = res * base + nbr;
 		}
 	}
 
@@ -111,7 +218,7 @@ asQWORD asStringScanUInt64(const char *string, int base, size_t *numScanned)
 
 //
 // The function will encode the unicode code point into the outEncodedBuffer, and then
-// return the length of the encoded value. If the input value is not a valid unicode code
+// return the length of the encoded value. If the input value is not a valid unicode code 
 // point, then the function will return -1.
 //
 // This function is taken from the AngelCode ToolBox.
@@ -164,7 +271,7 @@ int asStringEncodeUTF8(unsigned int value, char *outEncodedBuffer)
 int asStringDecodeUTF8(const char *encodedBuffer, unsigned int *outLength)
 {
 	const unsigned char *buf = (const unsigned char*)encodedBuffer;
-
+	
 	int value = 0;
 	int length = -1;
 	unsigned char byte = buf[0];
@@ -180,7 +287,7 @@ int asStringDecodeUTF8(const char *encodedBuffer, unsigned int *outLength)
 		value = int(byte & 0x1F);
 		length = 2;
 
-		// The value at this moment must not be less than 2, because
+		// The value at this moment must not be less than 2, because 
 		// that should have been encoded with one byte only.
 		if( value < 2 )
 			length = -1;
@@ -204,7 +311,7 @@ int asStringDecodeUTF8(const char *encodedBuffer, unsigned int *outLength)
 		byte = buf[n];
 		if( (byte & 0xC0) == 0x80 )
 			value = (value << 6) + int(byte & 0x3F);
-		else
+		else 
 			break;
 	}
 
@@ -220,7 +327,7 @@ int asStringDecodeUTF8(const char *encodedBuffer, unsigned int *outLength)
 
 //
 // The function will encode the unicode code point into the outEncodedBuffer, and then
-// return the length of the encoded value. If the input value is not a valid unicode code
+// return the length of the encoded value. If the input value is not a valid unicode code 
 // point, then the function will return -1.
 //
 // This function is taken from the AngelCode ToolBox.

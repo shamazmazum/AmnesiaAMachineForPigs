@@ -51,8 +51,7 @@ namespace hpl {
 	cPhysicsWorldNewton::cPhysicsWorldNewton()
 		: iPhysicsWorld()
 	{
-		//mpNewtonWorld = NewtonCreate();
-		mpNewtonWorld = NewtonCreate(NULL, NULL);
+		mpNewtonWorld = NewtonCreate();
 
 		if(mpNewtonWorld==NULL){
 			Warning("Couldn't create newton world!\n");
@@ -182,17 +181,17 @@ namespace hpl {
 		switch(mAccuracy)
 		{
 		case ePhysicsAccuracy_Low:
-									NewtonSetSolverModel(mpNewtonWorld,1);
-									NewtonSetFrictionModel(mpNewtonWorld,1);
-									break;
+			NewtonSetSolverModel(mpNewtonWorld,1);
+			NewtonSetFrictionModel(mpNewtonWorld,1);
+			break;
 		case ePhysicsAccuracy_Medium:
-									NewtonSetSolverModel(mpNewtonWorld,2);
-									NewtonSetFrictionModel(mpNewtonWorld,1);
-									break;
+			NewtonSetSolverModel(mpNewtonWorld,2);
+			NewtonSetFrictionModel(mpNewtonWorld,1);
+			break;
 		case ePhysicsAccuracy_High:
-									NewtonSetSolverModel(mpNewtonWorld,0);
-									NewtonSetFrictionModel(mpNewtonWorld,0);
-									break;
+			NewtonSetSolverModel(mpNewtonWorld,0);
+			NewtonSetFrictionModel(mpNewtonWorld,0);
+			break;
 		}
 	}
 
@@ -389,7 +388,7 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	static std::vector<iPhysicsBody*> *gpBodyVec;
-	static void AddNewtonBodyToVector(const NewtonBody* apNewtonBody)//, void* userData)
+	static void AddNewtonBodyToVector(const NewtonBody* apNewtonBody, void* userData)
 	{
 		cPhysicsBodyNewton* pBody = (cPhysicsBodyNewton*) NewtonBodyGetUserData(apNewtonBody);
 		gpBodyVec->push_back(pBody);
@@ -399,8 +398,7 @@ namespace hpl {
 	{
 		gpBodyVec = apBodyVec;
 
-		//NewtonWorldForEachBodyInAABBDo(mpNewtonWorld,apBV->GetMin().v, apBV->GetMax().v,AddNewtonBodyToVector, NULL);
-		NewtonWorldForEachBodyInAABBDo(mpNewtonWorld,apBV->GetMin().v, apBV->GetMax().v,AddNewtonBodyToVector);
+		NewtonWorldForEachBodyInAABBDo(mpNewtonWorld,apBV->GetMin().v, apBV->GetMax().v,AddNewtonBodyToVector, NULL);
 	}
 
 	//-----------------------------------------------------------------------
@@ -720,8 +718,9 @@ namespace hpl {
 		gDebugColor = aColor;
 
 		cCollideShapeNewton *pNewtonShape = static_cast<cCollideShapeNewton*>(apShape);
+        cMatrixf mtx = a_mtxTransform.GetTranspose();
 		NewtonCollisionForEachPolygonDo (	pNewtonShape->GetNewtonCollision(),
-											&(a_mtxTransform.GetTranspose().m[0][0]),
+											&(mtx.m[0][0]),
 											RenderDebugPolygon,
 											NULL);
 	}

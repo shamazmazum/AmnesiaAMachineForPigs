@@ -17,8 +17,6 @@
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#pragma comment(lib, "newton.lib")
-
 #include "impl/LowLevelPhysicsNewton.h"
 
 #include "impl/PhysicsWorldNewton.h"

@@ -1,24 +1,24 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2009 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
-   This software is provided 'as-is', without any express or implied
-   warranty. In no event will the authors be held liable for any
+   This software is provided 'as-is', without any express or implied 
+   warranty. In no event will the authors be held liable for any 
    damages arising from the use of this software.
 
-   Permission is granted to anyone to use this software for any
-   purpose, including commercial applications, and to alter it and
+   Permission is granted to anyone to use this software for any 
+   purpose, including commercial applications, and to alter it and 
    redistribute it freely, subject to the following restrictions:
 
-   1. The origin of this software must not be misrepresented; you
+   1. The origin of this software must not be misrepresented; you 
       must not claim that you wrote the original software. If you use
-      this software in a product, an acknowledgment in the product
+      this software in a product, an acknowledgment in the product 
       documentation would be appreciated but is not required.
 
-   2. Altered source versions must be plainly marked as such, and
+   2. Altered source versions must be plainly marked as such, and 
       must not be misrepresented as being the original software.
 
-   3. This notice may not be removed or altered from any source
+   3. This notice may not be removed or altered from any source 
       distribution.
 
    The original version of this library can be located at:
@@ -37,6 +37,8 @@
 
 #include <stdio.h>
 #include <string.h>
+
+// TODO: optimize: On compilers with C++11 support the string class should take advantage of the move operator &&
 
 class asCString
 {
@@ -64,6 +66,8 @@ public:
 	asCString &operator =(char);
 
 	asCString SubString(size_t start, size_t length = (size_t)(-1)) const;
+
+	int FindLast(const char *str, int *count = 0) const;
 
 	size_t Format(const char *fmt, ...);
 
@@ -102,5 +106,26 @@ bool operator <(const asCString &, const asCString &);
 asCString operator +(const asCString &, const char *);
 asCString operator +(const char *, const asCString &);
 asCString operator +(const asCString &, const asCString &);
+
+// a wrapper for using the pointer of asCString in asCMap
+class asCStringPointer
+{
+public:
+	asCStringPointer();
+	asCStringPointer(const char *str, size_t len);
+	asCStringPointer(asCString *cstr);
+
+	const char *AddressOf() const;
+	size_t GetLength() const;
+
+	bool operator==(const asCStringPointer& other) const;
+	bool operator<(const asCStringPointer& other) const;
+
+private:
+	// Either string/length or cstring is stored
+	const char *string;
+	size_t      length;
+	asCString  *cstring;
+};
 
 #endif

@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2007 Andreas Jonsson
+   Copyright (c) 2003-2013 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -36,6 +36,9 @@
 //
 
 #include "as_config.h"
+
+#ifndef AS_NO_COMPILER
+
 #include "as_typeinfo.h"
 
 BEGIN_AS_NAMESPACE
@@ -48,6 +51,8 @@ asCTypeInfo::asCTypeInfo()
 	isVariable            = false;
 	isExplicitHandle      = false;
 	qwordValue            = 0;
+	isLValue              = false;
+	isVoidExpression      = false;
 }
 
 void asCTypeInfo::Set(const asCDataType &dt)
@@ -60,6 +65,8 @@ void asCTypeInfo::Set(const asCDataType &dt)
 	isVariable       = false;
 	isExplicitHandle = false;
 	qwordValue       = 0;
+	isLValue         = false;
+	isVoidExpression = false;
 }
 
 void asCTypeInfo::SetVariable(const asCDataType &dt, int stackOffset, bool isTemporary)
@@ -115,16 +122,12 @@ void asCTypeInfo::SetNullConstant()
 {
 	Set(asCDataType::CreateNullHandle());
 	isConstant       = true;
-	isExplicitHandle = true;
+	isExplicitHandle = false;
 	qwordValue       = 0;
+	isLValue         = false;
 }
 
-void asCTypeInfo::SetDummy()
-{
-	SetConstantQW(asCDataType::CreatePrimitive(ttInt, true), 0);
-}
-
-bool asCTypeInfo::IsNullConstant()
+bool asCTypeInfo::IsNullConstant() const
 {
 	if( isConstant && dataType.IsObjectHandle() )
 		return true;
@@ -132,4 +135,25 @@ bool asCTypeInfo::IsNullConstant()
 	return false;
 }
 
+void asCTypeInfo::SetVoidExpression()
+{
+	Set(asCDataType::CreatePrimitive(ttVoid, false));
+	isLValue = false;
+	isConstant = false;
+	isVoidExpression = true;
+}
+
+bool asCTypeInfo::IsVoidExpression() const
+{
+	return isVoidExpression;
+}
+
+void asCTypeInfo::SetDummy()
+{
+	SetConstantQW(asCDataType::CreatePrimitive(ttInt, true), 0);
+}
+
+
 END_AS_NAMESPACE
+
+#endif // AS_NO_COMPILER

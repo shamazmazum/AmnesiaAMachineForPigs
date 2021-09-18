@@ -511,13 +511,15 @@ void cLuxEnemyMover::UpdateMoveAnimation(float afTimeStep)
 	if(mbOverideMoveState) return;
 
 	float fSpeed = GetMoveSpeed();
+	eLuxEnemyPoseType pose = mpEnemy->mCurrentPose;
 	if(mpCharBody->GetMoveSpeed(eCharDir_Forward) <0) fSpeed = -fSpeed;
+
 
 	//Log("Update move anim. Speed: %f Current: %d\n", fSpeed, mMoveState);
 
-	bool bCanJog = mpEnemy->mfWalkToJogSpeed>0 && mpEnemy->mfRunToJogSpeed>0 && mpEnemy->GetJogAnimationName()!="";
-
-	eLuxEnemyPoseType pose = mpEnemy->mCurrentPose;
+	bool bCanJog = mpEnemy->mfWalkToJogSpeed[pose] > 0 &&
+		mpEnemy->mfRunToJogSpeed[pose] > 0 &&
+		mpEnemy->GetJogAnimationName()!="";
 
 	////////////////////////////////
 	// Move state animation
