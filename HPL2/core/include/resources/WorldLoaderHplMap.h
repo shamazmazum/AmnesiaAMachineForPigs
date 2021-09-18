@@ -48,7 +48,8 @@ namespace hpl {
 	#define MAP_CACHE_FORMAT_MAGIC_NUMBER		0xF441451F
 #endif
 
-	#define MAP_CACHE_FORMAT_VERSION			11
+	// buzer: set it to some arbitrary large number so it won't interfere with other source mods
+	#define MAP_CACHE_FORMAT_VERSION			219676930
 
 	//----------------------------------------
 
