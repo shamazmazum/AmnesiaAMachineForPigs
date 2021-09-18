@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -44,7 +44,7 @@ namespace hpl {
 	#define START_TIMING_TAB(x)
 	#define STOP_TIMING_TAB(x)
 #endif
-	
+
 	//--------------------------------------------------------
 
 	class iScript;
@@ -89,25 +89,25 @@ namespace hpl {
 		/**
 		 * Creates a ne script
 		 * \param asName name of the script.
-		 * \return 
+		 * \return
 		 */
 		virtual iScript* CreateScript(const tString& asName)=0;
 
 		/**
 		 * Add a function to the script vm. Example: "void test(float x)". must be __stdcall
 		 * \param asFuncDecl the declaration.
-		 * \return 
+		 * \return
 		 */
 		virtual bool AddScriptFunc(const tString& asFuncDecl, void* pFunc)=0;
-		
+
 		/**
 		 * Add a variable to the script vm. Example: "int MyVar"
-		 * \param asVarDecl the declartion 
+		 * \param asVarDecl the declartion
 		 * \param *pVar the variable
-		 * \return 
+		 * \return
 		 */
 		virtual bool AddScriptVar(const tString& asVarDecl, void *pVar)=0;
-		
+
 
 	};
 };

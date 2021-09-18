@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -32,30 +32,30 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cBitmapData::cBitmapData()
 	{
 		mpData = NULL;
 		mlSize =0;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cBitmapData::~cBitmapData()
 	{
 		if(mpData) hplDeleteArray( mpData );
 	}
-	
+
 
 	//-----------------------------------------------------------------------
 
 	void cBitmapData::SetData(const unsigned char* apData, int alSize)
 	{
 		if(mpData && mlSize != alSize) hplDelete( mpData );
-		
+
 		mlSize = alSize;
 		mpData = hplNewArray(unsigned char, mlSize);
-        
+
 		memcpy(mpData, apData, mlSize);
 	}
 
@@ -71,7 +71,7 @@ namespace hpl {
 	cBitmap::cBitmap()
 	{
 		mvImages.resize(1);
-		
+
 		mbDataIsCompressed = false;
 
 		mvSize = 0;
@@ -106,7 +106,7 @@ namespace hpl {
 
 		return &mvImages[alImage * mlNumOfMipMaps + alMipMapLevel];
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cBitmap::SetUpData(int alNumOfImages, int alNumOfMipmaps)
@@ -130,7 +130,7 @@ namespace hpl {
 		mlBytesPerPixel = GetChannelsInPixelFormat(aFormat);
 
         int lDataSize = mvSize.x * mvSize.y * mvSize.z * mlBytesPerPixel;
-		
+
 		cBitmapData* pData = GetData(alImage, alMipMap);
 		pData->mpData = hplNewArray(unsigned char, lDataSize);
 		pData->mlSize = lDataSize;
@@ -145,8 +145,8 @@ namespace hpl {
 		int lDataCount = mvSize.x * mvSize.y * mvSize.z;
 
 		unsigned char *pPixelData = GetData(alImage, alMipMap)->mpData;
-		
-		unsigned char vClearColor[] = {	FloatColorToUChar(aColor.r), 
+
+		unsigned char vClearColor[] = {	FloatColorToUChar(aColor.r),
 										FloatColorToUChar(aColor.g),
 										FloatColorToUChar(aColor.b),
 										FloatColorToUChar(aColor.a)
@@ -164,7 +164,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	
+
 	void cBitmap::Blit(	cBitmap *apSrcBmp, const cVector3l& avDestPosition,const cVector3l& avSrcSize,
 						const cVector3l& avSrcPosition,
 						int alDestImage, int alDestMipMap,
@@ -174,12 +174,12 @@ namespace hpl {
 
 		////////////////////////////////////////
 		//Check so positions are in bounds
-		if(	avDestPosition.x >= mvSize.x || avDestPosition.y >= mvSize.y || 
+		if(	avDestPosition.x >= mvSize.x || avDestPosition.y >= mvSize.y ||
 			avDestPosition.z >= mvSize.z)
 		{
 			return;
 		}
-		if(	avSrcPosition.x >= apSrcBmp->GetSize().x || avSrcPosition.y >= apSrcBmp->GetSize().y || 
+		if(	avSrcPosition.x >= apSrcBmp->GetSize().x || avSrcPosition.y >= apSrcBmp->GetSize().y ||
 			avSrcPosition.z >= apSrcBmp->GetSize().z)
 		{
 			return;
@@ -188,7 +188,7 @@ namespace hpl {
 
 		////////////////////////////////////////
 		//Check so source size is not too large for source
-		
+
 		// Get bounds and check so they are in range
 		int lSrcWidth = avSrcSize.x >	apSrcBmp->GetSize().x ?	apSrcBmp->GetSize().x : avSrcSize.x;
 		int lSrcHeight = avSrcSize.y >	apSrcBmp->GetSize().y ?	apSrcBmp->GetSize().y : avSrcSize.y;
@@ -217,16 +217,16 @@ namespace hpl {
 
 		////////////////////////////////////////
 		//Check so source size is not too large for destination
-		
+
 		//Get coordinates and check for negative
 		cVector3l vDestPos = avDestPosition;
 		if(vDestPos.x < 0) {
-			lSrcWidth += vDestPos.x; 
+			lSrcWidth += vDestPos.x;
 			vSrcPos.x -= vDestPos.x;
 			vDestPos.x =0;
 		}
 		if(vDestPos.y < 0) {
-			lSrcHeight += vDestPos.y; 
+			lSrcHeight += vDestPos.y;
 			vSrcPos.y -= vDestPos.y;
 			vDestPos.y =0;
 		}
@@ -242,7 +242,7 @@ namespace hpl {
 		if(vDestPos.z + lSrcDepth > mvSize.z)		lSrcDepth = mvSize.z - vDestPos.z;
 
 		//If any size dimension is zero, then we skip drawing
-		if(lSrcWidth <=0 || lSrcHeight <=0 || lSrcDepth <=0) 
+		if(lSrcWidth <=0 || lSrcHeight <=0 || lSrcDepth <=0)
 		{
 			return;
 		}
@@ -264,8 +264,8 @@ namespace hpl {
 
 		unsigned char* pSrcPixel = &pSrcData[lSrcAdress];
 		unsigned char* pDestPixel = &pDestData[lDestAdress];
-		
-        int lWidthCount = lSrcWidth;		
+
+        int lWidthCount = lSrcWidth;
 		int lHeightCount = lSrcHeight;
 		int lDepthCount = lSrcDepth;
 
@@ -282,8 +282,8 @@ namespace hpl {
 		{
 			//Log("x:%d y:%d\n",lWidthCount, lHeightCount);
 			CopyPixel(pDestPixel, mPixelFormat, pSrcPixel, srcPixelFormat);
-			
-			
+
+
 			pSrcPixel += lSrcPixelSize;
 			pDestPixel += lDestPixelSize;
 
@@ -317,9 +317,9 @@ namespace hpl {
 													);
 		}*/
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cBitmap::SetPixel(int alImage, int alMipMap, const cVector3l& avPixelPos, unsigned char* apPixelData)
 	{
 		cBitmapData* pData = GetData(alImage, alMipMap);
@@ -358,9 +358,9 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	//TODO: Make this inline? If so, at top off cpp and not in header
-	void cBitmap::CopyPixel(	unsigned char* apDest, ePixelFormat aDestFormat, 
+	void cBitmap::CopyPixel(	unsigned char* apDest, ePixelFormat aDestFormat,
 								unsigned char* apSrc, ePixelFormat aSrcFormat)
 	{
 		int lChannels = GetChannelsInPixelFormat(aDestFormat);
@@ -375,11 +375,11 @@ namespace hpl {
 	unsigned char* cBitmap::ConvertDataToFormat(unsigned char* apPixelData, ePixelFormat aSrcFormat, ePixelFormat aDestFormat)
 	{
 		if(aSrcFormat == aDestFormat) return apPixelData;
-		
+
 		// Make it into a general RGBA format
 		unsigned char *pSrcPixel = ConvertDataToRGBA(apPixelData, aSrcFormat);
 		unsigned char *pDestPixel = gvTempPixelData2;
-		
+
 		////////////////////////////////////////
 		// Convert into wanted format
 		switch(aDestFormat)

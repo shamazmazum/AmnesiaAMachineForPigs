@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -22,7 +22,7 @@
 
 namespace hpl
 {
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	//////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ namespace hpl
 
 	iGamepad::iGamepad(tString asName, int alIndex) : iInputDevice(asName, eInputDeviceType_Gamepad)
 	{
-		mlIndex = alIndex;	
+		mlIndex = alIndex;
 	}
 
 	//-----------------------------------------------------------------------
@@ -108,7 +108,7 @@ namespace hpl
 		case eGamepadButton_29: return "Button 29";
 #endif
 		}
-		
+
 		return "Unknown";
 	}
 
@@ -164,7 +164,7 @@ namespace hpl
 		if(asButton=="Button 28") return eGamepadButton_28;
 		if(asButton=="Button 29") return eGamepadButton_29;
 #endif
-		
+
 		return eGamepadButton_LastEnum;
 	}
 

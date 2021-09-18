@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -78,7 +78,7 @@ namespace hpl {
 
 		mfFalloff = 1.0f;
 		mfBrightness = 1.0f;
-			
+
 		///////////////////////////////
 		//Fade and flicker init
 		mDiffuseColor = 0;
@@ -90,7 +90,7 @@ namespace hpl {
 		mfSourceRadius = 0;
 		mfFadeTime=0;
 		mbFlickering = false;
-	
+
 		mfFlickerStateLength = 0;
 
 		mfFadeTime =0;
@@ -109,18 +109,18 @@ namespace hpl {
 	{
 		if(mpVisibleNodeTracker) hplDelete(mpVisibleNodeTracker);
 		if(mpGoboTexture) mpTextureManager->Destroy(mpGoboTexture);
-	}	
+	}
 
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	void iLight::OnChangeVisible()
-	{ 
+	{
 		for(size_t i =0; i<mvBillboards.size(); ++i)
 		{
 			mvBillboards[i].mpBillboard->SetVisible(mbIsVisible);
@@ -128,14 +128,14 @@ namespace hpl {
 	}
 
 	bool iLight::IsVisible()
-	{ 
+	{
 		if(mfBrightness <= 0) return false;
 
-		if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0) 
+		if(mDiffuseColor.r <=0 && mDiffuseColor.g <=0 && mDiffuseColor.b <=0)
 			return false;
 		if(mfRadius <= 0) return false;
 
-		return mbIsVisible; 
+		return mbIsVisible;
 	}
 
 	//-----------------------------------------------------------------------
@@ -144,15 +144,15 @@ namespace hpl {
 	void iLight::SetDiffuseColor(cColor aColor)
 	{
 		bool bWasVisble = IsVisible();
-		
+
 		mDiffuseColor = aColor;
 
 		bool bVisible = IsVisible();
-		
+
 		//Check if the light changed its visibility
 		if(mbIsVisible && bVisible != bWasVisble && mpRenderCallback)
 		{
-			mpRenderCallback->OnVisibleChange(this); 
+			mpRenderCallback->OnVisibleChange(this);
 		}
 
 		OnSetDiffuse();
@@ -166,7 +166,7 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	void iLight::UpdateLight(float afTimeStep)
-	{	
+	{
 		/////////////////////////////////////////////
 		// Fade
 		if(mfFadeTime>0)
@@ -175,7 +175,7 @@ namespace hpl {
 
 			float fNewRadius = mfRadius + mfRadiusAdd*afTimeStep;
 			SetRadius(fNewRadius);
-			
+
 			mDiffuseColor.r += mColAdd.r*afTimeStep;
 			mDiffuseColor.g += mColAdd.g*afTimeStep;
 			mDiffuseColor.b += mColAdd.b*afTimeStep;
@@ -196,7 +196,7 @@ namespace hpl {
 		/////////////////////////////////////////////
 		// Flickering
 		if(mbFlickering && mfFadeTime<=0)
-		{	
+		{
 			//////////////////////
 			//On
 			if(mbFlickerOn)
@@ -232,7 +232,7 @@ namespace hpl {
 			}
 			//////////////////////
 			//Off
-			else 
+			else
 			{
 				if(mfFlickerTime >= mfFlickerStateLength)
 				{
@@ -317,7 +317,7 @@ namespace hpl {
 	void iLight::SetFlicker(const cColor& aOffCol, float afOffRadius,
 		float afOnMinLength, float afOnMaxLength,const tString &asOnSound,const tString &asOnPS,
 		float afOffMinLength, float afOffMaxLength,const tString &asOffSound,const tString &asOffPS,
-		bool abFade,	float afOnFadeMinLength, float afOnFadeMaxLength, 
+		bool abFade,	float afOnFadeMinLength, float afOnFadeMaxLength,
 						float afOffFadeMinLength, float afOffFadeMaxLength)
 	{
 		mFlickerOffColor = aOffCol;
@@ -352,13 +352,13 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	bool iLight::CheckObjectIntersection(iRenderable *apObject)
 	{
 		//Log("------ Checking %s with light %s -----\n",apObject->GetName().c_str(), GetName().c_str());
 		//Log(" BV: min: %s max: %s\n",	apObject->GetBoundingVolume()->GetMin().ToString().c_str(),
 		//								apObject->GetBoundingVolume()->GetMax().ToString().c_str());
-		
+
 		//////////////////////////////////////////////////////////////
 		// If the lights cast shadows, cull objects that are in shadow
 		if(mbCastShadows)
@@ -373,19 +373,19 @@ namespace hpl {
 			return CollidesWithBV(apObject->GetBoundingVolume());
 		}
 
-				
+
 	}
 
 	//-----------------------------------------------------------------------
 
 	void iLight::SetRadius(float afX)
-	{ 
+	{
 		if(mfRadius == afX) return;
 
 		mfRadius = afX;
 
 		mbUpdateBoundingVolume = true;
-		
+
 		//This is so that the render container is updated.
 		SetTransformUpdated();
 	}
@@ -397,7 +397,7 @@ namespace hpl {
 		if(mfFadeTime>0 || mbFlickering)
 		{
 			mbUpdateBoundingVolume = true;
-			
+
 			//This is so that the render container is updated.
 			//SetTransformUpdated();
 		}
@@ -415,7 +415,7 @@ namespace hpl {
 
 		return &mBoundingVolume;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cMatrixf* iLight::GetModelMatrix(cFrustum* apFrustum)
@@ -438,7 +438,7 @@ namespace hpl {
 
 	iTexture* iLight::GetGoboTexture()
 	{
-		return mpGoboTexture;	
+		return mpGoboTexture;
 	}
 
 	//-----------------------------------------------------------------------
@@ -447,7 +447,7 @@ namespace hpl {
 	{
 		m_mapShadowCasterCache.insert(tShadowCasterCacheMap::value_type(apObject, apObject->GetTransformUpdateCount()));
 	}
-	
+
 	bool iLight::ShadowCasterIsValid(iRenderable *apObject)
 	{
 		tShadowCasterCacheMapIt it = m_mapShadowCasterCache.find(apObject);
@@ -455,7 +455,7 @@ namespace hpl {
 
 		return it->second == apObject->GetTransformUpdateCount();
 	}
-	
+
 	bool iLight::ShadowCastersAreUnchanged(const tRenderableVec &avObjects)
 	{
 		size_t lDynObjectCount=0;
@@ -471,9 +471,9 @@ namespace hpl {
 				}
 			}
 		}
-		
+
 		if(lDynObjectCount != m_mapShadowCasterCache.size()) return false;
-		
+
 		return true;
 	}
 
@@ -486,7 +486,7 @@ namespace hpl {
 			if(avObjects[i]->IsStatic()==false) AddShadowCaster(avObjects[i]);
 		}
 	}
-	
+
 	void iLight::ClearShadowCasterCache()
 	{
 		m_mapShadowCasterCache.clear();
@@ -506,14 +506,14 @@ namespace hpl {
 			if(pDoc->LoadFile(pFile))
 			{
 				TiXmlElement *pRootElem = pDoc->RootElement();
-				
+
                 TiXmlElement *pMainElem = pRootElem->FirstChildElement("MAIN");
 				if(pMainElem!=NULL)
 				{
 					mbCastShadows = cString::ToBool(pMainElem->Attribute("CastsShadows"),mbCastShadows);
 
 					mDiffuseColor.a = cString::ToFloat(pMainElem->Attribute("Specular"),mDiffuseColor.a);
-					
+
 					mfBrightness = cString::ToFloat(pMainElem->Attribute("Brightness"), mfBrightness);
 					mfFalloff = cString::ToFloat(pMainElem->Attribute("Falloff"), mfFalloff);
 
@@ -572,7 +572,7 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// PROTECTED METHODS
 	//////////////////////////////////////////////////////////////////////////
@@ -582,12 +582,12 @@ namespace hpl {
 	void iLight::RenderShadow(iRenderable *apObject,cRenderSettings *apRenderSettings,
 				iLowLevelGraphics *apLowLevelGraphics)
 	{
-		
+
 	}
 
 
 	//-----------------------------------------------------------------------
-	
+
 	void iLight::OnFlickerOff()
 	{
 		//Particle system
@@ -619,7 +619,7 @@ namespace hpl {
 		}
 	}
 
-	
+
 	//-----------------------------------------------------------------------
 
 }

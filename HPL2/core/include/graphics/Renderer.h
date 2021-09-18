@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -88,15 +88,15 @@ namespace hpl {
 		cVector3f mvBoxSpaceFrustumOrigin;
 		cMatrixf m_mtxInvBoxSpace;
 	};
-			
+
 	//---------------------------------------------
-	
+
 	class iRenderer;
 
 	typedef bool (*tRenderCHCObjectCallbackFunc)(iRenderer *,iRenderable *apObject);
 
 	//---------------------------------------------
-	
+
 #define START_RENDER_PASS(asName) \
 			if(mbLog){ \
 				Log("----------\n -- Start Rendering %s:\n----------\n",#asName);\
@@ -152,7 +152,7 @@ namespace hpl {
 
 		////////////////////////////
 		//Render settings
-		int mlMinimumObjectsBeforeOcclusionTesting;	
+		int mlMinimumObjectsBeforeOcclusionTesting;
 		int mlSampleVisiblilityLimit;
 		bool mbIsReflection;
 		bool mbClipReflectionScreenRect;
@@ -162,7 +162,7 @@ namespace hpl {
 		bool mbUseEdgeSmooth;
 
 		tPlanefVec mvOcclusionPlanes;
-		
+
 		bool mbUseCallbacks;
 
 		eShadowMapResolution mMaxShadowMapResolution;
@@ -172,7 +172,7 @@ namespace hpl {
 		cVector2l mvScissorRectSize;
 
 		bool mbRenderWorldReflection;
-		
+
 		////////////////////////////
 		//Shadow settings
 		bool mbRenderShadows;
@@ -187,13 +187,13 @@ namespace hpl {
 		//Output
 		int mlNumberOfLightsRendered;
 		int mlNumberOfOcclusionQueries;
-	
+
 		////////////////////////////
 		//Debug
 		//tRenderableContainerNodeList mlstRenderedNodes;
 
 	private:
-		
+
 	};
 
 	//---------------------------------------------
@@ -223,7 +223,7 @@ namespace hpl {
 		float mfFOV;
 		float mfAspect;
 	};
-	
+
 	//---------------------------------------------
 
 	class cShadowMapData
@@ -234,13 +234,13 @@ namespace hpl {
 		iFrameBuffer *mpBuffer;
 		int mlFrameCount;
 		int mlShadowCasterNum;
-		
+
 		cShadowMapLightCache mCache;
 	};
 
 	//---------------------------------------------
 
-	
+
 	class iRenderer : public iRenderFunctions
 	{
 	friend class cRendererCallbackFunctions;
@@ -272,7 +272,7 @@ namespace hpl {
 		cRenderList *GetCurrentRenderList(){ return mpCurrentRenderList;}
 
 		float GetCurrentFrameTime() { return mfCurrentFrameTime; }
-		
+
 		iVertexBuffer* GetShapeBoxVertexBuffer(){ return mpShapeBox; }
 
 		void AssignOcclusionObject(void *apSource, int alCustomIndex, iVertexBuffer *apVtxBuffer, cMatrixf *apMatrix, bool abDepthTest);
@@ -285,7 +285,7 @@ namespace hpl {
 
 		//Temp variables used by material.
 		float GetTempAlpha(){ return mfTempAlpha; }
-		
+
 		//Static settings. Must be set before renderer data load.
 		static void SetShadowMapQuality(eShadowMapQuality aQuality) { mShadowMapQuality = aQuality;}
 		static eShadowMapQuality GetShadowMapQuality(){ return mShadowMapQuality;}
@@ -313,7 +313,7 @@ namespace hpl {
 
 	protected:
 		/**
-		* In case some intermediate format is used then make sure it is at the correct buffer before ending rendering. 
+		* In case some intermediate format is used then make sure it is at the correct buffer before ending rendering.
 		* When sending to a frame buffer at the end, then this method is never called and the intermediate can be returned with GetPostEffectFrameBuffer
 		*/
 		virtual void CopyToFrameBuffer()=0;
@@ -335,7 +335,7 @@ namespace hpl {
 		/**
 		 * Brute force adding of visible objects. Nothing is rendered.
 		 */
-		void CheckForVisibleAndAddToList(iRenderableContainer *apContainer, tRenderableFlag alNeededFlags); 
+		void CheckForVisibleAndAddToList(iRenderableContainer *apContainer, tRenderableFlag alNeededFlags);
 
 		void CheckNodesAndAddToListIterative(iRenderableContainerNode *apNode, tRenderableFlag alNeededFlags);
 
@@ -345,16 +345,16 @@ namespace hpl {
 		 */
 		void CheckForVisibleObjectsAddToListAndRenderZ(	cVisibleRCNodeTracker *apVisibleNodeTracker,
 														tObjectVariabilityFlag alObjectTypes, tRenderableFlag alNeededFlags,
-														bool abSetupRenderStates, 
+														bool abSetupRenderStates,
 														tRenderCHCObjectCallbackFunc apRenderObjectCallback);
-		
+
 		static bool RenderObjectZAndAddToRenderListStaticCallback(iRenderer *apRenderer, iRenderable *apObject);
 		bool RenderObjectZAndAddToRenderList(iRenderable *apObject);
 
 		void PushUpVisibility(iRenderableContainerNode *apNode);
 		void RenderNodeBoundingBox(iRenderableContainerNode *apNode, iOcclusionQuery *apQuery);
 		int RenderAndAddNodeObjects(iRenderableContainerNode *apNode, tRenderCHCObjectCallbackFunc apRenderCallback, tRenderableFlag alNeededFlags);
-		
+
 		void PushNodeChildrenToStack(tRendererSortedNodeSet& a_setNodeStack, iRenderableContainerNode *apNode, int alNeededFlags);
 		void AddAndRenderNodeOcclusionQuery(tNodeOcclusionPairList *apList, iRenderableContainerNode *apNode, bool abObjectsRendered);
 
@@ -373,20 +373,20 @@ namespace hpl {
 		 * Only depth is needed for framebuffer. All objects needs to be added to renderlist!
 		 */
 		void AssignAndRenderOcclusionQueryObjects(bool abSetFrameBuffer, iFrameBuffer *apFrameBuffer, bool abUsePosAndSize);
-		
+
 		/**
 		 * This retrieves all occlusion information for light pair queries and release occlusion queries. If specified, this is a waiting operation.
 		 */
 		void RetrieveAllLightOcclusionPair(bool abWaitForResult);
-		
-		
+
+
 		void RenderBasicSkyBox();
 
 		bool SetupLightScissorRect(iLight *apLight, cMatrixf *apViewSpaceMatrix);
-				
+
 		void SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial);
 		void SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *apMaterial);
-		
+
 		void DrawCurrentMaterial(eMaterialRenderMode aRenderMode, iRenderable *apObject);
 
 
@@ -399,7 +399,7 @@ namespace hpl {
 		 */
 		cRect2l GetClipRectFromObject(iRenderable *apObject, float afPaddingPercent, cFrustum *apFrustum, const cVector2l &avScreenSize, float afHalfFovTan);
 
-		
+
 		/**
 		* Checks the IsVisible and also clip planes (in setttings), if visible in reflection and other stuff . No frustum check!
 		*/
@@ -418,9 +418,9 @@ namespace hpl {
 
 		void SetOcclusionPlanesActive(bool abX);
 
-		
+
 		iVertexBuffer* CreateQuadVertexBuffer(	eVertexBufferType aType,
-												const cVector3f& avPos, const cVector2f& avSize, 
+												const cVector3f& avPos, const cVector2f& avSize,
 												const cVector2f& avMinUV=0, const cVector2f& avMaxUV=1,
 												bool abInvertY=false);
 		iVertexBuffer* LoadVertexBufferFromMesh(const tString& asMeshName, tVertexElementFlag alVtxToCopy);
@@ -432,7 +432,7 @@ namespace hpl {
 
 		iOcclusionQuery *GetOcclusionQuery();
 		void ReleaseOcclusionQuery(iOcclusionQuery * apQuery);
-		
+
         cResources* mpResources;
 		cGpuShaderManager *mpShaderManager;
 
@@ -456,16 +456,16 @@ namespace hpl {
 
 		bool mbSendFrameBufferToPostEffects;
 		tRendererCallbackList *mpCallbackList;
-		
+
 		float mfCurrentNearPlaneTop;
 		float mfCurrentNearPlaneRight;
-		
+
 		iVertexBuffer *mpShapeBox;
 
 		iGpuProgram *mpDepthOnlyProgram;
 
 		cMatrixf m_mtxSkyBox;
-		
+
 		cRect2l mTempClipRect;
 		float mfScissorLastFov;
 		float mfScissorLastTanHalfFov;

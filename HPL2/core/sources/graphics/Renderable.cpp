@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -30,7 +30,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	iRenderable::iRenderable(const tString &asName) : iEntity3D(asName)
 	{
 		mlLastMatrixCount = -1;
@@ -38,12 +38,12 @@ namespace hpl {
 		mbStatic = false;
 
 		mlRenderFlags =eRenderableFlag_VisibleInReflection | eRenderableFlag_VisibleInNonReflection;
-		
+
 		mfIlluminationAmount = 1.0f;
 		mfCoverageAmount = 1.0f;
 
 		mlRenderFrameCount = -1;
-		
+
 		mlCalcScaleMatrixCount = -1;
 		mvCalcScale = cVector3f(1,1,1);
 
@@ -68,19 +68,19 @@ namespace hpl {
 
         mfShaderTimer = 0.0f;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	void iRenderable::SetRenderFlagBit(tRenderableFlag alFlagBit, bool abSet)
 	{
 		if(abSet)	mlRenderFlags |= alFlagBit;
-		else		mlRenderFlags &= (~alFlagBit); 
+		else		mlRenderFlags &= (~alFlagBit);
 
 		if(mpRenderCallback) mpRenderCallback->OnRenderFlagsChange(this);
 	}
@@ -97,7 +97,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cMatrixf* iRenderable::GetInvModelMatrix()
 	{
 		cMatrixf *pModelMatrix = GetModelMatrix(NULL);
@@ -106,10 +106,10 @@ namespace hpl {
 		if(mlLastMatrixCount != GetMatrixUpdateCount())
 		{
 			mlLastMatrixCount = GetMatrixUpdateCount();
-						
+
 			m_mtxInvModel = cMath::MatrixInverse(*pModelMatrix);
 		}
-		
+
 		return &m_mtxInvModel;
 	}
 
@@ -126,11 +126,11 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	const cVector3f& iRenderable::GetCalcScale()
 	{
 		cMatrixf *pModelMatrix = GetModelMatrix(NULL);
-		
+
 		if(pModelMatrix != NULL && mlCalcScaleMatrixCount != GetMatrixUpdateCount())
 		{
 			mlCalcScaleMatrixCount = GetMatrixUpdateCount();
@@ -141,20 +141,20 @@ namespace hpl {
 
 		return mvCalcScale;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	bool iRenderable::CollidesWithBV(cBoundingVolume *apBV)
 	{
 		return cMath::CheckBVIntersection(*GetBoundingVolume(), *apBV);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool iRenderable::CollidesWithFrustum(cFrustum *apFrustum)
 	{
-		return apFrustum->CollideBoundingVolume(GetBoundingVolume()) != eCollision_Outside; 
+		return apFrustum->CollideBoundingVolume(GetBoundingVolume()) != eCollision_Outside;
 	}
-	
+
 	//-----------------------------------------------------------------------
 }

@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -80,7 +80,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cMeshLoaderFBX::cMeshLoaderFBX(iLowLevelGraphics *apLowLevelGraphics, cMeshLoaderMSH *apMeshLoaderMSH, bool abLoadAndSaveMSHFormat) : iMeshLoader(apLowLevelGraphics)
 	{
 		mpMeshLoaderMSH = apMeshLoaderMSH;
@@ -96,7 +96,7 @@ namespace hpl {
 		mbLog = true;
 		mbLowLog = false;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cMeshLoaderFBX::~cMeshLoaderFBX()
@@ -110,7 +110,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cMesh* cMeshLoaderFBX::LoadMesh(const tWString& asFile, tMeshLoadFlag aFlags)
 	{
 		/////////////////////////////////////////////////
@@ -120,7 +120,7 @@ namespace hpl {
 			tWString sMSHFile = cString::SetFileExtW(asFile, _W("msh"));
 			cDate currentDate = cPlatform::FileModifiedDate(asFile);
 			cDate mshDate = cPlatform::FileModifiedDate(sMSHFile);
-			
+
 			if(cResources::GetForceCacheLoadingAndSkipSaving() || mshDate > currentDate || cPlatform::FileExists(asFile)==false)
 			{
 				cMesh *pMesh = mpMeshLoaderMSH->LoadMesh(sMSHFile, aFlags);
@@ -140,10 +140,10 @@ namespace hpl {
 		tSubMeshDataList lstSubData;
 
 		cSkeleton* pSkeleton = new cSkeleton();
-		
+
 		if(mbLog)Log("Loading skeleton '%s':\n", asFile.c_str());
 		LoadSkeletonRec(pSkeleton->GetRootBone(),pScene->GetRootNode(),0);
-		
+
 		//Check if any bones where found.
 		if(pSkeleton->GetRootBone()->GetChildIterator().HasNext() == false)
 		{
@@ -166,17 +166,17 @@ namespace hpl {
 				MakeFinalBonesRec(boneIt.Next(),mtxIdentity, mtxIdentity);
 			}
 		}
-				
+
 		//Load animations
 		cAnimation *pAnimation = NULL;//LoadAnimations(pScene, pImporter, asFile,pSkeleton);
 
 		//Clean up
 		pScene->Destroy(true,true);
 		pImporter->Destroy(true,true);
-		
+
 		//Create the mesh
 		cMesh *pMesh = hplNew( cMesh, (cString::To8Char(asFile), asFile, mpMaterialManager,mpAnimationManager) );
-		
+
 		//Set skeleton.
 		if(pSkeleton) pMesh->SetSkeleton(pSkeleton);
 
@@ -187,9 +187,9 @@ namespace hpl {
 		for(;it != lstSubData.end();it++)
 		{
 			cSubMeshData& subData = *it;
-			
+
 			cSubMesh * pSubMesh = pMesh->CreateSubMesh(subData.msName);
-            
+
 			pSubMesh->SetVertexBuffer(subData.mpVtxBuffer);
 
 			for(int i=0; i < (int)subData.mvVtxBonePairs.size(); i++)
@@ -216,7 +216,7 @@ namespace hpl {
 
 			pSubMesh->Compile();
 		}
-		
+
 		//Setup the joints (create new vertex coords, etc)
 		if(pSkeleton) pMesh->CompileBonesAndSubMeshes();
 
@@ -225,10 +225,10 @@ namespace hpl {
 		if(	cResources::GetForceCacheLoadingAndSkipSaving()==false && mbLoadAndSaveMSHFormat )
 		{
 			tWString sMSHFile = cString::SetFileExtW(asFile, _W("msh"));
-			
+
 			mpMeshLoaderMSH->SaveMesh(pMesh, sMSHFile);
 		}
-				
+
 		return pMesh;
 	}
 
@@ -264,10 +264,10 @@ namespace hpl {
 		LoadScene(mpSdkManager, pScene, cString::To8Char(asFile).c_str());
 
 		cSkeleton* pSkeleton = new cSkeleton();
-		
+
 		if(mbLog)Log("Loading skeleton '%s':\n", asFile.c_str());
 		LoadSkeletonRec(pSkeleton->GetRootBone(),pScene->GetRootNode(),0);
-		
+
 		//Check if any bones where found.
 		if(pSkeleton->GetRootBone()->GetChildIterator().HasNext() == false)
 		{
@@ -290,14 +290,14 @@ namespace hpl {
 				MakeFinalBonesRec(boneIt.Next(),mtxIdentity, mtxIdentity);
 			}
 		}
-				
+
 		//Load animations
 		cAnimation *pAnimation = LoadAnimations(pScene, pImporter, asFile,pSkeleton);
 
 		//Clean up
 		pScene->Destroy(true,true);
 		pImporter->Destroy(true,true);
-		
+
 		if(pSkeleton) hplDelete(pSkeleton);
 
 		/////////////////////////////////////////////////
@@ -315,7 +315,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 
 	//-----------------------------------------------------------------------
 
@@ -335,7 +335,7 @@ namespace hpl {
 
 		int lStart;
 		int lEnd;
-		
+
         for(int i=0;i<vStrings.GetCount();i++)
 		{
 			KFbxTakeInfo* pTakeInfo = apScene->GetTakeInfo(*vStrings[i]);
@@ -356,15 +356,15 @@ namespace hpl {
 			}
 		}
 		Log("\n");
-		
+
 		// If there where any animations in the file, create an animation and add the tracks to it.
-		// Only 
+		// Only
 		if(lTake != -1)
 		{
 			cAnimation*pAnimation = hplNew( cAnimation, (vStrings[lTake]->Buffer(), asFile, cString::GetFileName(cString::To8Char(asFile))) );
 			pAnimation->SetLength( ((float)lEnd)/1000.0f );
-			
-			LoadAnimationRec(apScene,apScene->GetRootNode(),pAnimation,vStrings[lTake]->Buffer(),0, 
+
+			LoadAnimationRec(apScene,apScene->GetRootNode(),pAnimation,vStrings[lTake]->Buffer(),0,
 							cVector3f(0,0,0),cVector3f(1,1,1),cVector3f(0,0,0), apSkeleton);
 
 			return pAnimation;
@@ -373,7 +373,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	static KFCurve *GetCurve(KFbxNode *apNode, KFbxAnimLayer * apAnimLayer, tAnimTransformFlag aType, int alAxis)
 	{
 		KFCurve *pCurve=NULL;
@@ -418,7 +418,7 @@ namespace hpl {
 							KFbxNode *apNode,KFbxAnimLayer * apAnimLayer, tAnimTransformFlag aType, int alAxis)
 	{
 		KFCurve *pCurve = GetCurve(apNode, apAnimLayer,aType, alAxis);
-		
+
 		pVec->resize(pTimesSet->size());
 		int i=0;
 		tAnimTimeSetIt it = pTimesSet->begin();
@@ -426,13 +426,13 @@ namespace hpl {
 		{
 			KTime time;
 			time.SetMilliSeconds((kLongLong)(*it * 1000));
-			
+
 			(*pVec)[i].mfTime = *it;
 			(*pVec)[i].mfValue = pCurve->Evaluate(time);
 			//Log("%f, ", (float) key.GetValue());
 			i++;
 		}
-		
+
 		/*//See if any time is missing if so insert it at the end.
 		tAnimTimeSetIt it = pTimesSet->begin();
 		for(;it != pTimesSet->end(); it++)
@@ -448,7 +448,7 @@ namespace hpl {
 	{
 		for(int i=0; i< (int)pVec->size(); i++)
 		{
-			if(std::abs(afTime - (*pVec)[i].mfTime) < kEpsilonf) return i;	
+			if(std::abs(afTime - (*pVec)[i].mfTime) < kEpsilonf) return i;
 		}
 
 		return -1;
@@ -468,7 +468,7 @@ namespace hpl {
 		return cVector3f();
 	}
 	////////////////////////
-	
+
 	static void AddVectorElementsToTempArray(tTempKeyFrameDataVec* apDestVec,tTakeKeyDataVec* apSrcVec,
 												tAnimTransformFlag aType)
 	{
@@ -480,7 +480,7 @@ namespace hpl {
 				int lPos = FindTimeIndex(apDestVec, data->mfTime);
 
 				cVector3f vVec = GetAxisVector(axis,data->mfValue);
-				
+
 
 				//Log("type: %d time: %f axis: %d: vec: (%s) ",aType,data->mfTime, axis, vVec.ToString().c_str());
 
@@ -497,11 +497,11 @@ namespace hpl {
 				{
 					//Log("creating new frame\n");
 					cTempKeyFrameData frame;
-					
+
 					//Clear all the values to 0
 					frame.vRot =0; frame.vScale =0; frame.vTrans=0;
 					frame.mfTime = data->mfTime;
-					
+
 					//Set the vector
 					switch(aType){
 					case eAnimTransformFlag_Translate: frame.vTrans += vVec; break;
@@ -515,20 +515,20 @@ namespace hpl {
 		}
 	}
 	////////////////////////
-	
+
 	static cMatrixf MatrixFromEulerAngles(cVector3f avRot)
 	{
 		cMatrixf mtxRot = cMath::MatrixRotateX(cMath::ToRad(avRot.x));
 		mtxRot = cMath::MatrixMul(cMath::MatrixRotateY(cMath::ToRad(avRot.y)), mtxRot);
 		mtxRot = cMath::MatrixMul(cMath::MatrixRotateZ(cMath::ToRad(avRot.z)), mtxRot);
-		
+
 		return mtxRot;
 	}
-	
+
 	////////////////////////
-	
-	void cMeshLoaderFBX::LoadAnimationRec(KFbxScene *apScene,KFbxNode * apNode, cAnimation* apAnimation,const tString &asAnimStackName, 
-											int alDepth, 
+
+	void cMeshLoaderFBX::LoadAnimationRec(KFbxScene *apScene,KFbxNode * apNode, cAnimation* apAnimation,const tString &asAnimStackName,
+											int alDepth,
 											cVector3f vParentT, cVector3f vParentS, cVector3f vParentR, cSkeleton * apSkeleton)
 	{
 		const char * node_name = apNode->GetName();
@@ -541,11 +541,11 @@ namespace hpl {
 			tTakeKeyDataVec vTranslateKeys[3];
 			tTakeKeyDataVec vRotateKeys[3];
 			tTakeKeyDataVec vScaleKeys[3];
-			
+
 			tAnimTransformFlag transFlags = 0;
 
 			tAnimTimeSet setTimes;
-			
+
 			for(int i=0;i<3;i++)
 			{
 				GetAnimTimes(&setTimes,apNode,pAnimLayer,eAnimTransformFlag_Translate, i);
@@ -570,7 +570,7 @@ namespace hpl {
 			{
 				KTime time;
 				time.SetMilliSeconds((kLongLong)(*it * 1000));
-				
+
 				KFbxMatrix localTransform = apNode->EvaluateLocalTransform(time, KFbxNode::eSOURCE_SET);
 				KFbxMatrix geometryMatrix = GetGeometryTwo(apNode);
 				localTransform = localTransform * geometryMatrix;
@@ -584,26 +584,26 @@ namespace hpl {
 				vTempKeyFrame[i].vRot = 0;
 				i++;
 			}
-			
+
 			cBone* pBone = apSkeleton->GetBoneByName(apNode->GetName());
 			cMatrixf boneLocal = pBone->GetLocalTransform();
 			cMatrixf boneLocalUnscaled = pBone->GetLocalTransformUnscaled();
-			
+
 			cQuaternion qInvBoneRot;
 			qInvBoneRot.FromRotationMatrix( boneLocalUnscaled.GetRotation() );
 			qInvBoneRot.v = qInvBoneRot.v * -1;
 			qInvBoneRot.Normalize();
-			
+
 			//Add all of the temporary keyframes to the track. Subtract bone rest pose's translation and orientation ( the latter by premultiplying with inv bone rot )
 			cAnimationTrack *pTrack = apAnimation->CreateTrack(apNode->GetName(),transFlags);
-			
+
 			for(int i=0; i< vTempKeyFrame.size(); i++)
 			{
 				cTempKeyFrameData *data = &vTempKeyFrame[i];
-				
+
 				cKeyFrame *pKeyFrame = pTrack->CreateKeyFrame(data->mfTime);
 				pKeyFrame->trans = data->vTrans - boneLocal.GetTranslation();
-				
+
 				data->qFinalRot.Normalize();
 
 				pKeyFrame->rotation = cMath::QuaternionMul(qInvBoneRot, data->qFinalRot );
@@ -616,7 +616,7 @@ namespace hpl {
 			LoadAnimationRec(apScene, apNode->GetChild(i),apAnimation,asAnimStackName,alDepth+1,vParentT, vParentS, vParentR, apSkeleton);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cMeshLoaderFBX::LoadSkeletonRec(cBone* apBone,	KFbxNode *apNode, int alDepth)
@@ -660,20 +660,20 @@ namespace hpl {
 			a_mtxParentGlobal = apBone->GetWorldTransform();
 			a_mtxParentGlobalUnscaled = apBone->GetWorldTransformUnscaled();
 		}
-		
+
 		cBoneIterator it = apBone->GetChildIterator();
 
 		while(it.HasNext())
 		{
 			MakeFinalBonesRec(it.Next(),a_mtxParentGlobal, a_mtxParentGlobalUnscaled);
 		}
-		
+
 	}
 
 	//-----------------------------------------------------------------------
 
 	//Search the scene for geometry
-	void cMeshLoaderFBX::LoadSceneRec(tSubMeshDataList* apSubMeshList,cSkeleton *apSkeleton, 
+	void cMeshLoaderFBX::LoadSceneRec(tSubMeshDataList* apSubMeshList,cSkeleton *apSkeleton,
 										cNode3D* apHplNode,
 										KFbxNode *apNode, int alDepth, bool animationOnly)
 	{
@@ -682,7 +682,7 @@ namespace hpl {
 		{
 			LoadMeshData(apSubMeshList,apSkeleton,apHplNode,apNode,alDepth, animationOnly);
 		}
-		
+
 		//Loop through children
         for(int i=0;i<apNode->GetChildCount();i++)
 		{
@@ -691,26 +691,26 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cBone* cMeshLoaderFBX::LoadSkeletonData(cBone* apBone,KFbxNode *apNode, int alDepth)
 	{
 		//////////////////////////////////////////////////////
 		// Get bone properties.
 		KFbxSkeleton* pSkeleton = apNode->GetSkeleton();
-		
+
         cBone* pNewBone = apBone->CreateChildBone(apNode->GetName(), apNode->GetName());
 
-		//Just set identity for the time being, 
+		//Just set identity for the time being,
 		//The global matrix will be loaded when the matrix links are loaded.
 		cMatrixf mtxLocal = cMatrixf::Identity;
-        		
+        
 		pNewBone->SetTransform(mtxLocal);
 		pNewBone->SetTransformUnscaled(mtxLocal);
 
 		//Set value to 0, use this value later to see what bones are linked to
 		//geometry.
 		pNewBone->SetValue(0);
-		
+
 		if(mbLog)
 		{
 			//Log("%s Loading bone: '%s'\n",GetTabs(alDepth),apNode->GetName());
@@ -719,14 +719,14 @@ namespace hpl {
 			//Log("%s NodeSize: %f\n",GetTabs(alDepth),pSkeleton->GetLimbNodeSize());
 			//Log("%s Local Transform: %s\n",GetTabs(alDepth),cMath::MatrixToChar(mtxLocal));
 		}
-		
+
 		return pNewBone;
 	}
 
 	//-----------------------------------------------------------------------
 
 	//-----------------------------------------------------------------------
-	
+
 	void cMeshLoaderFBX::LoadMeshData(tSubMeshDataList* apSubMeshList,cSkeleton* apSkeleton, cNode3D* apHplNode, KFbxNode *apNode, int alDepth, bool animationOnly)
 	{
 		//Build this list with uv, pos, normal and color.
@@ -740,7 +740,7 @@ namespace hpl {
 
 		KFbxMesh *pMesh = apNode->GetMesh();
 		tExtraVertricesVec vExtraVetrices;
-        
+
         tString nodeName = apNode->GetName();
         bool isControllerNode = nodeName.substr(0,4) == "CON_";
 
@@ -753,23 +753,23 @@ namespace hpl {
 
 			//If the mesh has been transformed to triangles or not.
 			bool mbTriangulated=false;
-		
+
 			if(mbLog)Log("%s Loading node: '%s'\n",GetTabs(alDepth),apNode->GetName());
 
 			//triangulate the mesh
-		
+
 			KFbxGeometryConverter pConverter( mpSdkManager );
 			//pConverter->TriangulateInPlace(apNode);
 
-		
+
 
 			KFbxMesh *pTriMesh = pMesh;
 			if(mbTriangulated==false)pTriMesh = pConverter.TriangulateMesh(pMesh);
-	
+
 			//mpSdkManager->DestroyKFbxGeometryConverter(pConverter);
 
 			KFbxVector4 *pPositions = pMesh->GetControlPoints();
-		
+
 			//////////////////////////////////////////////////////
 			//Polygons (indicies)
 			if(mbLowLog)Log("%s Polygons:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
@@ -787,7 +787,7 @@ namespace hpl {
 			}
 			if(mbLowLog)Log("\n");
 
-			//////////////////////////////////////////////////////	
+			//////////////////////////////////////////////////////
 			//Positions (vertrices)
 			if(mbLowLog)Log("%s Positions:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
 			for(int i=0;i<pMesh->GetControlPointsCount();i++)
@@ -796,7 +796,7 @@ namespace hpl {
 				if(mbLowLog)if(i != pMesh->GetControlPointsCount()-1)Log(", ");
 
 				cVector3f vPos((float)pPositions[i].GetAt(0),(float)pPositions[i].GetAt(1),(float)pPositions[i].GetAt(2));
-			
+
 				//The negative z is because it shows when the vertex has gotten a uv coord.
 				//And then extra uvs can be found.
 				mvVertexes.push_back(cVertex(vPos,cVector3f(0,0,-1),cColor(1,1)));
@@ -808,7 +808,7 @@ namespace hpl {
 			//////////////////////////////////////////////////////
 			//Normals
 			KFbxLayerElementNormal *pNormLayer = pLayer->GetNormals();
-			
+
 			if(pNormLayer)
 			{
 				if(mbLog)Log("%s Normal mapping mode: %d \n",GetTabs(alDepth), pNormLayer->GetMappingMode());
@@ -857,7 +857,7 @@ namespace hpl {
 			KFbxLayerElementTangent *pTangentLayer = pLayer->GetTangents();
 			KFbxLayerElementTangent::DirectArrayType pTangents = pTangentLayer->GetDirectArray();
 			KFbxLayerElementArrayTemplate<int> pTangentIndices = pTangentLayer->GetIndexArray();
-			
+
 			if(pTangentLayer)
 			{
 				if(mbLog)Log("%s Tangent mapping mode: %d \n",GetTabs(alDepth), pTangentLayer->GetMappingMode());
@@ -902,7 +902,7 @@ namespace hpl {
 						{
 							int positionIndex = polygonVertexIndex + vertexIndex;
 
-							
+
 							cVector3f vPos((float)pTangents[positionIndex].GetAt(0),(float)pTangents[positionIndex].GetAt(1),(float)pTangents[positionIndex].GetAt(2));
 							mvVertexes[positionIndex].tan = vPos;
 
@@ -924,7 +924,7 @@ namespace hpl {
 					}*/
 
 					if ( pTangentLayer->GetReferenceMode() == KFbxLayerElement::eDIRECT )
-					{					
+					{
 						if(mbLowLog)Log("%s Tangents:\n %s ",GetTabs(alDepth),GetTabs(alDepth));
 						for ( int i = 0; i < (int)mvIndexes.size(); i++)
 						{
@@ -937,14 +937,14 @@ namespace hpl {
 						Error("Tangent mapping mode is not correct!\n");
 						return;
 					}
-					
+
 					/*for(int i=0;i<(int)mvIndexes.size();i++)
 					{
 						int VtxPos = mvIndexes[i];
 						int lPos = pTangentIndices[VtxPos];
 						cVector3f vPos((float)pTangents[lPos].GetAt(0),(float)pTangents[lPos].GetAt(1),(float)pTangents[lPos].GetAt(2));
-						
-						
+
+
 						mvVertexes[VtxPos].tan = vPos;
 
 						if(mbLowLog)if(i != mvIndexes.size()-1)Log(", ");
@@ -1024,7 +1024,7 @@ namespace hpl {
 
 			//Create a vector for extra vertrcies added.
 			vExtraVetrices.resize(mvVertexes.size());
-		
+
 			//OInly useful to add extra if there are uv's
 			if(pUvLayer)
 			{
@@ -1037,13 +1037,13 @@ namespace hpl {
 					cExtraVtxValue &val = *it;
 					cVertex newVtx;
 
-					if(mbLowLog)Log("%d ",val.mlIndexNum);	
+					if(mbLowLog)Log("%d ",val.mlIndexNum);
 
 					//Check if there is allready a point added with the same values.
 					bool bOldFound = false;
 					for(int i=lStartPos; i<(int)mvVertexes.size();i++)
 					{
-						if(mvVertexes[i].tex == val.mvVal && 
+						if(mvVertexes[i].tex == val.mvVal &&
 							mvVertexes[i].pos == mvVertexes[mvIndexes[val.mlIndexNum]].pos &&
 							mvVertexes[i].norm == mvVertexes[mvIndexes[val.mlIndexNum]].norm &&
 							mvVertexes[i].tan == mvVertexes[mvIndexes[val.mlIndexNum]].tan)
@@ -1057,7 +1057,7 @@ namespace hpl {
 					if(bOldFound)continue;
 
 					unsigned int lVtxNum = mvIndexes[val.mlIndexNum];
-				
+
 					//Add the added to a list, so it is later to check up what points
 					//Have been splitted.
 					vExtraVetrices[lVtxNum].mvNewPoints.push_back((int)mvVertexes.size());
@@ -1101,7 +1101,7 @@ namespace hpl {
 						fbxDouble1 factor = ((KFbxSurfacePhong *)pMat)->DiffuseFactor.Get();
 						for(int i=0;i<(int)mvVertexes.size();i++)
 						{
-							mvVertexes[i].col = cColor((float)col[0],(float)col[1], 
+							mvVertexes[i].col = cColor((float)col[0],(float)col[1],
 								(float)col[2], (float)factor);
 						}
 					}
@@ -1111,12 +1111,12 @@ namespace hpl {
 					Error("No material found!\n");
 				}
 			}
-	
+
 			//////////////////////////////////////////////////////
 			//Texture
 
 			KFbxLayerElementTexture *pTextureLayer = pLayer->GetTextures(KFbxLayerElement::eDIFFUSE_TEXTURES);
-		
+
 			if(pUvLayer)
 			{
 				if(pTextureLayer)
@@ -1212,7 +1212,7 @@ namespace hpl {
 													pBoneNode->GetName(),
 													GetLinkModeName(pLink->GetLinkMode()),
 													sAssName.c_str());
-				
+
 					//////////////////////
 					//Get the bone matrix:
 					cBone* pBone = apSkeleton->GetBoneByName(pBoneNode->GetName());
@@ -1220,8 +1220,8 @@ namespace hpl {
 					KFbxXMatrix mtxTemp;
 					//////////////////////
 					//Get transform of the linking node (bone)
-				
-					KFbxVector4 vTrans, vRot, vScale; 
+
+					KFbxVector4 vTrans, vRot, vScale;
 
 					KFbxXMatrix transformLinkMatrix, lClusterGeometry;
 					pLink->GetTransformLinkMatrix( transformLinkMatrix );
@@ -1233,31 +1233,31 @@ namespace hpl {
 					vTrans = transformLinkMatrix.GetT();
 					vScale = transformLinkMatrix.GetS();
 					vRot = transformLinkMatrix.GetR();
-					
+
 					cVector3f vT(vTrans.GetAt(0),vTrans.GetAt(1),vTrans.GetAt(2));
 					cVector3f vS(vScale.GetAt(0),vScale.GetAt(1),vScale.GetAt(2));
 					cVector3f vR(vRot.GetAt(0),vRot.GetAt(1),vRot.GetAt(2));
-				
+
 					cMatrixf mtxS = cMath::MatrixScale(vS);
 					cMatrixf mtxT = cMath::MatrixTranslate(vT);
 					cMatrixf mtxR = MatrixFromEulerAngles( vR );
 
 
-					// WARNING OR SOMETHING 
+					// WARNING OR SOMETHING
 					// The rotaions are alittle crazy but so far it is working
 					// If something seems screwed up here is a good place to debug.
 					cMatrixf mtxBone =  cMath::MatrixMul(mtxR,mtxS);
 					mtxBone = cMath::MatrixMul(mtxT,mtxBone);
 
 					if(mbLog)Log("%s LTransform: %s\n",GetTabs(alDepth),cMath::MatrixToChar(mtxBone));
-				
+
 					//Sets the global position at rest for the bone!
 					pBone->SetTransform(mtxBone);
 					pBone->SetTransformUnscaled(mtxR);
 
 					//Set value to 1 to show that the bone has a link connection.
 					pBone->SetValue(1);
-				
+
 					//////////////////////
 					//Get transform of the node containing link.
 					//pLink->GetTransformMatrix(mtxTemp);
@@ -1270,7 +1270,7 @@ namespace hpl {
 						/// Get the data for the link
 						double *pWeights = pLink->GetControlPointWeights();
 						int *pVtxIndices = pLink->GetControlPointIndices();
-				
+
 						/////////////////////
 						// Set up a default bone-vtx pair
 						cVertexBonePair vtxBonePair;
@@ -1301,7 +1301,7 @@ namespace hpl {
 			///////////////////////////////////////////////////////////
 			//Create VertexBuffer
 			tVertexCompileFlag compileFlags = 0;
-		
+
 			eVertexBufferUsageType usageType = eVertexBufferUsageType_Static;
 			//Do some test to see if the mesh should be dynamic
 
@@ -1351,9 +1351,9 @@ namespace hpl {
 		//end of mesh
 		if(mbLog)Log("\n");
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	const char* cMeshLoaderFBX::GetTabs(int alDepth)
 	{
 		msTemp = "";
@@ -1371,10 +1371,10 @@ namespace hpl {
 		case KFbxNodeAttribute::eNULL: return "Null";
 		case KFbxNodeAttribute::eMARKER: return "Marker";
 		case KFbxNodeAttribute::eSKELETON: return "Skeleton";
-		case KFbxNodeAttribute::eMESH: return "Mesh"; 
-		case KFbxNodeAttribute::eNURB: return "Nurb"; 
-		case KFbxNodeAttribute::ePATCH: return "Patch"; 
-		case KFbxNodeAttribute::eCAMERA: return "Camera"; 
+		case KFbxNodeAttribute::eMESH: return "Mesh";
+		case KFbxNodeAttribute::eNURB: return "Nurb";
+		case KFbxNodeAttribute::ePATCH: return "Patch";
+		case KFbxNodeAttribute::eCAMERA: return "Camera";
 		case KFbxNodeAttribute::eCAMERA_SWITCHER: return "CameraSwicther";
 		case KFbxNodeAttribute::eLIGHT: return "Light";
 		case KFbxNodeAttribute::eOPTICAL_REFERENCE: return "Reference";
@@ -1484,17 +1484,17 @@ namespace hpl {
 				printf("         Name: \"%s\"\n", lTakeInfo->mName.Buffer());
 				printf("         Description: \"%s\"\n", lTakeInfo->mDescription.Buffer());
 
-				// Change the value of the import name if the animation stack should be imported 
+				// Change the value of the import name if the animation stack should be imported
 				// under a different name.
 				printf("         Import Name: \"%s\"\n", lTakeInfo->mImportName.Buffer());
 
 				// Set the value of the import state to false if the animation stack should be not
-				// be imported. 
+				// be imported.
 				printf("         Import State: %s\n", lTakeInfo->mSelect ? "true" : "false");
 				printf("\n");
 			}
 
-			// Set the import states. By default, the import states are always set to 
+			// Set the import states. By default, the import states are always set to
 			// true. The code below shows how to change these states.
 			IOS_REF.SetBoolProp(IMP_FBX_MATERIAL,        true);
 			IOS_REF.SetBoolProp(IMP_FBX_TEXTURE,         true);

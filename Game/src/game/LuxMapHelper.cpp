@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -64,11 +64,11 @@ bool cLuxLineOfSightCallback::BeforeIntersect(iPhysicsBody *apBody)
 			{
 				cSubMeshEntity *pSubMeshEnt = pMeshEntity->GetSubMeshEntity(i);
 				if(pSubMeshEnt->GetEntityParent() != (iEntity3D*)apBody)
-				{ 
+				{
 					continue;
 				}
 
-				cMaterial *pMaterial = pSubMeshEnt->GetMaterial(); 
+				cMaterial *pMaterial = pSubMeshEnt->GetMaterial();
 				if(	pMaterial && pMaterial->GetType()->IsTranslucent()==false &&
 					(mbCheckShadow==false || pSubMeshEnt->GetRenderFlagBit(eRenderableFlag_ShadowCaster)) )
 				{
@@ -130,10 +130,10 @@ bool cLuxClosestEntityCallback::BeforeIntersect(iPhysicsBody *apBody)
 	}
 	else
 	{
-		if(apBody->IsCharacter()) return false; 
+		if(apBody->IsCharacter()) return false;
 		if(apBody->GetCollide()==false) return false;
 	}
-	
+
 	return true;
 }
 
@@ -219,7 +219,7 @@ bool cLuxAttackRayCallback::BeforeIntersect(iPhysicsBody *apBody)
 bool cLuxAttackRayCallback::OnIntersect(iPhysicsBody *apBody,cPhysicsRayParams *apParams)
 {
 	mbIntersection = true;
-	
+
 	return false;
 }
 
@@ -233,7 +233,7 @@ bool cLuxAttackRayCallback::OnIntersect(iPhysicsBody *apBody,cPhysicsRayParams *
 
 cLuxMapHelper::cLuxMapHelper() : iLuxUpdateable("LuxMapHelper")
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -252,7 +252,7 @@ cLuxMapHelper::~cLuxMapHelper()
 
 void cLuxMapHelper::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -289,7 +289,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 
 	cBoundingVolume shapeBV =  apShape->GetBoundingVolume();
 	shapeBV.SetTransform(cMath::MatrixMul(a_mtxTransform, shapeBV.GetTransform()));
-	
+
 	std::vector<iPhysicsBody*> vBodies;
 	pPhysicsWorld->GetBodiesInBV(&shapeBV, &vBodies);
 	if(vBodies.empty()) return false;
@@ -331,7 +331,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 		{
 			continue;
 		}
-		
+
 		bool bCollide = pPhysicsWorld->CheckShapeCollision(apShape, a_mtxTransform, pBody->GetShape(), pBody->GetLocalMatrix(),
 															collideData,4, false);
 		if(bCollide==false)
@@ -353,7 +353,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 		//Set up entities
 		bHit = true;
 		iLuxEntity *pEntity = NULL;
-		
+
 		if(pBody->IsCharacter())
 			pEntity = (iLuxEntity*)pBody->GetCharacterBody()->GetUserData();
 		else
@@ -374,7 +374,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 		if(pBody->GetMass() > 0 || pBody->IsCharacter())
 		{
 			cVector3f vDir = cMath::Vector3Normalize(vHitPos - avOrigin);
-			
+
 			if(pBody->IsCharacter())
 			{
 				pBody->GetCharacterBody()->AddForceVelocity(vDir * afForce * 0.1f);
@@ -385,16 +385,16 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 				pBody->AddImpulseAtPosition(vDir * fImpulse, vHitPos);
 			}
 		}
-		
+
 		///////////////////////
 		//Add sound and effect
-		
+
 		////////////////////////
 		// Enemy
 		if(pEntity && pEntity->GetEntityType() == eLuxEntityType_Enemy)
 		{
 			iLuxEnemy *pEnemy = static_cast<iLuxEnemy*>(pEntity);
-			
+
 			//Sound
             if(pEnemy->GetHitSound(aWeaponHitType) != "")
 			{
@@ -421,13 +421,13 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 				if(pImpact)
 				{
 					//Sound
-					if(pImpact->GetSoundName()!="") 
+					if(pImpact->GetSoundName()!="")
 					{
 						cSoundEntity *pSound = pWorld->CreateSoundEntity("HitSound",pImpact->GetSoundName(), true);
 						if(pSound)pSound->SetPosition(vHitPos);
 					}
 					//Particle system
-					if(pImpact->GetPSName()!="") 
+					if(pImpact->GetPSName()!="")
 					{
 						cParticleSystem *pPS = pWorld->CreateParticleSystem("HitPS", pImpact->GetPSName(),1);
 						if(pPS)pPS->SetPosition(vHitPos);
@@ -435,7 +435,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 				}
 			}
 		}
-		
+
 		///////////////////////
 		//Add Damage
 		float fDamage = cMath::RandRectf(afMinDamage, afMaxDamage);
@@ -449,7 +449,7 @@ bool cLuxMapHelper::ShapeDamage(iCollideShape *apShape, const cMatrixf& a_mtxTra
 			if(apHitPlayer) *apHitPlayer = true;
 		}
 
-		
+
 
 	}
 
@@ -519,7 +519,7 @@ bool cLuxMapHelper::GetClosestCharCollider(const cVector3f& avStart,const cVecto
 	if(afDistance)	*afDistance = mClosestharColliderCallback.mfClosestDist;
 	if(avNormal)	*avNormal = mClosestharColliderCallback.mvClosestNormal;
 	if(apBody)		*apBody = pBodyFound;
-	
+
 	return  pBodyFound!=NULL;
 }
 
@@ -541,18 +541,18 @@ float cLuxMapHelper::GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLig
 	cLuxMap *pCurrentMap = gpBase->mpMapHandler->GetCurrentMap();
 	if(pCurrentMap==NULL) return 0.0f;
 
-	
+
 	////////////////////////////
 	//Setup data
-	tLightList lstIntersectingLights; 
+	tLightList lstIntersectingLights;
 
 	cWorld *pWorld = pCurrentMap->GetWorld();
 	iPhysicsWorld *pPhysicsWorld = pCurrentMap->GetPhysicsWorld();
-	
+
 	float fLightLevel =0;
 
 	//iLight *pPlayerAmbLight = gpBase->mpPlayer->GetHelperInDarkness()->GetAmbientLight();
-	
+
 	////////////////////////////
 	//Get lights from world
 	GetLightsAtNode(pWorld->GetRenderableContainer(eWorldContainerType_Static)->GetRoot(), lstIntersectingLights, avPos);
@@ -566,7 +566,7 @@ float cLuxMapHelper::GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLig
 		iLight *pLight = *it;
 
 		//if(pLight == pPlayerAmbLight) continue;
-		
+
 		///////////////////////////
 		//Check if the light is on the skip list
         if(apSkipLightsVec)
@@ -575,7 +575,7 @@ float cLuxMapHelper::GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLig
 			for(size_t i=0; i<apSkipLightsVec->size(); ++i)
 			{
 				iLight *pTestLight = (*apSkipLightsVec)[i];
-                if(pTestLight == pLight) 
+                if(pTestLight == pLight)
 				{
 					bSkip = true;
 					break;
@@ -584,7 +584,7 @@ float cLuxMapHelper::GetLightLevelAtPos(const cVector3f& avPos, std::vector<iLig
 			if(bSkip) continue;
 		}
 
-		
+
 		///////////////////////////
 		//Box light
 		if(pLight->GetLightType() == eLightType_Box)
@@ -643,7 +643,7 @@ void cLuxMapHelper::GetLightsAtNode(iRenderableContainerNode *apNode, tLightList
 		for(; childIt != apNode->GetChildNodeList()->end(); ++childIt)
 		{
 			iRenderableContainerNode *pChildNode = *childIt;
-			
+
 			//Make sure point is in node AABB.
 			if(cMath::CheckPointInAABBIntersection(avPos, apNode->GetMin(),apNode->GetMax()) )
 			{
@@ -700,7 +700,7 @@ void cLuxMapHelper::GetLightsAtNode(iRenderableContainerNode *apNode, tLightList
 		for(; childIt != apNode->GetChildNodeList()->end(); ++childIt)
 		{
 			iRenderableContainerNode *pChildNode = *childIt;
-			
+
 			//Make sure point is in node AABB.
 			if(cMath::CheckPointInAABBIntersection(avPos, apNode->GetMin(),apNode->GetMax()) )
 			{

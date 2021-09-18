@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -40,7 +40,7 @@ iLuxHandObject::iLuxHandObject(const tString& asName, cLuxPlayerHands *apHands)
 
 iLuxHandObject::~iLuxHandObject()
 {
-	if(mpMesh) 
+	if(mpMesh)
 	{
 		gpBase->mpEngine->GetResources()->GetMeshManager()->Destroy(mpMesh);
 	}
@@ -134,8 +134,8 @@ bool iLuxHandObject::LoadMainData(cXmlElement *apMainElem)
 void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
 {
 	/////////////////////////////
-	//Load base settings 
-	
+	//Load base settings
+
 	//Offset matrix
 	cVector3f vOffsetScale = apVarsElem->GetAttributeVector3f("OffsetScale",1);
 	cVector3f vOffsetRotation =cMath::Vector3ToRad(apVarsElem->GetAttributeVector3f("OffsetRotation",0));
@@ -151,7 +151,7 @@ void iLuxHandObject::LoadSettings(cXmlElement *apVarsElem)
 
 	//Bone that object attaches to
 	msAttachBoneName =	apVarsElem->GetAttributeString("AttachBoneName", "attachpoint");
-	
+
 
 	/////////////////////////////
 	//Load implemented vars
@@ -168,7 +168,7 @@ void iLuxHandObject::CreateEntity(cLuxMap *apMap)
 	// Load the entity
 	tString sFile = "models/player/"+msName+"/"+ msModelFile;
 	apMap->GetWorld()->CreateEntity("PlayerHands", cMatrixf::Identity, sFile);
-	
+
 	///////////////////////
 	// Set up the mesh
 	if(mpMeshEntity)
@@ -246,18 +246,18 @@ void iLuxHandObject::SetSetEntitiesVisible(bool abVisible)
 		mpMeshEntity->SetVisible(abVisible);
 		mpMeshEntity->SetActive(abVisible);
 	}
-	
+
 	for(size_t i=0; i<mvBillboards.size(); ++i)
 	{
 		mvBillboards[i]->SetVisible(abVisible);
 	}
-	
+
 	for(size_t i=0; i<mvParticleSystems.size(); ++i)
 	{
 		mvParticleSystems[i]->SetVisible(abVisible);
 		mvParticleSystems[i]->SetActive(abVisible);
 	}
-	
+
 	for(size_t i=0; i<mvLights.size(); ++i)
 	{
 		mvLights[i]->SetVisible(abVisible);

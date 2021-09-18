@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -43,7 +43,7 @@ int glDefaultSSAOSamples = 8;
 
 ///////////////////////////////////////////////////////////////
 // Default int values
-static cPresetValueInt gvIntPresets[] = 
+static cPresetValueInt gvIntPresets[] =
 {
 	cPresetValueInt("Graphics", "ShadowQuality", 1),
 	cPresetValueInt("Graphics", "ShadowResolution", 1),
@@ -59,7 +59,7 @@ static cPresetValueInt gvIntPresets[] =
 
 ///////////////////////////////////////////////////////////////
 // Default float values
-static cPresetValueFloat gvFloatPresets[] = 
+static cPresetValueFloat gvFloatPresets[] =
 {
 	cPresetValueFloat("Graphics", "TextureAnisotropy", 1.0f),
 
@@ -109,7 +109,7 @@ static tString gvPresetEntries[] =
 	"SSAOResolution",
 	"SSAOSamples",
 	"",
-	
+
 	// boolean values
 	"ParallaxEnabled",
 	"WorldReflection",
@@ -152,7 +152,7 @@ cPresetValueBool::cPresetValueBool(const tString& asCat, const tString& asName, 
 void cLauncherHelper::SetWidgetLabel(Fl_Widget* apWidget, const tWString& asLabel)
 {
 	tString sUTF8Label = cString::S16BitToUTF8(asLabel);
-	
+
 	apWidget->copy_label(sUTF8Label.c_str());
 }
 
@@ -161,7 +161,7 @@ void cLauncherHelper::SetWidgetLabel(Fl_Widget* apWidget, const tWString& asLabe
 void cLauncherHelper::SetMenuItemLabel(Fl_Menu_Item* apItem, const tWString &asLabel, tStringList& alstLabels)
 {
 	tString sUTF8Label = cString::S16BitToUTF8(asLabel);
-	
+
 	alstLabels.push_back(sUTF8Label);
 	apItem->label(alstLabels.back().c_str());
 }
@@ -196,11 +196,11 @@ tVideoModeVec cLauncherHelper::GetAvailableVideoModes(cConfigFile* apFile)
 				break;
 			}
 		}
-		
+
 		if(lResFoundIndex==-1)
 		{
 			cVideoMode vMode(cVector2l(lScreenWidth, lScreenHeight));
-			
+
 			vVidModes.push_back(vMode);
 		}
 	}
@@ -276,7 +276,7 @@ bool cLauncherHelper::EqualsPreset(cConfigFile* apFile, cConfigFile* apPresetFil
 		const tString& sCat = gvIntPresets[i].msCat;
 		const tString& sName = gvIntPresets[i].msName;
 
-		bEqualsPreset = bEqualsPreset && 
+		bEqualsPreset = bEqualsPreset &&
 			apFile->GetInt(sCat, sName , -1) ==
 			apPresetFile->GetInt(sCat, sName, 0);
 	}
@@ -287,7 +287,7 @@ bool cLauncherHelper::EqualsPreset(cConfigFile* apFile, cConfigFile* apPresetFil
 		const tString& sCat = gvFloatPresets[i].msCat;
 		const tString& sName = gvFloatPresets[i].msName;
 
-		bEqualsPreset = bEqualsPreset && 
+		bEqualsPreset = bEqualsPreset &&
 			apFile->GetFloat(sCat, sName , -1.0f) ==
 			apPresetFile->GetFloat(sCat, sName, 0.0f);
 	}
@@ -298,11 +298,11 @@ bool cLauncherHelper::EqualsPreset(cConfigFile* apFile, cConfigFile* apPresetFil
 		const tString& sCat = gvBoolPresets[i].msCat;
 		const tString& sName = gvBoolPresets[i].msName;
 
-		bEqualsPreset = bEqualsPreset && 
+		bEqualsPreset = bEqualsPreset &&
 			apFile->GetBool(sCat, sName , false) ==
 			apPresetFile->GetBool(sCat, sName, true);
 	}
-	
+
 	return bEqualsPreset;
 }
 
@@ -326,7 +326,7 @@ void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile
 
 //------------------------------------------------------------------------------
 
-void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile, 
+void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile,
 									   const tString& asLevel, const tString& asEntry, int alValue, bool abCheckEqualsPreset)
 {
 	apFile->SetInt(asLevel, asEntry, alValue);
@@ -335,7 +335,7 @@ void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile
 
 //------------------------------------------------------------------------------
 
-void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile, 
+void cLauncherHelper::UpdateConfigFile(cUserInterface* apUI, cConfigFile* apFile,
 									   const tString& asLevel, const tString& asEntry, float afValue, bool abCheckEqualsPreset)
 {
 	apFile->SetFloat(asLevel, asEntry, afValue);
@@ -348,14 +348,14 @@ void cLauncherHelper::UpdateConfigFileWithPreset(cConfigFile* apFile, cConfigFil
 {
 	if(apFile==NULL || apPresetFile==NULL) return;
 
-	
+
 	for(int i=0; gvIntPresets[i].msName!=""; ++i)
 	{
 		const tString& sCat = gvIntPresets[i].msCat;
 		const tString& sName = gvIntPresets[i].msName;
 		int lDefault = gvIntPresets[i].mlDefaultValue;
 
-		apFile->SetInt(sCat, sName, 
+		apFile->SetInt(sCat, sName,
 			apPresetFile->GetInt(sCat, sName, lDefault));
 	}
 
@@ -365,7 +365,7 @@ void cLauncherHelper::UpdateConfigFileWithPreset(cConfigFile* apFile, cConfigFil
 		const tString& sName = gvFloatPresets[i].msName;
 		float fDefault = gvFloatPresets[i].mfDefaultValue;
 
-		apFile->SetFloat(sCat, sName, 
+		apFile->SetFloat(sCat, sName,
 			apPresetFile->GetFloat(sCat, sName, fDefault));
 	}
 
@@ -375,10 +375,10 @@ void cLauncherHelper::UpdateConfigFileWithPreset(cConfigFile* apFile, cConfigFil
 		const tString& sName = gvBoolPresets[i].msName;
 		bool bDefault = gvBoolPresets[i].mbDefaultValue;
 
-		apFile->SetBool(sCat, sName, 
+		apFile->SetBool(sCat, sName,
 			apPresetFile->GetBool(sCat, sName, bDefault));
 	}
-	
+
 	/*
 	UpdateConfigFile("Graphics", "ShadowQuality", apPreset->GetInt("Graphics", "ShadowQuality", 1));
 	UpdateConfigFile("Graphics", "ShadowResolution", apPreset->GetInt("Graphics", "ShadowResolution", 1));
@@ -388,16 +388,16 @@ void cLauncherHelper::UpdateConfigFileWithPreset(cConfigFile* apFile, cConfigFil
 	UpdateConfigFile("Graphics", "TextureFilter", apPreset->GetInt("Graphics", "TextureFilter", 1));
 
 	UpdateConfigFile("Graphics", "WorldReflection", apPreset->GetBool("Graphics", "WorldReflection", "true"));
-  
+
   UpdateConfigFile("Graphics", "SSAOActive", apPreset->GetBool("Graphics", "SSAOActive", true));
-  
-  
+
+
   UpdateConfigFile("Graphics", "TextureQuality", apPreset->GetInt("Graphics", "TextureQuality", 1));
   UpdateConfigFile("Graphics", "TextureFilter", apPreset->GetInt("Graphics", "TextureFilter", 1));
   UpdateConfigFile("Graphics", "TextureAnisotropy", apPreset->GetFloat("Graphics", "TextureAnisotropy", 1));
-  
+
   UpdateConfigFile("Graphics", "EdgeSmooth", apPreset->GetBool("Graphics", "EdgeSmooth", false));
-  
+
   UpdateConfigFile("Graphics", "ParallaxEnabled", apPreset->GetBool("Graphics", "ParallaxEnabled", true));
   UpdateConfigFile("Graphics", "ParallaxQuality", apPreset->GetInt("Graphics", "ParallaxQuality", 0));
 
@@ -419,12 +419,12 @@ void cLauncherHelper::PopulateLanguages(const tStringVec& avLangFiles, const tSt
 	{
 		const tString& sLangFile = avLangFiles[i];
 
-		tString sLangName = cString::ToLowerCase(cString::Sub(sLangFile, 0, 
+		tString sLangName = cString::ToLowerCase(cString::Sub(sLangFile, 0,
 									cString::GetLastStringPos(sLangFile, ".")));
-									   
+
 		tString sLangEntry = cString::S16BitToUTF8(kTranslate("Languages", sLangName));
 		//tString sLangEntry = cString::To8Char(kTranslate("Languages", sLangName));
-									   	
+									   
 		apLangs->add(sLangEntry.c_str());
 
 		if(lDefaultLangIndex==-1 && sLangFile==asDefaultLang)
@@ -441,7 +441,7 @@ void cLauncherHelper::PopulateLanguages(const tStringVec& avLangFiles, const tSt
 
 //------------------------------------------------------------------------------
 
-void cLauncherHelper::cb_AddResolution(Fl_Widget* o, void* v) 
+void cLauncherHelper::cb_AddResolution(Fl_Widget* o, void* v)
 {
 	cUserInterface* ui = (cUserInterface*)v;
 	ui->AddResolutionWindow->show();
@@ -541,12 +541,12 @@ void cLauncherHelper::PopulateResolutions(const tVideoModeVec& avVidModes, cConf
 			// Check if custom added mode
 			if(vMode.mbCustom)
 			{
-				tWString sAppendix = tWString(kTranslate("Launcher", "Custom")); 
+				tWString sAppendix = tWString(kTranslate("Launcher", "Custom"));
 				sModeStr += " (" + cString::S16BitToUTF8(sAppendix) + ")";
 			}
 		}
 		lItemPos = apRes->add(sModeStr.c_str(), 0, NULL, (void*)i);
-			
+
 		if(vMode == curMode)
 			lSelectedRes = lItemPos;
 	}
@@ -579,7 +579,7 @@ void cLauncherHelper::PopulateSoundDevices(const tSoundDeviceVec& avSoundDevices
 	{
 		iSoundDeviceIdentifier* pDev = avSoundDevices[i];
 		tString sDev = cString::ReplaceStringTo(pDev->GetName(), "/", "\\/");
-		
+
 		apSndDevs->add(sDev.c_str());
 
 		/////////////////////////////////////////
@@ -600,7 +600,7 @@ void cLauncherHelper::PopulateSoundDevices(const tSoundDeviceVec& avSoundDevices
 		tString sDev = "(" + cString::S16BitToUTF8(tWString(kTranslate("Launcher", "Unsupported"))) +") " + apCurrentDev->GetName();
 		lIndex = apSndDevs->add(sDev.c_str());
 	}
-	
+
 	apSndDevs->value(lIndex);
 }
 
@@ -614,15 +614,15 @@ void cLauncherHelper::SetInitialSSAOSamples(cConfigFile* apConfig, Fl_Choice* ap
 	for(int i=0;i<apSamples->size();++i)
 	{
 		const Fl_Menu_Item& item = apSamples->menu()[i];
-		
+
 		int lValue = (long int)item.user_data();
 		if(lSSAOSamples==lValue)
 		{
 			lSelectedItem = i;
-			break;			
-		}		
+			break;
+		}
 	}
-	
+
 	apSamples->value(lSelectedItem);
 }
 
@@ -643,13 +643,13 @@ void cLauncherHelper::SetInitialAnisotropy(cConfigFile* apConfig, Fl_Choice* apA
 	for(int i=0;i<apAni->size();++i)
 	{
 		const Fl_Menu_Item& item = apAni->menu()[i];
-		
+
 		int lValue = (long int)item.user_data();
 		if(lAnisotropy==lValue)
 		{
 			lSelectedItem = i;
-			break;			
-		}		
+			break;
+		}
 	}
 
 	apAni->value(lSelectedItem);
@@ -762,15 +762,15 @@ void cLauncherHelper::SetUpWidgetLabels(cUserInterface* apUI, tStringList& alstL
 
 //------------------------------------------------------------------------------
 
-void cLauncherHelper::DetectSettings(cUserInterface* apUI, cConfigFile* apConfig, const std::vector<cConfigFile*>& avPresets, 
+void cLauncherHelper::DetectSettings(cUserInterface* apUI, cConfigFile* apConfig, const std::vector<cConfigFile*>& avPresets,
 									 cQualityChooser* apChooser, const tString& asCardString)
 {
 	tString sClosestMatch;
-	eQRating rating = apChooser->GetQualityRatingByCardString(asCardString, sClosestMatch); 
+	eQRating rating = apChooser->GetQualityRatingByCardString(asCardString, sClosestMatch);
 
 	if(sClosestMatch.empty()==false)
 	{
-		sClosestMatch = cString::S16BitToUTF8(kTranslate("Launcher", "UnlistedVCardClosestMatch")) + " " + sClosestMatch; 
+		sClosestMatch = cString::S16BitToUTF8(kTranslate("Launcher", "UnlistedVCardClosestMatch")) + " " + sClosestMatch;
 		fl_message(sClosestMatch.c_str());
 	}
 
@@ -780,7 +780,7 @@ void cLauncherHelper::DetectSettings(cUserInterface* apUI, cConfigFile* apConfig
 		tString sMsg = cString::S16BitToUTF8(kTranslate("Launcher", "UnlistedVCard"));
 		fl_message(sMsg.c_str());
 	}
-		
+
 	if(rating==eQRating_Unsupported)
 	{
 		tString sMsg = cString::S16BitToUTF8(kTranslate("Launcher", "UnsupportedVCard"));

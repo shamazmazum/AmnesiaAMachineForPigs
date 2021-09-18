@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -29,9 +29,9 @@ BEGIN_AS_NAMESPACE
 
 int CompareRelation(asIScriptEngine *engine, void *lobj, void *robj, int typeId, int &result)
 {
-    // TODO: If a lot of script objects are going to be compared, e.g. when sorting an array, 
+    // TODO: If a lot of script objects are going to be compared, e.g. when sorting an array,
     //       then the method id and context should be cached between calls.
-    
+
 	int retval = -1;
 	asIScriptFunction *func = 0;
 
@@ -48,7 +48,7 @@ int CompareRelation(asIScriptEngine *engine, void *lobj, void *robj, int typeId,
 			{
 				asDWORD flags;
 				int paramTypeId = f->GetParamTypeId(0, &flags);
-				
+
 				// The parameter must be an input reference of the same type
 				if( flags != asTM_INREF || typeId != paramTypeId )
 					break;
@@ -85,7 +85,7 @@ int CompareEquality(asIScriptEngine *engine, void *lobj, void *robj, int typeId,
 {
     // TODO: If a lot of script objects are going to be compared, e.g. when searching for an
 	//       entry in a set, then the method and context should be cached between calls.
-    
+
 	int retval = -1;
 	asIScriptFunction *func = 0;
 
@@ -102,7 +102,7 @@ int CompareEquality(asIScriptEngine *engine, void *lobj, void *robj, int typeId,
 			{
 				asDWORD flags;
 				int paramTypeId = f->GetParamTypeId(0, &flags);
-				
+
 				// The parameter must be an input reference of the same type
 				if( flags != asTM_INREF || typeId != paramTypeId )
 					break;
@@ -149,10 +149,10 @@ int ExecuteString(asIScriptEngine *engine, const char *code, asIScriptModule *mo
 	string funcCode = "void ExecuteString() {\n";
 	funcCode += code;
 	funcCode += "\n;}";
-	
+
 	// If no module was provided, get a dummy from the engine
 	asIScriptModule *execMod = mod ? mod : engine->GetModule("ExecuteString", asGM_ALWAYS_CREATE);
-	
+
 	// Compile the function that can be executed
 	asIScriptFunction *func = 0;
 	int r = execMod->CompileFunction("ExecuteString", funcCode.c_str(), -1, 0, &func);
@@ -171,7 +171,7 @@ int ExecuteString(asIScriptEngine *engine, const char *code, asIScriptModule *mo
 
 	// Execute the function
 	r = execCtx->Execute();
-	
+
 	// Clean up
 	func->Release();
 	if( !ctx ) execCtx->Release();
@@ -195,7 +195,7 @@ int WriteConfigToFile(asIScriptEngine *engine, const char *filename)
 	asDWORD currAccessMask = 0;
 	string currNamespace = "";
 
-	// Make sure the default array type is expanded to the template form 
+	// Make sure the default array type is expanded to the template form
 	bool expandDefArrayToTempl = engine->GetEngineProperty(asEP_EXPAND_DEF_ARRAY_TO_TMPL) ? true : false;
 	engine->SetEngineProperty(asEP_EXPAND_DEF_ARRAY_TO_TMPL, true);
 
@@ -256,7 +256,7 @@ int WriteConfigToFile(asIScriptEngine *engine, const char *filename)
 		}
 		else
 		{
-			// Only the type flags are necessary. The application flags are application 
+			// Only the type flags are necessary. The application flags are application
 			// specific and doesn't matter to the offline compiler. The object size is also
 			// unnecessary for the offline compiler
 			fprintf(f, "objtype \"%s\" %u\n", engine->GetTypeDeclaration(type->GetTypeId()), (unsigned int)(type->GetFlags() & 0xFF));
@@ -304,7 +304,7 @@ int WriteConfigToFile(asIScriptEngine *engine, const char *filename)
 
 	// Write the object types members
 	fprintf(f, "\n// Type members\n");
-	
+
 	c = engine->GetObjectTypeCount();
 	for( n = 0; n < c; n++ )
 	{
@@ -478,7 +478,7 @@ void PrintException(asIScriptContext *ctx, bool printStack)
 			{
 				// The context is being reused by the script engine for a nested call
 				printf("{...script engine...}\n");
-			}			
+			}
 		}
 	}
 }

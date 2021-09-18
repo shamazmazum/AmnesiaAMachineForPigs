@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -97,7 +97,7 @@ cLuxEnemy_Child::cLuxEnemy_Child(const tString &asName, int alID, cLuxMap *apMap
 
 cLuxEnemy_Child::~cLuxEnemy_Child()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -132,7 +132,7 @@ void cLuxEnemy_Child::UpdateEnemySpecific(float afTimeStep)
 bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
 {
 	kLuxBeginStateMachine
-	
+
 	////////////////////////////////
 	// Default
 	////////////////////////////////
@@ -145,30 +145,30 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-		
-	
+
+
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_TakeHit)
-		
+
 	//------------------------------
 
 	//If enemy is out of range (having been in, then turn him off)
 	kLuxOnMessage(eLuxEnemyMessage_PlayerOutOfRange)
-	
+
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDead)
-	
+
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-	
+
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_ChangePose)
-		
-		
+
+
 
 	//------------------------------
 
@@ -183,12 +183,12 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
 		kLuxOnMessage(eLuxEnemyMessage_PlayerInRange)
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 			//Nothing
 
 	//------------------------------
-	
+
 	////////////////////////////////
 	// Go Home
 	////////////////////////////////
@@ -199,7 +199,7 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 		kLuxOnEnter
 			mpPathfinder->MoveTo(mvStartPosition);
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			ChangeState(eLuxEnemyState_Idle);
 
@@ -223,13 +223,13 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 			mpMover->SetOverideMoveState(false);
 
 		//------------------------------
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			if(GetPatrolNodeNum()>0)
 			{
 				FadeOutCurrentAnim(0.2f);
-				ChangeState(eLuxEnemyState_Patrol);	
+				ChangeState(eLuxEnemyState_Patrol);
 			}
 			else
 			{
@@ -240,8 +240,8 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
 			SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(4, 13), true);
-	
-		
+
+
 	//------------------------------
 
 	////////////////////////////////
@@ -253,17 +253,17 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 		kLuxOnEnter
 			ChangeSoundState(eLuxEnemySoundState_Idle);
 			SetMoveSpeed(mPatrolMoveSpeed);
-			
+
 			cLuxEnemyPatrolNode* pPatrolNode = GetCurrentPatrolNode();
 			mpPathfinder->MoveTo(pPatrolNode->mpNode->GetPosition());
 
 
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-			
+
 			cLuxEnemyPatrolNode *pNode = GetCurrentPatrolNode();
 			if(pNode)	mfWaitTime = pNode->mfWaitTime;
 			else		mfWaitTime = 0.1f;
-			
+
 			if(pNode->msAnimation == "")
 			{
 				ChangeState(eLuxEnemyState_Wait);
@@ -280,12 +280,12 @@ bool cLuxEnemy_Child::StateEventImplement(int alState, eLuxEnemyStateEvent aEven
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
 			ChangeState(eLuxEnemyState_Wait);
-			
-	//------------------------------
-	
-	
 
-	
+	//------------------------------
+
+
+
+
 	kLuxEndStateMachine
 }
 

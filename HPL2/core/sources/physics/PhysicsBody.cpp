@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -46,12 +46,12 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	iPhysicsBody::iPhysicsBody(const tString &asName,iPhysicsWorld *apWorld,iCollideShape *apShape) 
+	iPhysicsBody::iPhysicsBody(const tString &asName,iPhysicsWorld *apWorld,iCollideShape *apShape)
 		: iEntity3D(asName)
 	{
 		mpWorld = apWorld;
 		mpShape = apShape;
-		
+
 		//Increment user count for the shape
 		apShape->IncUserCount();
 
@@ -66,7 +66,7 @@ namespace hpl {
 		mbBlocksSound = false;
 		mbBlocksLight = true;
 		mbUseSurfaceEffects = true;
-	
+
 		mpScrapeBody = NULL;
 		mpScrapeSoundEntity = NULL;
 		mlScrapeSoundEntityID = -1;
@@ -133,7 +133,7 @@ namespace hpl {
 	void iPhysicsBody::Destroy()
 	{
 		mbDestroying = true;
-		
+
 		mpWorld->DestroyShape(mpShape);
 
 		///////////////////////////
@@ -151,7 +151,7 @@ namespace hpl {
 		for(; conIt != mlstAttachedVerletContainers.end(); ++conIt)
 		{
 			iVerletParticleContainer *pCont = *conIt;
-			pCont->RemoveAttachedBody(this, false);	
+			pCont->RemoveAttachedBody(this, false);
 		}
 		mlstAttachedVerletContainers.clear();
 
@@ -162,7 +162,7 @@ namespace hpl {
 			iPhysicsJoint *pJoint = mvJoints[i];
 
 			pJoint->RemoveBody(this);
-			
+
 			if(pJoint->GetParentBody()==NULL && pJoint->GetChildBody()==NULL)
 			{
 				mpWorld->DestroyJoint(pJoint);
@@ -186,11 +186,11 @@ namespace hpl {
 
 		////////////////////////
 		// Remove sounds
-		if(mpScrapeSoundEntity && mpWorld->GetWorld()->SoundEntityExists(mpScrapeSoundEntity, mlScrapeSoundEntityID)) 
+		if(mpScrapeSoundEntity && mpWorld->GetWorld()->SoundEntityExists(mpScrapeSoundEntity, mlScrapeSoundEntityID))
 		{
 			mpWorld->GetWorld()->DestroySoundEntity(mpScrapeSoundEntity);
 		}
-		if(mpRollSoundEntity  && mpWorld->GetWorld()->SoundEntityExists(mpRollSoundEntity,mlRollSoundEntityID)) 
+		if(mpRollSoundEntity  && mpWorld->GetWorld()->SoundEntityExists(mpRollSoundEntity,mlRollSoundEntityID))
 		{
 			mpWorld->GetWorld()->DestroySoundEntity(mpRollSoundEntity);
 		}
@@ -264,13 +264,13 @@ namespace hpl {
 			}
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool iPhysicsBody::UpdateBeforeSimulate(float afTimeStep)
 	{
 		/////////////////////
-		//See if the body should still be in update list. 
+		//See if the body should still be in update list.
 		bool bNeedsUpdate = false;
 
 		int lTemp=0;
@@ -313,12 +313,12 @@ namespace hpl {
 			tempBV.SetPosition(GetBoundingVolume()->GetWorldCenter());
 			mpWorld->EnableBodiesInBV(&tempBV, true);
 		}
-		
+
 		return true;
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void iPhysicsBody::UpdateAfterSimulate(float afTimeStep)
 	{
 		//////////////////////////////////
@@ -326,7 +326,7 @@ namespace hpl {
         if(mbStaticMovement)
 		{
 			cVector3f vPos = GetLocalPosition();
-			
+
 			if(mvTotalStaticLinearVel != 0)
 			{
 				vPos += mvTotalStaticLinearVel * afTimeStep;
@@ -334,7 +334,7 @@ namespace hpl {
 			if(mvTotalStaticAngularVel != 0)
 			{
 				cMatrixf mtxRot = GetLocalMatrix().GetRotation();
-				
+
 				mtxRot = cMath::MatrixMul( cMath::MatrixRotate(mvTotalStaticAngularVel * afTimeStep, eEulerRotationOrder_XYZ), mtxRot );
 
 				SetMatrix(mtxRot);
@@ -353,7 +353,7 @@ namespace hpl {
 			SetAngularVelocity(0);
 			SetLinearVelocity(0);
 		}
-		
+
 		//////////////////////////////////
 		//Check slide sound
 		//Log("Slide: %d\n", HasSlide());
@@ -366,7 +366,7 @@ namespace hpl {
 				{
 					//Log("Stopped scrape %d on body '%s' IN BODY!\n", (size_t)GetScrapeSoundEntity(),
 					//												 GetName().c_str());
-					
+
 					if(mpWorld->GetWorld())
 					{
 						if(mpWorld->GetWorld()->SoundEntityExists(GetScrapeSoundEntity(), mlScrapeSoundEntityID))
@@ -374,7 +374,7 @@ namespace hpl {
 							GetScrapeSoundEntity()->FadeOut(5.2f);
 						}
 					}
-					
+
 					SetScrapeSoundEntity(NULL);
 					SetScrapeBody(NULL);
 				}
@@ -425,7 +425,7 @@ namespace hpl {
 	{
 		mlstBodyCallbacks.push_back(apCallback);
 	}
-	
+
 	void iPhysicsBody::RemoveBodyCallback(iPhysicsBodyCallback *apCallback)
 	{
 		tPhysicsBodyCallbackListIt it = mlstBodyCallbacks.begin();
@@ -463,7 +463,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	bool iPhysicsBody::OnAABBCollision(iPhysicsBody *apBody)
 	{
 		if(mlstBodyCallbacks.empty()) return true;
@@ -480,7 +480,7 @@ namespace hpl {
 
 		return bReturn;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void iPhysicsBody::OnCollide(iPhysicsBody *apBody, cPhysicsContactData* apContactData)
@@ -504,23 +504,23 @@ namespace hpl {
 	{
 		return mpMaterial;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	iCollideShape* iPhysicsBody::GetShape()
 	{
 		return mpShape;
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void iPhysicsBody::AddConnectedCharacter(iCharacterBody *apCharBody)
 	{
 		if(mbDestroying) return;
-		
+
 		mlstConnectedCharBodies.push_back(apCharBody);
 	}
-	
+
 	void iPhysicsBody::RemoveConnectedCharacter(iCharacterBody *apCharBody)
 	{
 		if(mbDestroying) return;
@@ -529,7 +529,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void iPhysicsBody::AddAttachedVerletContainer(iVerletParticleContainer *apContainer)
 	{
 		mlstAttachedVerletContainers.push_back(apContainer);
@@ -537,7 +537,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	
+
 	void iPhysicsBody::RemoveAttachedVerletContainer(iVerletParticleContainer *apContainer)
 	{
 		tVerletParticleContainerListIt it = mlstAttachedVerletContainers.begin();

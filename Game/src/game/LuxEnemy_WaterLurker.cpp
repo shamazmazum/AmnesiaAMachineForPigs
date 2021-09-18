@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -111,7 +111,7 @@ cLuxEnemy_WaterLurker::cLuxEnemy_WaterLurker(const tString &asName, int alID, cL
 
 cLuxEnemy_WaterLurker::~cLuxEnemy_WaterLurker()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -149,15 +149,15 @@ void cLuxEnemy_WaterLurker::OnAfterWorldLoad()
 void cLuxEnemy_WaterLurker::UpdateEnemySpecific(float afTimeStep)
 {
 
-	
-	}	
+
+	}
 
 //-----------------------------------------------------------------------
 
 bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
 {
 	kLuxBeginStateMachine
-	
+
 	////////////////////////////////
 	// Default
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
@@ -167,7 +167,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		//DO NOTHING
 
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDead)
-		ChangeState(eLuxEnemyState_Idle);	
+		ChangeState(eLuxEnemyState_Idle);
 
 	kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
 		cAINode *pNode = mpPathfinder->GetNodeAtPos(apMessage->mvCustomValue, 0, 1.5f, true, true, true, NULL);
@@ -176,7 +176,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			gpBase->mpDebugHandler->AddMessage(_W("Found food!"),false);
 
 			mvTempPos = pNode->GetPosition();
-			ChangeState(eLuxEnemyState_Search);	
+			ChangeState(eLuxEnemyState_Search);
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 		}
 		else
@@ -192,7 +192,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
 		kLuxOnUpdate
 			if(PlayerIsDetected()) ChangeState(eLuxEnemyState_Hunt);
-		
+
 		///////////////////////
 		// Heard sound
 		kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
@@ -208,7 +208,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 	kLuxState(eLuxEnemyState_GoHome)
 		kLuxOnEnter
 			ChangeSoundState(eLuxEnemySoundState_Idle);
-			
+
 			cAINode *pNode = mpPathfinder->GetNodeAtPos(GetPlayerFeetPos(), 0, 6, false, false, true, NULL);
 			if(pNode)
 			{
@@ -252,12 +252,12 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			ChangeState(eLuxEnemyState_Idle);
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-	
-	
+
+
 	////////////////////////////////
 	// Investigate (heard a sound)
 	kLuxState(eLuxEnemyState_Investigate)
-		kLuxOnEnter	
+		kLuxOnEnter
 			gpBase->mpDebugHandler->AddMessage(_W("Sound Heard! Vol: ")+cString::ToStringW(mfTempVal),false);
 
 			cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
@@ -274,8 +274,8 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 
 
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-			ChangeState(eLuxEnemyState_Idle);	
-		
+			ChangeState(eLuxEnemyState_Idle);
+
 		kLuxOnUpdate
 			if(mpMover->GetStuckCounter()>0.9f)
 			{
@@ -295,7 +295,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
 			{
 				cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
-				if(pNode) 
+				if(pNode)
 					mpPathfinder->MoveTo(pNode->GetPosition());
 
 				mfTempVal = apMessage->mfCustomValue;
@@ -311,7 +311,7 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			SendMessage(eLuxEnemyMessage_TimeOut_2, 0.1f, true);
 
 		kLuxOnUpdate
-		
+
 		///////////////////////
 		// Movement effect
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
@@ -322,11 +322,11 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			gpBase->mpDebugHandler->AddMessage(_W("to eat state!\n"),false);
 			ChangeState(eLuxEnemyState_Eat);
-		
+
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-				
+
 	////////////////////////////////
 	// Eat
 	kLuxState(eLuxEnemyState_Eat)
@@ -347,13 +347,13 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 				cVector3f vToFeet(mpCharBody->GetFeetPosition() - pFoodBody->GetLocalPosition());
 				vToFeet.Normalize();
 
-                pFoodBody->AddImpulse(vToFeet*2.5f);				
+                pFoodBody->AddImpulse(vToFeet*2.5f);
 
 				SplashWater(eWaterLurkerSplash_Eat);
 				pFood->GiveDamage(mfEatDamage, 10);
 				gpBase->mpDebugHandler->AddMessage(_W("took bite!!"),false);
 				gpBase->mpDebugHandler->AddMessage(_W("Health: ")+cString::ToStringW(pFood->GetHealth()),false);
-			
+
 				SendMessage(eLuxEnemyMessage_TimeOut, 1.2f, true);
 				mvTempPos = pFood->GetBody(0)->GetLocalPosition();
 			}
@@ -381,17 +381,17 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-			
-		
+
+
 	////////////////////////////////
 	// Hunt
-	kLuxState(eLuxEnemyState_Hunt)	
+	kLuxState(eLuxEnemyState_Hunt)
 		///////////////////////
 		// Enter
 		kLuxOnEnter
 			if(PlayerIsDetected()==false)
 			{
-				ChangeState(eLuxEnemyState_GoHome);	
+				ChangeState(eLuxEnemyState_GoHome);
 				mbCausesInfectionIncrease = false;
 			}
 			else if(mPreviousState == eLuxEnemyState_AttackMeleeShort)
@@ -410,12 +410,12 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 				gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
 				mbCausesInfectionIncrease = true;
 			}
-			
+
 		///////////////////////
 		// Leave
 		kLuxOnLeave
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-		
+
 		///////////////////////
 		// Movement effect
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
@@ -424,16 +424,16 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			SendMessage(eLuxEnemyMessage_TimeOut_2, 0.6f, true);
 
 		///////////////////////
-		//Update the player position	
+		//Update the player position
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 			mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
 			SendMessage(eLuxEnemyMessage_TimeOut, 0.4f, true);
 			if(PlayerIsDetected()==false)
 			{
-				ChangeState(eLuxEnemyState_GoHome);	
+				ChangeState(eLuxEnemyState_GoHome);
 				mbCausesInfectionIncrease = false;
 			}
-		
+
 		///////////////////////
 		//On update
 		kLuxOnUpdate
@@ -447,14 +447,14 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 				mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 				ChangeState(eLuxEnemyState_BreakDoor);
 			}
-			
+
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
 
 	////////////////////////////////
 	// Hunt Pause
-	kLuxState(eLuxEnemyState_HuntPause)	
+	kLuxState(eLuxEnemyState_HuntPause)
 		///////////////////////
 		// Enter
 		kLuxOnEnter
@@ -462,20 +462,20 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			SendMessage(eLuxEnemyMessage_TimeOut, mfAfterAttackPauseTime, true);
 
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			ChangeState(eLuxEnemyState_Hunt);	
+			ChangeState(eLuxEnemyState_Hunt);
 
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-		
+
 	////////////////////////////////
 	// Break door
-	kLuxState(eLuxEnemyState_BreakDoor)	
+	kLuxState(eLuxEnemyState_BreakDoor)
 		kLuxOnEnter
 			mpPathfinder->Stop();
 			SendMessage(eLuxEnemyMessage_TimeOut, 0.01f, true);
-		
+
 		///////////////////
 		//Damage door
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
@@ -486,16 +486,16 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		///////////////////
 		//Check if door is destroyed
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
-			ChangeState(eLuxEnemyState_Hunt);	
+			ChangeState(eLuxEnemyState_Hunt);
 			/*if(mpMap->DoorIsBroken(mlStuckDoorID))
 			{
-				ChangeState(eLuxEnemyState_Hunt);	
+				ChangeState(eLuxEnemyState_Hunt);
 			}
 			else
 			{
 				SendMessage(eLuxEnemyMessage_TimeOut, 1.5f, true);
 			}*/
-			
+
 
 		kLuxOnUpdate
 			//Turn towards the door!
@@ -505,13 +505,13 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-        		
+        
 	////////////////////////////////
 	// Attack Short
 	kLuxState(eLuxEnemyState_AttackMeleeShort)
 		kLuxOnEnter
-			SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);		
-	
+			SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
+
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
 			ChangeState(mPreviousState);
 
@@ -520,13 +520,13 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			Attack(mNormalAttackSize, mNormalAttackDamage, 1.0f);
 			SendMessage(eLuxEnemyMessage_TimeOut_2, 0.5f, true);
 			mpPathfinder->Stop();
-		
+
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_FoodInRange)
-	
-	
+
+
 	////////////////////////////////
 	// Dead (just in case...)
 	kLuxState(eLuxEnemyState_Dead)
@@ -534,15 +534,15 @@ bool cLuxEnemy_WaterLurker::StateEventImplement(int alState, eLuxEnemyStateEvent
 			ChangeSoundState(eLuxEnemySoundState_Silent);
 
 			mpPathfinder->Stop();
-			//PlayAnim("Dead",false, 0.4f);	
-			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);	
+			//PlayAnim("Dead",false, 0.4f);
+			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
 			gpBase->mpPlayer->RemoveTerrorEnemy(this);
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 			mpCharBody->SetActive(false);
 
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
-			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);	
+			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
 
 		////////////////////////
 		// Overload global
@@ -558,7 +558,7 @@ bool cLuxEnemy_WaterLurker::InRangeOfFood(iPhysicsBody *apFoodBody)
 {
 	//TODO: Check if in water?
 	float fYDist = apFoodBody->GetLocalPosition().y - mpCharBody->GetFeetPosition().y;
-	
+
 	bool bX = cMath::Abs(fYDist) <= mfPlayerDetectionHeight;
 	return bX;
 }
@@ -593,7 +593,7 @@ void cLuxEnemy_WaterLurker::SplashWater(eWaterLurkerSplash aType)
 	else if(aType == eWaterLurkerSplash_Run)	sPS = msSplashPS_Run;
 	else if(aType == eWaterLurkerSplash_Eat)	sPS = msSplashPS_Eat;
 	else if(aType == eWaterLurkerSplash_Attack)	sPS = msSplashPS_Attack;
-	
+
 	if(sPS!="")
 	{
 		cParticleSystem *pPS = mpMap->GetWorld()->CreateParticleSystem("LurkerSplash", sPS,1);
@@ -614,7 +614,7 @@ void cLuxEnemy_WaterLurker::SplashWater(eWaterLurkerSplash aType)
 
 bool cLuxEnemy_WaterLurker::PlayerIsDetected()
 {
-	return AbsHeightDistToPlayer() <= mfPlayerDetectionHeight; 
+	return AbsHeightDistToPlayer() <= mfPlayerDetectionHeight;
 }
 
 //-----------------------------------------------------------------------
@@ -633,12 +633,12 @@ float cLuxEnemy_WaterLurker::GetDamageMul(float afAmount, int alStrength)
 	if(	mCurrentState == eLuxEnemyState_Idle ||
 		mCurrentState == eLuxEnemyState_Wait ||
 		mCurrentState == eLuxEnemyState_Patrol ||
-		mCurrentState == eLuxEnemyState_Investigate) 
+		mCurrentState == eLuxEnemyState_Investigate)
 	{
 		return 1.0f;
 	}
 	if( mCurrentState == eLuxEnemyState_Hurt) return 0.5f;
-	
+
 	return 0.2f;
 }
 
@@ -646,14 +646,14 @@ float cLuxEnemy_WaterLurker::GetDamageMul(float afAmount, int alStrength)
 
 void cLuxEnemy_WaterLurker::PatrolUpdateGoal()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxEnemy_WaterLurker::PatrolEndOfPath()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------

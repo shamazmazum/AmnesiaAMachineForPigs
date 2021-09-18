@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -81,14 +81,14 @@ namespace hpl {
 	bool cRendererDeferred::mbDebugPrevFrameOcclusion = false;
 	bool cRendererDeferred::mbDebugRenderLightComplexity = false;
 	bool cRendererDeferred::mbDebugRenderOverdraw = false;
-	
+
 	//debug
 	bool cRendererDeferred::mbOcclusionTestLargeLights = true;
 	bool cRendererDeferred::mbDebugRenderFrameBuffers = false;
 	//bool cRendererDeferred::mbDebugRenderLightBuffer = false;
 	//bool cRendererDeferred::mbModulateFog = false;
 	//bool cRendererDeferred::mbFogEnabled = true;
-    
+
 	//////////////////////////////////////////////////////////////////////////
 	// DEBUG DEFINES
 	//////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ namespace hpl {
 	#define eFeature_Light_DivideInFrag		eFlagBit_5
 	#define eFeature_Light_ShadowMap		eFlagBit_6
 	#define eFeature_Light_DebugComplexity	eFlagBit_7
-	
+
 	#define kLightFeatureNum 8
 
 	cProgramComboFeature gvLightFeatureVec[] =
@@ -132,10 +132,10 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// FOG PROGRAM COMBOS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	#define eFeature_FogArea_OutsideBox		eFlagBit_0
 	#define eFeature_FogArea_Backside		eFlagBit_1
-	
+
 	#define kFogAreaFeatureNum 2
 
 	cProgramComboFeature gvFogAreaFeatureVec[] =
@@ -181,7 +181,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	cRendererDeferred::cRendererDeferred(cGraphics *apGraphics,cResources* apResources) 
+	cRendererDeferred::cRendererDeferred(cGraphics *apGraphics,cResources* apResources)
 		: iRenderer("Deferred",apGraphics, apResources,eDefferredProgramMode_LastEnum)
 	{
 		////////////////////////////////////
@@ -194,7 +194,7 @@ namespace hpl {
 		// Set up variables
 		mfLastFrustumFOV = -1;
 		mfLastFrustumFarPlane = -1;
-		
+
 		mfMinLargeLightNormalizedArea = 0.2f*0.2f;
 		mfMinRenderReflectionNormilzedLength = 0.15f;
 
@@ -211,7 +211,7 @@ namespace hpl {
 
 	cRendererDeferred::~cRendererDeferred()
 	{
-		STLDeleteAll(mvTempDeferredLights);	
+		STLDeleteAll(mvTempDeferredLights);
 	}
 
 	//-----------------------------------------------------------------------
@@ -221,7 +221,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cRendererDeferred::LoadData()
 	{
 		cVector2l vRelfectionSize = cVector2l(mvScreenSize.x/mlReflectionSizeDiv, mvScreenSize.y/mlReflectionSizeDiv);
@@ -243,13 +243,13 @@ namespace hpl {
 		//Create Depth and stencil
 		mpDepthStencil[0] = mpGraphics->CreateDepthStencilBuffer(mvScreenSize,24,8, false);
 		mpDepthStencil[1] = mpGraphics->CreateDepthStencilBuffer(vRelfectionSize, 24,8, false);
-		
+
 		////////////////////////////////////
 		//Create Frame buffers
 		for(int type=0; type<2; ++type)
 		{
 			mpGBuffer[type][eGBufferComponents_Full] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_Main");
-			for(int i=0;i<mlNumOfGBufferTextures; ++i) 
+			for(int i=0;i<mlNumOfGBufferTextures; ++i)
 			{
 				mpGBuffer[type][eGBufferComponents_Full]->SetTexture2D(i,mpGBufferTexture[type][i]);
 			}
@@ -279,7 +279,7 @@ namespace hpl {
 				Error("Could not create frame buffer with only depth for Deferred renderer type: %d!\n", type);
 				return false;
 			}
-			
+
 			/////////////////////////
 			//Frame buffer with only depth and color
 			mpGBuffer[type][eGBufferComponents_ColorAndDepth] = mpGraphics->CreateFrameBuffer("Deferred_GBuffer_ColorDepth");
@@ -311,7 +311,7 @@ namespace hpl {
 				return false;
 			}
 		}
-		
+
 		////////////////////////////////////
 		//Create Accumulation texture
 		mpAccumBufferTexture = mpGraphics->CreateTexture("AccumBiffer",eTextureType_Rect,eTextureUsage_RenderTarget);
@@ -349,15 +349,15 @@ namespace hpl {
 		////////////////////////////////////
 		//Create Reflection texture
 		mpReflectionTexture = CreateRenderTexture("ReflectionTexture",vRelfectionSize,ePixelFormat_RGBA);
-		
+
 		////////////////////////////////////
 		//Create Reflection buffer
 		mpReflectionBuffer = mpGraphics->CreateFrameBuffer("Deferred_Reflection");
 		mpReflectionBuffer->SetTexture2D(0,mpReflectionTexture);
 		mpReflectionBuffer->SetDepthStencilBuffer(mpDepthStencil[1]);
 		mpReflectionBuffer->CompileAndValidate();
-		
-		
+
+
 		////////////////////////////////////
 		//Create Shadow Textures
 		cVector3l vShadowSize[] = {
@@ -377,8 +377,8 @@ namespace hpl {
 			CreateAndAddShadowMap(eShadowMapResolution_Medium, vShadowSize[lStartSize + eShadowMapResolution_Medium],ePixelFormat_Depth16);
 		for(int i=0; i<6; ++i)
 			CreateAndAddShadowMap(eShadowMapResolution_Low, vShadowSize[lStartSize + eShadowMapResolution_Low],ePixelFormat_Depth16);
-		
-		
+
+
 		// Select samples depending quality and shader model (if dynamic branching is supported)
         if(mpLowLevelGraphics->GetCaps(eGraphicCaps_ShaderModel_4))
 		{
@@ -417,7 +417,7 @@ namespace hpl {
 				mlShadowJitterSamples = 0;
 			}
 		}
-		
+
 		if(mShadowMapQuality != eShadowMapQuality_Low)
 		{
 			mpShadowJitterTexture = mpGraphics->CreateTexture("ShadowOffset", eTextureType_2D, eTextureUsage_Normal);
@@ -441,14 +441,14 @@ namespace hpl {
 			mpSkyBoxProgram->SetShader(eGpuShaderType_Fragment, pFragShader);
 			mpSkyBoxProgram->Link();
 		}
-		
-		
+
+
 		////////////////////////////////////
 		//Create Fog program
 		{
 			cParserVarContainer vars;
 			if(GetGBufferType() == eDeferredGBuffer_32Bit)	vars.Add("PackedDepth");
-			
+
 			mpFogProgramManager = hplNew(	cProgramComboManager, ("FogArea", mpGraphics, mpResources, 1));
 
 			mpFogProgramManager->SetupGenerateProgramData(0,"Fog","deferred_fog_vtx.glsl","deferred_fog_frag.glsl",gvFogAreaFeatureVec,kFogAreaFeatureNum,vars);
@@ -467,7 +467,7 @@ namespace hpl {
             //cParserVarContainer vars2;
 			//if(GetGBufferType() == eDeferredGBuffer_32Bit)	vars2.Add("PackedDepth");
             //vars2.Add("FogModulation");
-			
+
 			//mpModulatedFogProgram = hplNew(	cProgramComboManager, ("ModulatedFogArea", mpGraphics, mpResources, 1));
 
 			//mpModulatedFogProgram->SetupGenerateProgramData(0,"ModulatedFog","deferred_fog_vtx.glsl","deferred_fog_frag.glsl",gvFogAreaFeatureVec,kFogAreaFeatureNum,vars2);
@@ -482,7 +482,7 @@ namespace hpl {
 			//mpModulatedFogProgram->AddGenerateProgramVariableId("avNegPlaneDistPos",kVar_avNegPlaneDistPos,0);
 			//mpModulatedFogProgram->AddGenerateProgramVariableId("afFalloffExp",kVar_afFalloffExp,0);
 		}
-		
+
 		////////////////////////////////////
 		//Create Light programs
 		{
@@ -521,7 +521,7 @@ namespace hpl {
 																				"deferred_base_vtx.glsl",
 																				"deferred_light_box_frag.glsl",
 																				&vars,true);
-				
+
 				if(mpLightBoxProgram[2])
 				{
 					mpLightBoxProgram[2]->GetVariableAsId("afComplexity",kVar_afComplexity);
@@ -539,12 +539,12 @@ namespace hpl {
 													"debug_heat_map_frag.glsl",
 													&vars,true);
 			}
-			
+
 			/////////////////////////////
 			//Lights
 			{
 				cParserVarContainer defaultVars;
-				
+
 				//Shadow variables
 				defaultVars.Add("ShadowJitterLookupMul",1.0f / (float)mlShadowJitterSize);
 				defaultVars.Add("ShadowJitterSamplesDiv2",mlShadowJitterSamples / 2);
@@ -560,7 +560,7 @@ namespace hpl {
 				//Deferred renderer type
 				if(mGBufferType == eDeferredGBuffer_32Bit)	defaultVars.Add("Deferred_32bit","");
 				else										defaultVars.Add("Deferred_64bit","");
-				
+
 				if(mlNumOfGBufferTextures == 4)				defaultVars.Add("RenderTargets_4","");
 				else										defaultVars.Add("RenderTargets_3","");
 
@@ -568,7 +568,7 @@ namespace hpl {
 													kLightFeatureNum,defaultVars);
 													//1, defaultVars);
 
-				
+
 				mpProgramManager->AddGenerateProgramVariableId("avLightPos",	kVar_avLightPos, eDefferredProgramMode_Lights);
 				mpProgramManager->AddGenerateProgramVariableId("avLightColor",	kVar_avLightColor, eDefferredProgramMode_Lights);
 				mpProgramManager->AddGenerateProgramVariableId("afInvLightRadius",	kVar_afInvLightRadius, eDefferredProgramMode_Lights);
@@ -598,7 +598,7 @@ namespace hpl {
 		if(mbSSAOLoaded)
 		{
 			cVector2l vSSAOSize = mvScreenSize / mlSSAOBufferSizeDiv;
-			
+
 			/////////////////////////////////////
 			// Textures and frame buffers
 
@@ -623,8 +623,8 @@ namespace hpl {
 			//Scatter disk
 			mpSSAOScatterDisk = mpGraphics->CreateTexture("SSAOScatterDisk", eTextureType_2D,eTextureUsage_Normal);
 			mpGraphics->GetTextureCreator()->GenerateScatterDiskMap2D(mpSSAOScatterDisk,4, mlSSAONumOfSamples, false);
-			
-			
+
+
 			/////////////////////////////////////
 			// Programs
 			cParserVarContainer programVars;
@@ -639,7 +639,7 @@ namespace hpl {
 				mpUnpackDepthProgram->GetVariableAsId("afNegInvFarPlane",kVar_afNegInvFarPlane);
 			}
 			programVars.Clear();
-			
+
 			//SSAO Blur programs (vertical and horizontal)
 			programVars.Add("BlurHorisontal");
 			mpSSAOBlurProgram[0] = mpGraphics->CreateGpuProgramFromShaders("SSAOBlurHori","deferred_ssao_blur_vtx.glsl", "deferred_ssao_blur_frag.glsl",&programVars);
@@ -653,10 +653,10 @@ namespace hpl {
 					mpSSAOBlurProgram[i]->GetVariableAsId("afFarPlane",kVar_afFarPlane);
 				}
 			}
-			
+
 			//SSAO Rendering
 			programVars.Add("SampleNumDiv2", mlSSAONumOfSamples / 2);
-			mpSSAORenderProgram = mpGraphics->CreateGpuProgramFromShaders(	"SSAORender","deferred_ssao_render_vtx.glsl", 
+			mpSSAORenderProgram = mpGraphics->CreateGpuProgramFromShaders(	"SSAORender","deferred_ssao_render_vtx.glsl",
 																			"deferred_ssao_render_frag.glsl",&programVars);
 			if(mpSSAORenderProgram)
 			{
@@ -719,16 +719,16 @@ namespace hpl {
 		////////////////////////////////////
 		//Create light shapes
 		tFlag lVtxFlag = eVertexElementFlag_Position | eVertexElementFlag_Color0 | eVertexElementFlag_Texture0;
-		mpShapeSphere[eDeferredShapeQuality_High] = LoadVertexBufferFromMesh("core_12_12_sphere.dae",lVtxFlag);	
+		mpShapeSphere[eDeferredShapeQuality_High] = LoadVertexBufferFromMesh("core_12_12_sphere.dae",lVtxFlag);
 		mpShapeSphere[eDeferredShapeQuality_Medium] = LoadVertexBufferFromMesh("core_7_7_sphere.dae",lVtxFlag);
 		mpShapeSphere[eDeferredShapeQuality_Low] = LoadVertexBufferFromMesh("core_5_5_sphere.dae",lVtxFlag);
 
 		mpShapePyramid = LoadVertexBufferFromMesh("core_pyramid.dae",lVtxFlag);
-		
+
 		////////////////////////////////////
 		//Quad used when rendering light.
 		mpFullscreenLightQuad = CreateQuadVertexBuffer(eVertexBufferType_Software,0,1,0,mvScreenSizeFloat, true);
-		
+
 		////////////////////////////////////
 		//Batch vertex buffer
 		mlMaxBatchVertices = mpShapeSphere[eDeferredShapeQuality_Low]->GetVertexNum() * mlMaxBatchLights;
@@ -743,13 +743,13 @@ namespace hpl {
 		mpBatchBuffer->CreateElementArray(eVertexBufferElement_Texture1,eVertexBufferElementFormat_Float,3);
 
 		mpBatchBuffer->Compile(0);
-        
+
 		return true;
 	}
 
 	//-----------------------------------------------------------------------
 
-	
+
 	void cRendererDeferred::DestroyData()
 	{
 		/////////////////////////
@@ -763,36 +763,36 @@ namespace hpl {
 			if(mpShapeSphere[i]) hplDelete(mpShapeSphere[i]);
 		}
 		if(mpShapePyramid) hplDelete(mpShapePyramid);
-		
-		
+
+
 		/////////////////////////
 		//G-Buffer and Accum buffer
 		for(int type=0; type<2; ++type)
 		{
 			for(int j=0; j<eGBufferComponents_LastEnum; ++j)
 			{
-				mpGraphics->DestroyFrameBuffer(mpGBuffer[type][j]);	
+				mpGraphics->DestroyFrameBuffer(mpGBuffer[type][j]);
 			}
-			
+
 			for(int j=0; j<mlNumOfGBufferTextures; ++j)
 			{
-				mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);	
+				mpGraphics->DestroyTexture(mpGBufferTexture[type][j]);
 			}
 
 			mpGraphics->DestoroyDepthStencilBuffer(mpDepthStencil[type]);
 		}
-		
-		mpGraphics->DestroyFrameBuffer(mpAccumBuffer);	
+
+		mpGraphics->DestroyFrameBuffer(mpAccumBuffer);
 		mpGraphics->DestroyFrameBuffer(mpReflectionBuffer);
-		
+
 		mpGraphics->DestroyTexture(mpAccumBufferTexture);
 		mpGraphics->DestroyTexture(mpReflectionTexture);
-		
-		
+
+
 		/////////////////////////
 		//Shadow textures
 		DestroyShadowMaps();
-		
+
 		if(mpShadowJitterTexture) mpGraphics->DestroyTexture(mpShadowJitterTexture);
 
 		/////////////////////////
@@ -825,11 +825,11 @@ namespace hpl {
 		{
 			mpGraphics->DestroyTexture(mpEdgeSmooth_LinearDepthTexture);
 			mpGraphics->DestroyFrameBuffer(mpEdgeSmooth_LinearDepthBuffer);
-			
+
 			mpGraphics->DestroyGpuProgram(mpEdgeSmooth_UnpackDepthProgram);
 			mpGraphics->DestroyGpuProgram(mpEdgeSmooth_RenderProgram);
 		}
-		
+
 		/////////////////////////
 		//Gpu programs
 		mpGraphics->DestroyGpuProgram(mpSkyBoxProgram);
@@ -843,7 +843,7 @@ namespace hpl {
 	{
 		return mpAccumBufferTexture;
 
-		//This should never be needed since if a post effect is used, 
+		//This should never be needed since if a post effect is used,
 		/*if(mpCurrentRenderTarget->mpFrameBuffer==NULL)
 		{
 			return mpAccumBuffer;
@@ -855,11 +855,11 @@ namespace hpl {
 	}
 
 	iTexture* cRendererDeferred::GetGbufferTexture(int alIdx)
-	{ 
+	{
 		int lType = mpCurrentSettings->mbIsReflection ? 1 : 0;
 		return mpGBufferTexture[lType][alIdx];
 	}
-	
+
 	cDeferredLight* cRendererDeferred::GetDeferredLight(int alID)
 	{
 		if(alID < mvTempDeferredLights.size()) return mvTempDeferredLights[alID];
@@ -890,7 +890,7 @@ namespace hpl {
 		SetBlendMode(eMaterialBlendMode_None);
 		SetAlphaMode(eMaterialAlphaMode_Solid);
 		SetChannelMode(eMaterialChannelMode_RGBA);
-		
+
 		SetFrameBuffer(mpCurrentRenderTarget->mpFrameBuffer,true);
 
 		SetFlatProjection();
@@ -905,7 +905,7 @@ namespace hpl {
 		cVector2f vViewportPos((float)mpCurrentRenderTarget->mvPos.x, (float)mpCurrentRenderTarget->mvPos.y);
 		cVector2f vViewportSize((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y);
 		DrawQuad(	cVector2f(0,0),1,
-					cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y)-vViewportPos.y ), 
+					cVector2f(vViewportPos.x, (mvScreenSizeFloat.y - vViewportSize.y)-vViewportPos.y ),
 					cVector2f(vViewportPos.x + vViewportSize.x,mvScreenSizeFloat.y - vViewportPos.y),
 					true);
 
@@ -913,33 +913,33 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cRendererDeferred::SetupRenderList()
 	{
 		mpCurrentRenderList->Setup(mfCurrentFrameTime,mpCurrentFrustum);
 	}
 
 		//-----------------------------------------------------------------------
-	
+
 	void cRendererDeferred::RenderObjects()
 	{
 		mlDrawCalls = 0;
 
 		//Set up variables used in rendering later on.
 		SetupRenderVariables();
-		
+
 		//Set up the frame buffers needed for G-buffer
 		SetupGBuffer();
 
 		tRenderableFlag lVisibleFlags=0;
 		if(mpCurrentSettings->mbIsReflection)	lVisibleFlags |= eRenderableFlag_VisibleInReflection;
 		else									lVisibleFlags |= eRenderableFlag_VisibleInNonReflection;
-		
+
 		///////////////////////////
 		//Occlusion testing
 		if(mpCurrentSettings->mbUseOcclusionCulling)
 		{
-			CheckForVisibleObjectsAddToListAndRenderZ(	mpCurrentSettings->mpVisibleNodeTracker,eObjectVariabilityFlag_All, lVisibleFlags, 
+			CheckForVisibleObjectsAddToListAndRenderZ(	mpCurrentSettings->mpVisibleNodeTracker,eObjectVariabilityFlag_All, lVisibleFlags,
 														true, NULL);
 
 			mpCurrentRenderList->Compile(	eRenderListCompileFlag_Z_Dissolve |
@@ -957,7 +957,7 @@ namespace hpl {
 		{
 			CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Static), lVisibleFlags);
 			CheckForVisibleAndAddToList(mpCurrentWorld->GetRenderableContainer(eWorldContainerType_Dynamic), lVisibleFlags);
-			
+
 			mpCurrentRenderList->Compile(	eRenderListCompileFlag_Z_Dissolve |
 											eRenderListCompileFlag_Z |
 											eRenderListCompileFlag_Diffuse |
@@ -968,14 +968,14 @@ namespace hpl {
 			RenderZ();
 			RenderZDissolve();
 		}
-		
+
 		RenderGbuffer();
 		if(mbDebugRenderFrameBuffers)
 		{
 			RenderGbufferContent();
 			return;
 		}
-		
+
 		AssignAndRenderOcclusionQueryObjects(false, NULL, true);
 		SetupLightsAndRenderQueries();
 
@@ -991,15 +991,15 @@ namespace hpl {
 			return;
 		}*/
 		RenderLights();
-		
+
 		if(mbDebugRenderLightComplexity)
 		{
 			RenderLightComplexity();
-			
+
 			if(mbOcclusionTestLargeLights)
 				RetrieveAllLightOcclusionPair(false); //false = we do not stop and wait.
 			return;
-		}		
+		}
 
 
 
@@ -1014,7 +1014,7 @@ namespace hpl {
         //}
 
 		RenderIllumination();
-		
+
         RenderFog();
 		RenderFullScreenFog();
 
@@ -1034,7 +1034,7 @@ namespace hpl {
 				RetrieveAllLightOcclusionPair(false); //false = we do not stop and wait.
 			return;
 		}
-		
+
 		RenderTranslucent();
 
 		RunCallback(eRendererMessage_PostTranslucent);
@@ -1061,7 +1061,7 @@ namespace hpl {
 
 		/////////////////////////////
 		// Clear depth (no need to clear any of the textures!)
-		
+
 		mpLowLevelGraphics->SetClearDepth(1);
 		ClearFrameBuffer(eClearFrameBufferFlag_Depth, true);
 		END_RENDER_PASS();
@@ -1076,10 +1076,10 @@ namespace hpl {
 		mfFarPlane = mpCurrentFrustum->GetFarPlane();
 		mfFarTop = -tan(mpCurrentFrustum->GetFOV()*0.5f) * mfFarPlane;
 		mfFarBottom = -mfFarTop;
-		mfFarRight = mfFarBottom * mpCurrentFrustum->GetAspect(); 
+		mfFarRight = mfFarBottom * mpCurrentFrustum->GetAspect();
 		mfFarLeft = -mfFarRight;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRendererDeferred::RenderZ()
@@ -1169,7 +1169,7 @@ namespace hpl {
 		END_RENDER_PASS();
 	}
 
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRendererDeferred::RenderGbuffer()
@@ -1183,7 +1183,7 @@ namespace hpl {
 		SetAlphaMode(eMaterialAlphaMode_Solid);
 		SetChannelMode(eMaterialChannelMode_RGBA);
 
-		
+
 		////////////////////////////////////
 		//Iterate renderable objects and render to G-Buffer
 		cRenderableVecIterator diffuseIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Diffuse);
@@ -1211,7 +1211,7 @@ namespace hpl {
 
 			DrawCurrentMaterial(eMaterialRenderMode_Diffuse, pObject);
 		}
-		
+
 		SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
 		END_RENDER_PASS();
@@ -1223,7 +1223,7 @@ namespace hpl {
 	{
 		//If not active or loaded, return.
 		if(mbSSAOLoaded==false || mpCurrentSettings->mbSSAOActive==false) return;
-		
+
 		//Check so any box lights are to be rendered, else return
 		if(mSSAOType == eDeferredSSAO_InBoxLight)
 		{
@@ -1242,7 +1242,7 @@ namespace hpl {
 		cVector2f vQuadSize = cVector2f(mfFarRight*2,mfFarTop*2);
 
 		iTexture *pGBufferDepthTexture = GetBufferTexture(2);
-		
+
 		cVector2f vGBufferDepthSize = cVector2f((float)pGBufferDepthTexture->GetWidth(), (float)pGBufferDepthTexture->GetHeight());
 		cVector2f vSSAOSize = cVector2f((float)mpSSAOTexture->GetWidth(), (float)mpSSAOTexture->GetHeight());
 
@@ -1254,10 +1254,10 @@ namespace hpl {
 		SetBlendMode(eMaterialBlendMode_None);
 		SetDepthWrite(false);
 		SetDepthTest(false);
-		
+
 		SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
-		
-		
+
+
 		//////////////////////////////
 		// Render linear depth
 		SetFrameBuffer(mpLinearDepthBuffer);
@@ -1269,7 +1269,7 @@ namespace hpl {
 		}
 		SetProgram(mpUnpackDepthProgram);
 		SetTexture(0, pGBufferDepthTexture);	//Set G-buffer depth texture
-		
+
 		DrawQuad(vQuadPos, vQuadSize,0, vGBufferDepthSize,true);
 
 
@@ -1303,12 +1303,12 @@ namespace hpl {
 			SetFrameBuffer(mpSSAOBlurBuffer);
 			SetTexture(0,mpSSAOTexture);
 			SetTexture(1,mpLinearDepthTexture);
-			
+
 			if(mpSSAOBlurProgram[0])
 				mpSSAOBlurProgram[0]->SetFloat(kVar_afFarPlane, mfFarPlane);
 			SetProgram(mpSSAOBlurProgram[0]);
 			DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
-			
+
 			//Vertical
 			SetFrameBuffer(mpSSAOBuffer);
 			SetTexture(0,mpSSAOBlurTexture);
@@ -1319,7 +1319,7 @@ namespace hpl {
 			SetProgram(mpSSAOBlurProgram[1]);
 			DrawQuad(vQuadPos, vQuadSize,0, vSSAOSize,true);
 		}
-        
+
 
 		///////////////////////////////
 		// Debug rendering
@@ -1346,7 +1346,7 @@ namespace hpl {
 		{
 			SetChannelMode(eMaterialChannelMode_RGB);
 			SetGBuffer(eGBufferComponents_Color);
-			
+
 			SetFlatProjection();
 			SetProgram(NULL);
 
@@ -1358,7 +1358,7 @@ namespace hpl {
 			DrawQuad(0,1, 0,vSSAOSize, true);
 			SetChannelMode(eMaterialChannelMode_RGBA);
 		}
-		
+
 		/////////////////////////////
 		// Set render states back to normal
 		SetNormalFrustumProjection();
@@ -1382,7 +1382,7 @@ namespace hpl {
 
 		iTexture *pGBufferDepthTexture = GetBufferTexture(2);
 		iTexture *pGBufferNormalTexture = GetBufferTexture(1);
-		
+
 		//////////////////////////////
 		// Set up render states
 		SetChannelMode(eMaterialChannelMode_RGBA);
@@ -1429,12 +1429,12 @@ namespace hpl {
 		/////////////////////////////
 		// Set render states back to normal
 		SetNormalFrustumProjection();
-		
+
 		END_RENDER_PASS();
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	//Definitions used when rendering lights
 	#define kLightRadiusMul_High		1.08f
 	#define kLightRadiusMul_Medium		1.12f
@@ -1448,7 +1448,7 @@ namespace hpl {
 	 * Calculates matrices for both rendering shape and the transformation
 	 * \param a_mtxDestRender This has a scale based on radius and radius mul. The mul is to make sure that the shape covers the while light.
 	 * \param a_mtxDestTransform A simple view space transform for the light.
-	 * \param afRadiusMul 
+	 * \param afRadiusMul
 	 */
 	static inline void SetupLightMatrix(cMatrixf& a_mtxDestRender,cMatrixf& a_mtxDestTransform, iLight *apLight, cFrustum *apFrustum, float afRadiusMul)
 	{
@@ -1468,9 +1468,9 @@ namespace hpl {
 
 			float fFarHeight = pLightSpot->GetTanHalfFOV() * pLightSpot->GetRadius() * 2.0f;
 			//Note: Aspect might be wonky if there is no gobo.
-			float fFarWidth = fFarHeight * pLightSpot->GetAspect(); 
+			float fFarWidth = fFarHeight * pLightSpot->GetAspect();
 
-			a_mtxDestRender = cMath::MatrixScale(cVector3f(fFarWidth,fFarHeight,apLight->GetRadius()) );//x and y = "far plane", z = radius 
+			a_mtxDestRender = cMath::MatrixScale(cVector3f(fFarWidth,fFarHeight,apLight->GetRadius()) );//x and y = "far plane", z = radius
 			a_mtxDestTransform = cMath::MatrixMul(apFrustum->GetViewMatrix(), apLight->GetWorldMatrix());
 			a_mtxDestRender = cMath::MatrixMul(a_mtxDestTransform,a_mtxDestRender);
 		}
@@ -1499,14 +1499,14 @@ namespace hpl {
 			{
 				cMatrixf mtxFinal = cMath::MatrixMul(pLight->GetWorldMatrix(),m_mtxInvView);
 				apProgram->SetMatrixf(kVar_a_mtxInvViewRotation, mtxFinal.GetRotation());
-			}	
+			}
 		}
 		////////////////////////
 		// Spot light specific
 		else if(pLight->GetLightType() == eLightType_Spot)
 		{
 			cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
-			
+
 			//Calculate and set the forward vector
 			cVector3f vForward = cVector3f(0,0,1);
 			vForward = cMath::MatrixMul3x3(apLightData->m_mtxViewSpaceTransform, vForward);
@@ -1520,13 +1520,13 @@ namespace hpl {
 			{
 				cVector2f vInvShadowMapSize(1.0f / (float)apLightData->mpShadowTexture->GetWidth(),
 											1.0f / (float)apLightData->mpShadowTexture->GetHeight());
-				
+
 				if(mpShadowJitterTexture)
 					apProgram->SetVec2f(kVar_avShadowMapOffsetMul, vInvShadowMapSize * pLight->GetShadowMapBlurAmount());
 
 				apLightData->mpShadowTexture = NULL;
 			}
-			
+
 			if(pLight->GetGoboTexture() || apLightData->mbCastShadows)
 			{
 				cMatrixf mtxFinal = cMath::MatrixMul(pLightSpot->GetViewProjMatrix(), m_mtxInvView);
@@ -1568,9 +1568,9 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	#ifdef kDebug_RenderLightData
-		
+
 		#define RenderSingleLightDebug() \
 			SetStencilActive(false); SetProgram(NULL);SetTextureRange(NULL,0); mpLowLevelGraphics->SetColor(cColor(0.25,0,0,0));\
 			DrawCurrent();\
@@ -1591,13 +1591,13 @@ namespace hpl {
 		tFlag lFlags = alExtraFlags;
 		if(pLight->GetColor().a > 0)	lFlags |= eFeature_Light_Specular;
 		if(pLight->GetGoboTexture())		lFlags |= eFeature_Light_Gobo;
-		
+
 		//Spotlight specifics
 		if(lightType == eLightType_Spot)
 		{
 			lFlags |= eFeature_Light_SpotLight;
 			if(lFlags & eFeature_Light_LightShapes) lFlags |= eFeature_Light_DivideInFrag;
-			
+
 			//Only spot lights can cast shadows (for now)
 			if(apLightData->mbCastShadows && apLightData->mpShadowTexture)
 			{
@@ -1618,9 +1618,9 @@ namespace hpl {
 		{
 			pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
 		}
-		
+
 		if(pLight->GetGoboTexture())		SetTexture(5, pLight->GetGoboTexture());
-		
+
 		////////////////////////
 		// Point light specific
 		if(lightType == eLightType_Point)
@@ -1632,12 +1632,12 @@ namespace hpl {
 		else if(lightType == eLightType_Spot)
 		{
 			cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
-			
+
 			//Shadow stuff
 			if(apLightData->mpShadowTexture)
 			{
 				SetTexture(6, apLightData->mpShadowTexture);
-				
+
 				if(mpShadowJitterTexture) SetTexture(7, mpShadowJitterTexture);
 			}
 
@@ -1656,7 +1656,7 @@ namespace hpl {
 	{
 		//Setup render states
 		SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
-		
+
 		int lDrawCalls = mlDrawCalls;
 
 		//Render shadow map and set used shadow texture to data.
@@ -1691,14 +1691,14 @@ namespace hpl {
 		SetChannelMode(eMaterialChannelMode_RGBA);
 		SetBlendMode(eMaterialBlendMode_Add);
 		SetAlphaMode(eMaterialAlphaMode_Solid);
-		
+
 	}
 
 	//-----------------------------------------------------------------------
 
-	
+
 	iVertexBuffer* cRendererDeferred::GetLightShape(iLight *apLight, eDeferredShapeQuality aQuality)
-	{	
+	{
 		///////////////////
 		//Point Light
 		if(apLight->GetLightType() == eLightType_Point)
@@ -1721,7 +1721,7 @@ namespace hpl {
 	{
 		iLight *pLightA = apLightDataA->mpLight;
 		iLight *pLightB = apLightDataB->mpLight;
-		
+
 		cLightBox *pBoxLightA = static_cast<cLightBox*>(pLightA);
 		cLightBox *pBoxLightB = static_cast<cLightBox*>(pLightB);
 
@@ -1746,7 +1746,7 @@ namespace hpl {
 		{
 			return pLightA->GetLightType() < pLightB->GetLightType();
 		}
-		
+
 		//////////////////////////
 		//Specular
 		int lHasSpecularA = pLightA->GetColor().a > 0 ? 1 : 0;
@@ -1776,30 +1776,30 @@ namespace hpl {
 		{
 			cLightSpot *pLightSpotA = static_cast<cLightSpot*>(pLightA);
 			cLightSpot *pLightSpotB = static_cast<cLightSpot*>(pLightB);
-			
+
 			if(pLightSpotA->GetSpotFalloffMap() != pLightSpotB->GetSpotFalloffMap())
 			{
 				return pLightSpotA->GetSpotFalloffMap() < pLightSpotB->GetSpotFalloffMap();
 			}
 		}
-		
+
 		//////////////////////////
 		//Pointer
 		return pLightA < pLightB;
 	}
 
-	
+
 
 	//-----------------------------------------------------------------------
 
-	typedef bool (*tSortDeferredLightFunc)(const cDeferredLight* apLightDataA, const cDeferredLight* apLightDataB); 
+	typedef bool (*tSortDeferredLightFunc)(const cDeferredLight* apLightDataA, const cDeferredLight* apLightDataB);
 
 	static tSortDeferredLightFunc vLightSortFunctions[eDeferredLightList_LastEnum] = {	SortFunc_Default,
 																						SortFunc_Default,
 																						SortFunc_Default,
-																						
+
 																						SortFunc_Default, //<- Batches, not used!
-																						
+
 																						SortFunc_Box,
 																						SortFunc_Box};
 
@@ -1815,7 +1815,7 @@ namespace hpl {
 			for(size_t i=0; i<mpCurrentSettings->mvLightOcclusionPairs.size(); ++i)
 			{
 				cLightOcclusionPair &loPair = mpCurrentSettings->mvLightOcclusionPairs[i];
-				
+
 				if(loPair.mlSampleResults > mpCurrentSettings->mlSampleVisiblilityLimit)
 				{
 					setPrevVisibleLights.insert(loPair.mpLight);
@@ -1824,7 +1824,7 @@ namespace hpl {
 
 			mpCurrentSettings->mvLightOcclusionPairs.resize(0);
 		}
-        
+
 
 		//////////////////////////
 		// Clear light list
@@ -1834,9 +1834,9 @@ namespace hpl {
 		////////////////////////////////
 		// Set up variables
 		float fScreenArea = (float)(mvRenderTargetSize.x*mvRenderTargetSize.y);
-		
+
 		mlMinLargeLightArea =	(int)(mfMinLargeLightNormalizedArea * fScreenArea);
-		
+
 		///////////////////////////////
 		//Set up render states
 		SetDepthTest(true);
@@ -1895,7 +1895,7 @@ namespace hpl {
 			//Point
 			if(lightType == eLightType_Point)
 			{
-				pLightData->mClipRect = cMath::GetClipRectFromSphere(pLightData->m_mtxViewSpaceRender.GetTranslation(), pLight->GetRadius(), 
+				pLightData->mClipRect = cMath::GetClipRectFromSphere(pLightData->m_mtxViewSpaceRender.GetTranslation(), pLight->GetRadius(),
 																	mpCurrentFrustum,mvRenderTargetSize,
 																	true,mfScissorLastTanHalfFov);
 			}
@@ -1926,12 +1926,12 @@ namespace hpl {
 				{
 					cVector3f vIntersection = pLightSpot->GetFrustum()->GetOrigin();
 					pLightSpot->GetFrustum()->CheckLineIntersection(mpCurrentFrustum->GetOrigin(), pLight->GetBoundingVolume()->GetWorldCenter(),vIntersection);
-					
+
 					float fDistToLight = cMath::Vector3Dist(mpCurrentFrustum->GetOrigin(), vIntersection);
-					
+
 					pLightData->mbCastShadows = true;
 					pLightData->mShadowResolution = GetShadowMapResolution(pLight->GetShadowMapResolution(), mpCurrentSettings->mMaxShadowMapResolution);
-					
+
 					///////////////////////
 					//Skip shadow
 					if(fDistToLight > mfShadowDistanceNone)
@@ -1956,19 +1956,19 @@ namespace hpl {
 							pLightData->mShadowResolution = eShadowMapResolution_Low;
 					}
 				}
-				
+
 			}
 
 
 			///////////////////////////
 			// Render Query
-			
+
 			//If not doing occlusion testing on large light, might as well just skip here
 			if(mbOcclusionTestLargeLights==false || mpCurrentSettings->mbUseOcclusionCulling==false) continue;
 
 			// If inside near plane or too small on screen skip queries
 			if(pLightData->mbInsideNearPlane || pLightData->mlArea < mlMinLargeLightArea) continue;
-			
+
 
 			///////////////////////////
 			// Only check if light was invisible last frame
@@ -1977,7 +1977,7 @@ namespace hpl {
 			////////////////////////////////
 			//Render light shape and make a query
 			pLightData->mpQuery = GetOcclusionQuery();
-			
+
 			//Model matrix
 			SetModelViewMatrix( pLightData->m_mtxViewSpaceRender );
 
@@ -1990,7 +1990,7 @@ namespace hpl {
 			pLightData->mpQuery->End();
 		}
 
-		if(mbOcclusionTestLargeLights) 
+		if(mbOcclusionTestLargeLights)
 		{
 			mpLowLevelGraphics->FlushRendering();
 		}
@@ -2025,7 +2025,7 @@ namespace hpl {
 		{
 			mvSortedLights[i].resize(0); //No clear, keep array size data, no need to delete, same pointer in temp list
 		}
-		
+
 
 		//////////////////////////////
 		//Fill lists
@@ -2046,7 +2046,7 @@ namespace hpl {
 				pLightData->m_mtxViewSpaceRender = cMath::MatrixScale(pLightBox->GetSize());
 				pLightData->m_mtxViewSpaceRender.SetTranslation(pLightBox->GetWorldPosition());
 				pLightData->m_mtxViewSpaceRender = cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), pLightData->m_mtxViewSpaceRender);
-				
+
 				mpCurrentSettings->mlNumberOfLightsRendered++;
 
 				//Check if near plane is inside box. If so only render back
@@ -2058,18 +2058,18 @@ namespace hpl {
 				{
 					mvSortedLights[eDeferredLightList_Box_StencilFront_RenderBack].push_back(pLightData);
 				}
-				
+
 				continue;
 			}
 
 			////////////////////////
-			// Test if query has any samples. 
+			// Test if query has any samples.
 			//  Only check if the query is done, else skip so we do not have a stop-and-wait.
 			iOcclusionQuery *pQuery = pLightData->mpQuery;
 			if(pQuery)
 			{
 				bool bLightInvisible = false;
-				if(pQuery->FetchResults())	
+				if(pQuery->FetchResults())
 				{
 					int lSampleCount = pQuery->GetSampleCount();
 					if(lSampleCount <= mpCurrentSettings->mlSampleVisiblilityLimit)
@@ -2080,16 +2080,16 @@ namespace hpl {
 					if(mbLog)
 						Log(" Fetching query for light '%s'/%d. Have %d samples. Visible: %d\n", pLight->GetName().c_str(), pLight,lSampleCount, !bLightInvisible);
 				}
-				
+
 				ReleaseOcclusionQuery(pQuery);
 				pLightData->mpQuery = NULL;
-				
+
 				if(bLightInvisible)
 				{
 					continue;
 				}
 			}
-			
+
 			mpCurrentSettings->mlNumberOfLightsRendered++;
 
 			////////////////////////
@@ -2122,9 +2122,9 @@ namespace hpl {
 					//mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].push_back(pLightData);
 					mvSortedLights[eDeferredLightList_StencilFront_RenderBack].push_back(pLightData);
 				}
-				
-				
-				
+
+
+
 				//Skip batching for now, only speed boosts when having many small lights
 				//Add later when proper test scenes exist.
 				//mvSortedLights[eDeferredLightList_Batches].push_back(lightData);
@@ -2134,7 +2134,7 @@ namespace hpl {
 		//Log("Near lights: %d\n",mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].size());
 		//Log("Large lights: %d\n",mvSortedLights[eDeferredLightList_StencilFront_RenderBack].size());
 		//Log("Default lights: %d\n",mvSortedLights[eDeferredLightList_RenderBack].size());
-		
+
 		//////////////////////////////
 		//Sort lists
 		for(int i=0; i<eDeferredLightList_LastEnum; ++i)
@@ -2144,26 +2144,26 @@ namespace hpl {
 				std::sort(mvSortedLights[i].begin(), mvSortedLights[i].end(), vLightSortFunctions[i]);
 			}
 		}
-		
+
 	}
 
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cRendererDeferred::RenderLights_StencilBack_ScreenQuad()
 	{
 		if(mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].empty()) return;
 		if(mbLog) Log("---\nRendering Lights StencilBack_ScreenQuad Begin\n");
-		
+
 		//Check if stencil is dirty
 		if(mbStencilNeedClearing)
 		{
 			ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
 			mbStencilNeedClearing = false;
 		}
-		
+
 		if(mbDepthCullLights) SetStencilActive(true);
-		
+
 		///////////////////////
 		// Render Inside Near Plane Lights
 		int lNumOfNearPlaneLights = (int)mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad].size();
@@ -2218,9 +2218,9 @@ namespace hpl {
 			SetChannelMode(eMaterialChannelMode_RGBA);
 			SetFlatProjectionMinMax(cVector3f(mfFarLeft,mfFarBottom,-mfFarPlane*1.5f),cVector3f(mfFarRight,mfFarTop,mfFarPlane*1.5f));
 			SetCullMode(eCullMode_CounterClockwise);
-			
+
 			SetStencilWriteMask(0xFF);
-			
+
 			for(int i=0; i<lIterations; ++i)
 			{
 				cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilBack_ScreenQuad][lStartLight + i];
@@ -2230,7 +2230,7 @@ namespace hpl {
 				// Render shadow (if light is caster)
 				if(pLightData->mbCastShadows && SetupShadowMapRendering(pLight))
 				{
-					if(mbDepthCullLights) 
+					if(mbDepthCullLights)
 					{
 						SetStencilActive(false);
 						SetDepthTest(true);
@@ -2242,8 +2242,8 @@ namespace hpl {
 
 					//Render shadow map
 					RenderLightShadowMap(pLightData);
-					
-					if(mbDepthCullLights) 
+
+					if(mbDepthCullLights)
 					{
 						SetDepthTest(false);
 						SetStencilActive(true);
@@ -2269,7 +2269,7 @@ namespace hpl {
 
 				// Set up clip
 				SetScissorRect(pLightData->mClipRect, true);
-								
+
 				//Debug data
 				RenderSingleLightDebug();
 
@@ -2281,15 +2281,15 @@ namespace hpl {
 
 				//Draw the light
 				DrawCurrent();
-				
+
 				/////////////////////////////
-				// Update min max clip rect occupied by lights 
+				// Update min max clip rect occupied by lights
 				/*if(vMinClip.x > lightData.mClipRect.x) vMinClip.x = lightData.mClipRect.x;
 				if(vMinClip.y > lightData.mClipRect.y) vMinClip.y = lightData.mClipRect.y;
 				if(vMaxClip.x < lightData.mClipRect.x+lightData.mClipRect.w) vMaxClip.x = lightData.mClipRect.x+lightData.mClipRect.w;
 				if(vMaxClip.y < lightData.mClipRect.y+lightData.mClipRect.h) vMaxClip.y = lightData.mClipRect.y+lightData.mClipRect.h;*/
 			}
-			
+
 			/////////////////////////////
 			//Go back to normal frustum projection
 			SetNormalFrustumProjection();
@@ -2303,12 +2303,12 @@ namespace hpl {
 				//According to test there was a slow down using this. Keeping code anyways.
 				//cRect2l dirtyRect(vMinClip, vMaxClip - vMinClip);
 				//SetupScissorRect(dirtyRect);
-				
+
 				lStartLight += kMaxStencilBitsUsed;
 				ClearFrameBuffer(eClearFrameBufferFlag_Stencil,true);
 			}
 		}
-		
+
 		////////////////////////////////////////
 		// Reset things needed
 		mbStencilNeedClearing = true;
@@ -2329,7 +2329,7 @@ namespace hpl {
 			mbStencilNeedClearing = false;
 		}
 
-		if(mbDepthCullLights) 
+		if(mbDepthCullLights)
 		{
 			SetStencilActive(true);
 			SetDepthTest(true);
@@ -2338,7 +2338,7 @@ namespace hpl {
 		{
 			SetDepthTest(false);
 		}
-		
+
 		///////////////////////
 		// Render Large Lights
 		int lNumOfNearPlaneLights = (int)mvSortedLights[eDeferredLightList_StencilFront_RenderBack].size();
@@ -2346,7 +2346,7 @@ namespace hpl {
 		while(lNumOfNearPlaneLights>0)
 		{
 
-			
+
 			int lIterations;
 			if(lNumOfNearPlaneLights >kMaxStencilBitsUsed)	lIterations = kMaxStencilBitsUsed;
 			else											lIterations = lNumOfNearPlaneLights;
@@ -2393,7 +2393,7 @@ namespace hpl {
 			{
 				cDeferredLight* pLightData = mvSortedLights[eDeferredLightList_StencilFront_RenderBack][lStartLight + i];
 				iLight *pLight = pLightData->mpLight;
-				
+
 				//////////////////
 				// Render shadow (if light is caster)
 				if(pLightData->mbCastShadows && SetupShadowMapRendering(pLight))
@@ -2404,12 +2404,12 @@ namespace hpl {
 
 					//Render shadow map
 					RenderLightShadowMap(pLightData);
-					
+
 					//Reset render settings to previous
 					SetStencilActive(true);
 					SetCullMode(eCullMode_Clockwise);
 				}
-				
+
 				//////////////////
 				// Render light
 				if(mbLog)Log(" Rendering light: '%s' / %d\n",pLight->GetName().c_str(), pLight);
@@ -2424,7 +2424,7 @@ namespace hpl {
 				//Set vertex buffer
 				//SetVertexBuffer(mpShapeSphereHighRes);
 				SetVertexBuffer(GetLightShape(pLight, eDeferredShapeQuality_High));
-				
+
 				//Set up program and textures
 				iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,eFeature_Light_LightShapes | eFeature_Light_DivideInFrag);
 
@@ -2453,7 +2453,7 @@ namespace hpl {
 					DrawCurrent();
 				}
 			}
-			
+
 			/////////////////////////////
 			//Prepare for next iteration (if any)
 			if(lNumOfNearPlaneLights >0)
@@ -2475,7 +2475,7 @@ namespace hpl {
 	{
 		if(mvSortedLights[eDeferredLightList_RenderBack].empty()) return;
 		if(mbLog) Log("---\nRendering Lights RenderBack Begin\n");
-		
+
 		if(mbDepthCullLights)
 		{
 			SetStencilActive(false);
@@ -2485,7 +2485,7 @@ namespace hpl {
 		{
 			SetDepthTest(false);
 		}
-		
+
 		/////////////////////////////
 		//Render back of light geometry, checking depth
 		SetChannelMode(eMaterialChannelMode_RGBA);
@@ -2520,7 +2520,7 @@ namespace hpl {
 			SetVertexBuffer(GetLightShape(pLight, eDeferredShapeQuality_Medium));
 
 			//Set up program and textures
-			tFlag lExtraFlags = eFeature_Light_LightShapes; 
+			tFlag lExtraFlags = eFeature_Light_LightShapes;
 			if(pLightData->mbInsideNearPlane) lExtraFlags |= eFeature_Light_DivideInFrag;
 			iGpuProgram *pProgram = SetupProgramAndTextures(pLightData,lExtraFlags);
 
@@ -2657,7 +2657,7 @@ namespace hpl {
 												eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
 				//SetStencil(	eStencilFunc_Always, 0xFF, cMath::GetFlagBit(kStartStencilBit + i),
 				//								eStencilOp_Keep, eStencilOp_Keep,eStencilOp_Keep);
-				
+
 				RenderBoxLight(pLightData);
 			}
 
@@ -2674,12 +2674,12 @@ namespace hpl {
 		// Reset things needed
 		mbStencilNeedClearing = true;
 		SetBlendMode(eMaterialBlendMode_Add);
-		
+
 		if(mbLog) Log("Rendering Lights Box_StencilFront_RenderBack End\n---\n");
 	}
 
 	//------------------------------------------------------------------------------
-	
+
 	void cRendererDeferred::RenderLights_Box_RenderBack()
 	{
 		if(mvSortedLights[eDeferredLightList_Box_RenderBack].empty()) return;
@@ -2697,7 +2697,7 @@ namespace hpl {
 
 		SetChannelMode(eMaterialChannelMode_RGBA);
 		SetVertexBuffer(mpShapeBox);
-		
+
 		/////////////////////////////
 		//Render back of light geometry, checking depth
 		for(size_t i=0; i<mvSortedLights[eDeferredLightList_Box_RenderBack].size(); ++i)
@@ -2712,7 +2712,7 @@ namespace hpl {
 
 		if(mbLog) Log("Rendering Lights Box_RenderBack End\n---\n");
 	}
-	
+
 	//------------------------------------------------------------------------------
 
 	void cRendererDeferred::RenderLights()
@@ -2727,7 +2727,7 @@ namespace hpl {
 		/////////////////////////////////////////
 		// Render SSAO (used by box lights)
 		RenderSSAO();
-		
+
 		/////////////////////////////////////////
 		// Set up general render states.
 		SetDepthTest(true);
@@ -2753,7 +2753,7 @@ namespace hpl {
 		// Render box lights
 		RenderLights_Box_RenderBack();
 		RenderLights_Box_StencilFront_RenderBack();
-		
+
 		///////////////////////
 		// Render lights that are inside near plane
 		RenderLights_StencilBack_ScreenQuad();
@@ -2765,12 +2765,12 @@ namespace hpl {
 		///////////////////////
 		// Simple rendering with no stencil
 		RenderLights_RenderBack();
-		
+
 		///////////////////////
 		// Batch lights and renderer several at a time.
 		// Skip for now...
 		//RenderLights_Batches();
-				
+
 		////////////////////////////
 		//Reset settings
 		SetStencilActive(false);
@@ -2784,7 +2784,7 @@ namespace hpl {
 			SetDepthTest(true);
 			SetDepthWrite(false);
 			SetBlendMode(eMaterialBlendMode_None);
-			
+
 			SetVertexBuffer(NULL);
 			SetProgram(NULL);
 			SetTextureRange(NULL,0);
@@ -2802,14 +2802,14 @@ namespace hpl {
 				else if(pLight->GetLightType() == eLightType_Spot)
 				{
 					cLightSpot *pLightSpot = static_cast<cLightSpot*>(pLight);
-					
+
 					pLightSpot->GetFrustum()->Draw(mpLowLevelGraphics);
 				}
 			}
 		}
 		#endif
 
-		
+
 		END_RENDER_PASS();
 	}
 
@@ -2820,11 +2820,11 @@ namespace hpl {
 		if(mpCurrentRenderList->ArrayHasObjects(eRenderListType_Illumination)==false) return;
 
 		START_RENDER_PASS(Illumination);
-		
+
 		cRenderableVecIterator illumIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Illumination);
 		if(illumIt.HasNext()==false) return;
 
-		
+
 		SetDepthTest(true);
 		SetDepthWrite(false);
 		SetDepthTestFunc(eDepthTestFunc_Equal);
@@ -2833,7 +2833,7 @@ namespace hpl {
 		SetChannelMode(eMaterialChannelMode_RGBA);
 
 		SetTextureRange(NULL,1);
-				
+
 		while(illumIt.HasNext())
 		{
 			iRenderable *pObject = illumIt.Next();
@@ -2851,14 +2851,14 @@ namespace hpl {
             eMaterialRenderMode renderMode = pMaterial->GetTexture(eMaterialTexture_IlluminationModulate) ? eMaterialRenderMode_IlluminationModulate : eMaterialRenderMode_Illumination;
 
 			SetMaterialProgram(renderMode,pMaterial);
-			
+
 			SetTexture(0,pMaterial->GetTextureInUnit(renderMode,0));
 
             if ( renderMode == eMaterialRenderMode_IlluminationModulate )
             {
 			    SetTexture(1,pMaterial->GetTextureInUnit(renderMode,1));
             }
-			
+
 			SetMatrix(pObject->GetModelMatrixPtr());
 
 			SetVertexBuffer(pObject->GetVertexBuffer());
@@ -2868,10 +2868,10 @@ namespace hpl {
 
 		SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
 
-		
+
 		END_RENDER_PASS();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRendererDeferred::RenderDecals()
@@ -2944,14 +2944,14 @@ namespace hpl {
 		SetTextureRange(NULL, 1);
 
 		SetMatrix(NULL);
-		
+
 
 		//////////////////////////
 		// Set up program
 		int lFlags =0;
         iGpuProgram *pProgram = mpFogProgramManager->GenerateProgram(0, lFlags);
 		//iGpuProgram *pProgram = NULL;
-        
+
         //if ( mbModulateFog )
         //{
         //    pProgram= mpModulatedFogProgram->GenerateProgram(0, lFlags);
@@ -2962,7 +2962,7 @@ namespace hpl {
         //}
 
 		SetProgram(pProgram);
-        
+
 		if(pProgram)
 		{
 			if(GetGBufferType() == eDeferredGBuffer_32Bit)
@@ -3012,7 +3012,7 @@ namespace hpl {
 
 		SetAlphaMode(eMaterialAlphaMode_Solid);
 		SetBlendMode(eMaterialBlendMode_Alpha);
-		
+
 		SetTexture(0, GetGbufferTexture(2)); //depth!
 		//SetTexture(1, mpLightBufferTexture);
         SetTextureRange(NULL, 1);
@@ -3021,7 +3021,7 @@ namespace hpl {
 		{
 			cFogAreaRenderData& fogData = mpCurrentSettings->mvFogRenderData[i];
 			cFogArea *pFogArea = fogData.mpFogArea;
-			
+
 			/////////////////////////////////////////////
 			// Get program
 			int lFlags =0;
@@ -3034,7 +3034,7 @@ namespace hpl {
 				if(pFogArea->GetShowBacksideWhenOutside()) lFlags |= eFeature_FogArea_Backside;
 				lFlags |= eFeature_FogArea_OutsideBox;
 			}
-			
+
             iGpuProgram *pProgram = mpFogProgramManager->GenerateProgram(0, lFlags);
 			//iGpuProgram *pProgram = NULL;
             //
@@ -3052,13 +3052,13 @@ namespace hpl {
 			/////////////////////////////////////////////
 			// Setup program
 			SetProgram(pProgram);
-			
+
 			if(GetGBufferType() == eDeferredGBuffer_32Bit)
 					pProgram->SetFloat(kVar_afNegFarPlane, -mpCurrentFrustum->GetFarPlane());
 			pProgram->SetVec2f(kVar_avFogStartAndLength, cVector2f(pFogArea->GetStart(), pFogArea->GetEnd() - pFogArea->GetStart()));
 			pProgram->SetColor4f(kVar_avFogColor, pFogArea->GetColor());
 			pProgram->SetFloat(kVar_afFalloffExp, pFogArea->GetFalloffExp());
-		
+
 			/////////////////////////////////////////////
 			//Outside of box setup
 			if(fogData.mbInsideNearFrustum==false)
@@ -3066,7 +3066,7 @@ namespace hpl {
 				cMatrixf mtxInvModelView = cMath::MatrixInverse( cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), *pFogArea->GetModelMatrixPtr()) );
 				cVector3f vRayCastStart = cMath::MatrixMul(mtxInvModelView, cVector3f(0));
 
-				
+
 				pProgram->SetVec3f(kVar_avRayCastStart, vRayCastStart);
 				pProgram->SetMatrixf(kVar_a_mtxBoxInvViewModelRotation, mtxInvModelView.GetRotation());
 
@@ -3078,7 +3078,7 @@ namespace hpl {
 				pProgram->SetVec3f(kVar_avNegPlaneDistNeg, vNegPlaneDistNeg*-1);
 				pProgram->SetVec3f(kVar_avNegPlaneDistPos, vNegPlaneDistPos*-1);
 			}
-			
+
 			/////////////////////////////////////////////
 			// Render
 			SetCullMode(fogData.mbInsideNearFrustum ? eCullMode_Clockwise : eCullMode_CounterClockwise);
@@ -3098,7 +3098,7 @@ namespace hpl {
 
 		END_RENDER_PASS();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 
@@ -3144,8 +3144,8 @@ namespace hpl {
 					mfTempAlpha *= GetFogAreaVisibilityForObject(&mpCurrentSettings->mvFogRenderData[i], pObject);
 				}
 			}
-			
-			
+
+
 			////////////////////////////////////////
 			// Update object, need to do this here since otherwise the reflection rendering might reset it!
 
@@ -3154,12 +3154,12 @@ namespace hpl {
 			{
 				continue;
 			}
-			
+
 			if(pObject->RetrieveOcculsionQuery(this)==false)
 			{
 				continue;
 			}
-			
+
 			cMatrixf *pMatrix = pObject->GetModelMatrix(mpCurrentFrustum);
 
 			////////////////////////////////////////
@@ -3169,7 +3169,7 @@ namespace hpl {
 				if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false) continue;
 
 				///////////////////////////////////
-				//Retrieve all occlusion queries before rendering new scene. 
+				//Retrieve all occlusion queries before rendering new scene.
 				//  Otherwise it will lead to problems on some cards.
 				WaitAndRetrieveAllOcclusionQueries();	//Queires for halos and such
 				if(mbOcclusionTestLargeLights)
@@ -3186,23 +3186,23 @@ namespace hpl {
 			if(pMaterial->HasRefraction())
 			{
 				if(CheckRenderablePlaneIsVisible(pObject, mpCurrentFrustum)==false) continue;
-				
+
 				////////////////////////////////////
 				// Get the clip rect needed by the refraction
 				cBoundingVolume *pBV = pObject->GetBoundingVolume();
 
-				if(fHalfFovTan ==0)	
+				if(fHalfFovTan ==0)
 					fHalfFovTan = tan(mpCurrentFrustum->GetFOV()*0.5f);
 				cRect2l clipRect = GetClipRectFromObject(pObject, 0.2f, mpCurrentFrustum, mvRenderTargetSize, fHalfFovTan);
-				
+
 				////////////////////////////////////
 				// Add an extra check to make sure there is no bleeding. Draw outline of mesh to alpha!
 				if(pMaterial->UseRefractionEdgeCheck())
 				{
 					////////////////////////////////////
 					// Clear alpha
-					SetFlatProjection(cVector2f((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y));					
-					
+					SetFlatProjection(cVector2f((float)mvRenderTargetSize.x, (float)mvRenderTargetSize.y));
+
 					//Set up new settings
 					SetDepthTest(false);
 					SetProgram(NULL);
@@ -3210,10 +3210,10 @@ namespace hpl {
 					SetAlphaMode(eMaterialAlphaMode_Solid);
 					SetChannelMode(eMaterialChannelMode_A);
 					SetTextureRange(NULL,0);
-					
-					DrawQuad(	cVector2f((float)clipRect.x, (float)clipRect.y), 
+
+					DrawQuad(	cVector2f((float)clipRect.x, (float)clipRect.y),
 								cVector2f((float)clipRect.w, (float)clipRect.h), 0, 1, false, cColor(1,0));
-                    
+
 					//Set Normal projection and depth test
 					SetNormalFrustumProjection();
 					SetDepthTest(true);
@@ -3224,31 +3224,31 @@ namespace hpl {
 					SetVertexBuffer(pObject->GetVertexBuffer());
 
 					DrawCurrent();
-										
+
 					//Set backs settings to normal.
 					SetChannelMode(eMaterialChannelMode_RGBA);
 					SetAlphaMode(eMaterialAlphaMode_Trans);
 				}
-				
+
 				////////////////////////////////////
 				// Copy frame buffer to texture
-				CopyFrameBufferToTexure(mpRefractionTexture, 
-										cVector2l(clipRect.x, clipRect.y), 
-										cVector2l(clipRect.w, clipRect.h), 
+				CopyFrameBufferToTexure(mpRefractionTexture,
+										cVector2l(clipRect.x, clipRect.y),
+										cVector2l(clipRect.w, clipRect.h),
 										cVector2l(clipRect.x, clipRect.y),
 										true);
-				
+
 			}
-			
+
 			////////////////////////////////////////
 			// Set up and render
 			if(pMaterial->HasRefraction())	SetBlendMode(eMaterialBlendMode_None); //Blending shall take place in shader!
 			else							SetBlendMode(pMaterial->GetBlendMode());
 			SetDepthTest(pMaterial->GetDepthTest());
-			
+
 			SetMaterialProgram(renderMode,pMaterial);
 			SetMaterialTextures(renderMode, pMaterial);
-			
+
 			SetMatrix(pMatrix);
 
 			SetVertexBuffer(pObject->GetVertexBuffer());
@@ -3264,10 +3264,10 @@ namespace hpl {
 
 				SetBlendMode(eMaterialBlendMode_Add);
 				SetDepthTest(pMaterial->GetDepthTest());
-				
+
 				SetMaterialProgram(renderMode,pMaterial);
 				SetMaterialTextures(renderMode, pMaterial);
-				
+
 				SetMatrix(pMatrix);
 
 				SetVertexBuffer(pObject->GetVertexBuffer());
@@ -3279,7 +3279,7 @@ namespace hpl {
 		SetAlphaMode(eMaterialAlphaMode_Solid);
 		SetAlphaLimit(mfDefaultAlphaLimit);
 
-		
+
 
 		END_RENDER_PASS();
 	}
@@ -3320,7 +3320,7 @@ namespace hpl {
 		//////////////////////////////////////////////
 		// No reflection, just clear!
 		else
-		{	
+		{
 			if(mbReflectionTextureCleared == false)
 			{
 				if(mpCurrentSettings->mbLog) Log("- Clear reflection Begin!\n");
@@ -3342,7 +3342,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cRendererDeferred::RenderSubMeshEntityReflection(cSubMeshEntity *pReflectionObject)
 	{
 		cMaterial *pRelfMaterial = pReflectionObject->GetMaterial();
@@ -3399,8 +3399,8 @@ namespace hpl {
 		cMatrixf mtxReflProj = cMath::ProjectionMatrixObliqueNearClipPlane(mtxProj, cameraSpaceReflPlane);
 
 		cFrustum reflectFrustum;
-		reflectFrustum.SetupPerspectiveProj(mtxReflProj, mtxReflView, 
-			mpCurrentFrustum->GetFarPlane(),mpCurrentFrustum->GetNearPlane(), 
+		reflectFrustum.SetupPerspectiveProj(mtxReflProj, mtxReflView,
+			mpCurrentFrustum->GetFarPlane(),mpCurrentFrustum->GetNearPlane(),
 			mpCurrentFrustum->GetFOV(), mpCurrentFrustum->GetAspect(),
 			vReflOrigin,false, &mtxProj, true);
 		reflectFrustum.SetInvertsCullMode(true);
@@ -3429,7 +3429,7 @@ namespace hpl {
 				maxRelfctionDistPlane.FromNormalPoint(vClipNormal, vClipPoint);
 			}
 			///////////////////////////////
-			//Get the plane into camera space and then get a point where z=max reflection distance. 
+			//Get the plane into camera space and then get a point where z=max reflection distance.
 			//Note: Because of test above a and b in plane cannot be 0!
 			else
 			{
@@ -3565,7 +3565,7 @@ namespace hpl {
 		if(mpCurrentSettings->mbLog)
 			Log("\n==============================\n= BEGIN RENDER REFLECTION\n==============================\n\n");
 
-		Render(mfCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);				
+		Render(mfCurrentFrameTime, &reflectFrustum, mpCurrentWorld, mpCurrentSettings->mpReflectionSettings, &renderTarget, false, mpCallbackList);
 
 		if(mpCurrentSettings->mbLog)
 			Log("\n==============================\n= END RENDER REFLECTION\n==============================\n\n");
@@ -3573,7 +3573,7 @@ namespace hpl {
 
 		///////////////////////////
 		//Set back to order!
-		BeginRendering(	mfCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget, 
+		BeginRendering(	mfCurrentFrameTime, pSaved_Frustum, mpCurrentWorld, pSaved_Settings, pSaved_RenderTarget,
 						bSaved_SendFrameBufferToPostEffects,mpCallbackList, false);
 
 
@@ -3586,7 +3586,7 @@ namespace hpl {
 		SetAlphaLimit(0.01f);
 		SetAlphaMode(eMaterialAlphaMode_Trans);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRendererDeferred::SetAccumulationBuffer()
@@ -3615,7 +3615,7 @@ namespace hpl {
 	iFrameBuffer* cRendererDeferred::GetGBufferFrameBuffer(eGBufferComponents aComponents)
 	{
 		int lType = mpCurrentSettings->mbIsReflection ? 1 : 0;
-		
+
 		return mpGBuffer[lType][aComponents];
 	}
 
@@ -3636,7 +3636,7 @@ namespace hpl {
 		START_RENDER_PASS(DeferredSkyBox);
 
 		SetGBuffer(eGBufferComponents_ColorAndDepth);
-		
+
 
 		//Debug, leave in for Luis or someone to test.
 		//int lTargets1[] = {0,3};
@@ -3717,25 +3717,25 @@ namespace hpl {
 			SetTexture(0,GetBufferTexture(3));
 			DrawQuad(cVector2f(0.5f,0.5f),cVector2f(0.5f,0.5f), 0,mvScreenSizeFloat, true);
 		}
-		
+
 
 		SetNormalFrustumProjection();
 		END_RENDER_PASS();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRendererDeferred::RenderLightComplexity()
 	{
 		START_RENDER_PASS(LightComplexity);
-		
+
 		/////////////////
 		// Color map the data for better readablitiy
 		SetDepthTest(false);
 		SetMatrix(NULL);
 		SetFrameBuffer(mpGBuffer[0][eGBufferComponents_Normals]);
 		SetCullMode(eCullMode_CounterClockwise);
-		
+
 		SetBlendMode(eMaterialBlendMode_None);
 		SetFlatProjection();
 		SetTexture(0, mpAccumBufferTexture);
@@ -3753,7 +3753,7 @@ namespace hpl {
 		SetTexture(0, GetBufferTexture(1));
 
 		DrawQuad(0,1, 0,mvScreenSizeFloat, true);
-		
+
 		/////////////
 		// Reset states
 		SetNormalFrustumProjection();
@@ -3779,7 +3779,7 @@ namespace hpl {
 		SetTextureRange(0,0);
 		SetProgram(mpOverdrawProgram);
 
-		
+
 		cRenderableVecIterator transIt = mpCurrentRenderList->GetArrayIterator(eRenderListType_Translucent);
 		while(transIt.HasNext())
 		{
@@ -3827,7 +3827,7 @@ namespace hpl {
 		SetMatrix(NULL);
 		SetFrameBuffer(mpGBuffer[0][eGBufferComponents_Normals]);
 		SetCullMode(eCullMode_CounterClockwise);
-		
+
 		SetBlendMode(eMaterialBlendMode_None);
 		SetFlatProjection();
 		SetTexture(0, mpAccumBufferTexture);
@@ -3845,7 +3845,7 @@ namespace hpl {
 		SetTexture(0, GetBufferTexture(1));
 
 		DrawQuad(0,1, 0,mvScreenSizeFloat, true);
-		
+
 		/////////////
 		// Reset states
 		SetNormalFrustumProjection();
@@ -3853,7 +3853,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
  //   void cRendererDeferred::RenderLightBufferContent()
 	//{
 	//	START_RENDER_PASS(GBufferContent);
@@ -3876,7 +3876,7 @@ namespace hpl {
 
 	//	SetTexture(0,mpLightBufferTexture);
 	//	DrawQuad(cVector2f(0,0),cVector2f(1.0f,1.0f), 0,mvScreenSizeFloat, true);
-	//	
+	//
 
 	//	SetNormalFrustumProjection();
 	//	END_RENDER_PASS();
@@ -3904,7 +3904,7 @@ namespace hpl {
 
 		SetTexture(0,mpReflectionTexture);
 		DrawQuad(cVector2f(0,0),cVector2f(1,1), 0, mvScreenSizeFloat / (float)mlReflectionSizeDiv, true);
-		
+
 
 		SetNormalFrustumProjection();
 		END_RENDER_PASS();

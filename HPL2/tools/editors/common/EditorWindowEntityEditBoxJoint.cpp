@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -61,7 +61,7 @@ cEditorWindowEntityEditBoxJoint::cEditorWindowEntityEditBoxJoint(cEditorEditMode
 
 cEditorWindowEntityEditBoxJoint::~cEditorWindowEntityEditBoxJoint()
 {
-	
+
 }
 
 //----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ void cEditorWindowEntityEditBoxJoint::Create()
 {
 	mpTabGeneral = mpTabs->AddTab(_W("General"));
 	mpTabJointBase = mpTabs->AddTab(_W("Joint - Base"));
-	
+
 	////////////////////////////////////////
 	// Properties in Tab 'General'
 	AddPropertyName(mpTabGeneral);
@@ -138,7 +138,7 @@ void cEditorWindowEntityEditBoxJoint::OnUpdate(float afTimeStep)
 	mpCheckBoxStickyMaxLimit->SetChecked(mpEntity->GetStickyMaxLimit(), false);
 
 	mpInputMoveSound->SetText(cString::To16Char(mpEntity->GetMoveSound()));
-	
+
 	{
 		tWString sValue = cString::To16Char(mpEntity->GetMoveType());
 		for(int i=0;i<mpInpMoveType->GetNumValues();++i)
@@ -155,12 +155,12 @@ void cEditorWindowEntityEditBoxJoint::OnUpdate(float afTimeStep)
 	mpInputMinMoveFreq->SetNumericValue(mpEntity->GetMinMoveFreq());
 	mpInputMinMoveFreqSpeed->SetNumericValue(mpEntity->GetMinMoveFreqSpeed());
 	mpInputMinMoveVolume->SetNumericValue(mpEntity->GetMinMoveVolume());
-	
+
 	mpInputMaxMoveSpeed->SetNumericValue(mpEntity->GetMaxMoveSpeed());
 	mpInputMaxMoveFreq->SetNumericValue(mpEntity->GetMaxMoveFreq());
 	mpInputMaxMoveFreqSpeed->SetNumericValue(mpEntity->GetMaxMoveFreqSpeed());
 	mpInputMaxMoveVolume->SetNumericValue(mpEntity->GetMaxMoveVolume());
-	
+
 	mpInputMiddleMoveSpeed->SetNumericValue(mpEntity->GetMiddleMoveSpeed());
 	mpInputMiddleMoveVolume->SetNumericValue(mpEntity->GetMiddleMoveVolume());
 
@@ -179,7 +179,7 @@ void cEditorWindowEntityEditBoxJoint::OnUpdate(float afTimeStep)
 	mpInputBreakSound->SetText(cString::To16Char(mpEntity->GetBreakSound()));
 
 	mpCheckBoxCollideBodies->SetChecked(mpEntity->GetCollideBodies(), false);
-	
+
 
 	////////////////////////////////////////////
 	// Specific inputs
@@ -232,7 +232,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointBase(cWidgetTab* apPare
 	mpCheckBoxStickyMinLimit = mpSet->CreateWidgetCheckBox(vPos, 0, _W("Sticky Min Limit"), apParentTab);
 	AddWidget(mpCheckBoxStickyMinLimit);
 	mpCheckBoxStickyMinLimit->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(InputCallback));
-	
+
 	vPos.y += fAddNear;
 
 	mpCheckBoxStickyMaxLimit = mpSet->CreateWidgetCheckBox(vPos, 0, _W("Sticky Max Limit"), apParentTab);
@@ -240,7 +240,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointBase(cWidgetTab* apPare
 	mpCheckBoxStickyMaxLimit->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(InputCallback));
 
 	vPos.y += fAddFar;
-	
+
 	mpLabelLimitStepCount = mpSet->CreateWidgetLabel(vPos, 0, _W("Limit Step Count"), apParentTab);
 	AddWidget(mpLabelLimitStepCount);
 	vPos.y+=fAddNearLabel;
@@ -250,13 +250,13 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointBase(cWidgetTab* apPare
 	AddWidget(mpInputLimitStepCount);
 
 	vPos.y += fAddFar;
-	
+
 	mpCheckBoxCollideBodies = mpSet->CreateWidgetCheckBox(vPos, cVector2f(120,25), _W("Collide Bodies"), apParentTab);
 	mpCheckBoxCollideBodies->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(InputCallback));
 	AddWidget(mpCheckBoxCollideBodies);
 
 	vPos.y += fAddFar;
-	
+
 	mpCheckBoxBreakable = mpSet->CreateWidgetCheckBox(vPos, cVector2f(120,25), _W("Breakable"), apParentTab);
 	mpCheckBoxBreakable->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(InputCallback));
 	AddWidget(mpCheckBoxBreakable);
@@ -288,7 +288,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointSounds(cWidgetTab* apPa
 	mpInpMoveType->AddValue(_W("Linear"));
 
 	vPos.y += mpInpMoveType->GetSize().y;
-    
+
 
 	cWidgetLabel* pLabel = NULL;
 
@@ -336,7 +336,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointSounds(cWidgetTab* apPa
 	vPos.x += 75;
 	mpLabelMinMoveVolume = mpSet->CreateWidgetLabel(vPos, 0, _W("Volume"), apParentTab);
 	AddWidget(mpLabelMinMoveVolume);
-	
+
 	vPos.x = 15;
 	vPos.y+=fAddNearLabel;
 
@@ -386,7 +386,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointSounds(cWidgetTab* apPa
 	vPos.x += 75;
 	mpLabelMaxMoveVolume = mpSet->CreateWidgetLabel(vPos, 0, _W("Volume"), apParentTab);
 	AddWidget(mpLabelMaxMoveVolume);
-	
+
 	vPos.x = 15;
 	vPos.y+=fAddNearLabel;
 
@@ -412,7 +412,7 @@ void cEditorWindowEntityEditBoxJoint::AddPropertySetJointSounds(cWidgetTab* apPa
 	mpLabelMiddleMoveVolume = mpSet->CreateWidgetLabel(vPos, 0, _W("Volume"), apParentTab);
 	AddWidget(mpLabelMiddleMoveVolume);
 
-	vPos.x =15;	
+	vPos.x =15;
 	vPos.y+=fAddNearLabel;
 
 	mpInputMiddleMoveSpeed = mpSet->CreateWidgetTextBox(vPos, cVector2f(70,25), _W(""), apParentTab, eWidgetTextBoxInputType_Numeric,0.5f);
@@ -790,7 +790,7 @@ bool cEditorWindowEntityEditBoxJoint::InputCallback(iWidget* apWidget, const cGu
 	/*
 	//////////////////////////////////
 	// Ball : Cone Pin
-	else if(apWidget == mvInputConePin[0] || 
+	else if(apWidget == mvInputConePin[0] ||
 			apWidget == mvInputConePin[1] ||
 			apWidget == mvInputConePin[2])
 	{
@@ -800,9 +800,9 @@ bool cEditorWindowEntityEditBoxJoint::InputCallback(iWidget* apWidget, const cGu
 			vTemp.v[i] = mvInputConePin[i]->GetNumericValue();
 		}
 
-		pAction = hplNew( cEditorActionJointBallSetVector3Property,(lID, 
-															  pLevel, 
-															  eEditorJointBallVector3Property_ConePin, 
+		pAction = hplNew( cEditorActionJointBallSetVector3Property,(lID,
+															  pLevel,
+															  eEditorJointBallVector3Property_ConePin,
 															  vTemp));
 	}*/
 	//////////////////////////////////
@@ -844,7 +844,7 @@ bool cEditorWindowEntityEditBoxJoint::InputCallback(iWidget* apWidget, const cGu
 	/*
 	//////////////////////////////////
 	// Screw & Slider : Pin
-	else if(apWidget == mvInputPin[0] || 
+	else if(apWidget == mvInputPin[0] ||
 			apWidget == mvInputPin[1] ||
 			apWidget == mvInputPin[2])
 	{
@@ -856,14 +856,14 @@ bool cEditorWindowEntityEditBoxJoint::InputCallback(iWidget* apWidget, const cGu
 
 		if(mpEntity->GetJointType()==eEditorEntityJointType_Screw)
 		{
-			pAction = hplNew( cEditorActionJointScrewSetVector3Property,(lID, 
+			pAction = hplNew( cEditorActionJointScrewSetVector3Property,(lID,
 																		 pLevel,
 																		 eEditorJointScrewVector3Property_Pin,
 																		 vTemp));
 		}
 		else
 		{
-			pAction = hplNew( cEditorActionJointSliderSetVector3Property,(lID, 
+			pAction = hplNew( cEditorActionJointSliderSetVector3Property,(lID,
 																		  pLevel,
 																		  eEditorJointSliderVector3Property_Pin,
 																		  vTemp));
@@ -989,7 +989,7 @@ void cEditorWindowEntityEditBoxJoint::AttachBodyToJoint(int alBodyType)
 	{
 		int lBodyID = -1;
 		if(pNewBody) lBodyID = pNewBody->GetID();
-		
+
 		iEditorAction* pAction = mpEntity->CreateSetPropertyActionInt(alBodyType, lBodyID);
 		//iEditorAction* pAction = hplNew( cEditorActionJointAttachBody,(mpEntity->GetID(), mpEditMode->GetEditorWorld(), aBody, lBodyID));
 		mpEditor->AddAction(pAction);
@@ -998,7 +998,7 @@ void cEditorWindowEntityEditBoxJoint::AttachBodyToJoint(int alBodyType)
 	hplDelete(mpCurrentBodyHighlighter);
 	mpCurrentBodyHighlighter = NULL;
 
-	
+
 	mpEditMode->SetCurrentEntitySelector(NULL);
 }
 

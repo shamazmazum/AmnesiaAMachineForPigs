@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -107,7 +107,7 @@ void cLuxLoadScreenHandler::LoadFonts()
 
 void cLuxLoadScreenHandler::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -259,7 +259,7 @@ void cLuxLoadScreenHandler::DrawMenuScreen()
 	//Draw Image
 	cVector2f vImageSize = pImage->GetImageSize();
 	pSet->DrawGfx(pImage, cVector3f(400,300,0)- cVector3f(vImageSize.x/2.0f, vImageSize.y/2.0f, 0));
-	
+
 	//////////////////////
 	//Draw Text
 	cVector2f vSize(20);
@@ -322,7 +322,7 @@ void cLuxLoadScreenHandler::Exit()
 tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 {
 	if(msLoadTextCat == "" || msLoadTextEntry == "") return "";
-	
+
 	tString sEntry = msLoadTextEntry;
 	if(mlTextRandomNum > 1)
 	{
@@ -335,7 +335,7 @@ tString cLuxLoadScreenHandler::GetGameScreenTextEntry()
 				lNum = lIdx;
 				break;
 			}
-			++lIdx; 
+			++lIdx;
 			if(lIdx >= mlTextRandomNum) lIdx =0;
 		}
 
@@ -385,7 +385,7 @@ void cLuxLoadScreenHandler::UpdateGameState(float afTimeStep)
 		mfExtraTime -= afTimeStep;
 		return;
 	}
-	
+
 	////////////////////////////
 	// Alpha
     mfAlpha -= afTimeStep * (1.0f/mfFadeOutTime);
@@ -448,7 +448,7 @@ void cLuxLoadScreenHandler::DrawGameScreen(cGuiSet *apSet)
 		tWString sLoading = kTranslate("General", "Loading");
 		tWString sContinue = kTranslate("Game", "DeathPress");
 		cVector3f vPos(400, mfLoadingY,1);
-		
+
 		float fLoadAlpha = cMath::Max(0.0f, mfLoadingAlpha);
 
 		apSet->DrawFont(sLoading, mpFontDefault, vPos, mvLoadingFontSize, cColor(mLoadingFontColor.r,mLoadingFontColor.g,mLoadingFontColor.b,mLoadingFontColor.a * fLoadAlpha), eFontAlign_Center);

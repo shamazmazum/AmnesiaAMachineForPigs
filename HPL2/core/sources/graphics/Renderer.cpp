@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -78,9 +78,9 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	int iRenderer::mlRenderFrameCount =0;
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// RENDERER SORTING
 	//////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-		
+
 	//////////////////////////////////////////////////////////////////////////
 	// RENDER SETTINGS
 	//////////////////////////////////////////////////////////////////////////
@@ -110,13 +110,13 @@ namespace hpl {
 		////////////////////////
 		// Create data
 		mpRenderList = hplNew( cRenderList, () );
-	
+
 		mpVisibleNodeTracker = hplNew( cVisibleRCNodeTracker, () );
 
 		////////////////////////
 		// Setup data
 		mlCurrentOcclusionObject = 0;
-		
+
 		////////////////////////
 		// Set up General Variables
 		mbIsReflection = abIsReflection;
@@ -155,7 +155,7 @@ namespace hpl {
 		////////////////////////////
 		//Light settings
 		mbSSAOActive = mbIsReflection ? false : true;
-		
+
 		////////////////////////
 		// Set up Output Variables
 		mlNumberOfLightsRendered =0;
@@ -179,7 +179,7 @@ namespace hpl {
 	{
 		hplDelete(mpRenderList);
 		hplDelete(mpVisibleNodeTracker);
-		
+
 		STLDeleteAll(mvOcclusionObjectPool);
 
 		for(size_t i=0; i<mvLightOcclusionPairs.size(); ++i)
@@ -198,7 +198,7 @@ namespace hpl {
 		//return;
 		mpVisibleNodeTracker->Reset();
 
-        if(mpReflectionSettings) mpReflectionSettings->ResetVariables();		
+        if(mpReflectionSettings) mpReflectionSettings->ResetVariables();
 	}
 
 	//-----------------------------------------------------------------------
@@ -220,7 +220,7 @@ namespace hpl {
 		RenderSettingsCopy(mlSampleVisiblilityLimit);
 
 		mpReflectionSettings->mbUseScissorRect = false;
-		
+
 		////////////////////////////
 		//Shadow settings
 		RenderSettingsCopy(mbRenderShadows);
@@ -243,7 +243,7 @@ namespace hpl {
 	{
 		mvOcclusionPlanes.push_back(aPlane);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cRenderSettings::ResetOcclusionPlanes()
@@ -273,7 +273,7 @@ namespace hpl {
 
 		++mlCurrentOcclusionObject;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 
@@ -308,10 +308,10 @@ namespace hpl {
 		//////////////////////////////////////
 		// Get the query and wait (if needed) for result to come in.
 		iOcclusionQuery *pQuery = pObject->mpQuery;
-		
+
 		//If query is null, then samples have already been retrieved.
 		if(pQuery==NULL) return pObject->mlSampleResults;
-		
+
 		while(pQuery->FetchResults()==false);
 
 		pObject->mlSampleResults = pQuery->GetSampleCount();
@@ -329,7 +329,7 @@ namespace hpl {
 		{
 			iOcclusionQuery *pQuery = mvOcclusionObjectPool[i]->mpQuery;
 			if(pQuery==NULL) continue;
-			
+
             while(pQuery->FetchResults()==false);
 
 			mvOcclusionObjectPool[i]->mlSampleResults = pQuery->GetSampleCount();
@@ -369,7 +369,7 @@ namespace hpl {
 		mpLight = apLight;
 		mlTransformCount = apLight->GetTransformUpdateCount();
 		mfRadius = apLight->GetRadius();
-		
+
 		if(apLight->GetLightType() == eLightType_Spot)
 		{
 			cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
@@ -430,13 +430,13 @@ namespace hpl {
 		//////////////
 		// Create programs
 		cParserVarContainer vars;
-		
+
 		mpDepthOnlyProgram = mpProgramManager->CreateProgramFromShaders("DepthOnly",
 											"deferred_base_vtx.glsl",
 											"deferred_depthonly_frag.glsl",
 											&vars,false);
 
-		
+
 		////////////
 		// Create shapes
 		//  Color and Texture because Geforce cards fail without it, no idea why...
@@ -455,7 +455,7 @@ namespace hpl {
 
 		hplDelete(mpCallbackFunctions);
 		hplDelete(mpProgramManager);
-		
+
 		hplDelete(mpDepthOnlyProgram);
 	}
 
@@ -466,7 +466,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	void iRenderer::Render(float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
 							bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList)
 	{
@@ -474,7 +474,7 @@ namespace hpl {
 
 		SetupRenderList();
         RenderObjects();
-		
+
         EndRendering();
 	}
 
@@ -493,7 +493,7 @@ namespace hpl {
 		{
 			iFrameBufferAttachment *pAttachement = mpCurrentRenderTarget->mpFrameBuffer->GetColorBuffer(0);
             iTexture *pTexture = static_cast<iTexture*>(pAttachement);
-			
+
 			return pTexture;
 		}
 		else
@@ -511,10 +511,10 @@ namespace hpl {
 
 		mpCurrentSettings->AssignOcclusionObject(this, apSource, alCustomIndex, apVtxBuffer, apMatrix, abDepthTest);
 	}
-	
+
 	int iRenderer::RetrieveOcclusionObjectSamples(void *apSource, int alCustomIndex)
 	{
-		int lSamples = mpCurrentSettings->RetrieveOcclusionObjectSamples(this, apSource, alCustomIndex);	
+		int lSamples = mpCurrentSettings->RetrieveOcclusionObjectSamples(this, apSource, alCustomIndex);
 
 		if(mbLog) Log("  Retrieved %d samples from occlusion object with source %d and custom ID: %d.\n",lSamples,apSource, alCustomIndex);
 
@@ -535,7 +535,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	void iRenderer::BeginRendering(	float afFrameTime,cFrustum *apFrustum, cWorld *apWorld, cRenderSettings *apSettings, cRenderTarget *apRenderTarget,
 									bool abSendFrameBufferToPostEffects,tRendererCallbackList *apCallbackList, bool abAtStartOfRendering)
 	{
@@ -559,7 +559,7 @@ namespace hpl {
 
 		////////////////////////////////
 		//Initialize render functions
-		InitAndResetRenderFunctions(apFrustum, apRenderTarget, apSettings->mbLog, 
+		InitAndResetRenderFunctions(apFrustum, apRenderTarget, apSettings->mbLog,
 									apSettings->mbUseScissorRect, apSettings->mvScissorRectPos, apSettings->mvScissorRectSize);
 
 
@@ -586,7 +586,7 @@ namespace hpl {
 		if(mbSetupOcclusionPlaneForFog && apWorld->GetFogActive() && apWorld->GetFogColor().a >= 1.0f && apWorld->GetFogCulling())
 		{
 			cPlanef fogPlane;
-			fogPlane.FromNormalPoint(	apFrustum->GetForward(), 
+			fogPlane.FromNormalPoint(	apFrustum->GetForward(),
 										apFrustum->GetOrigin() + apFrustum->GetForward()*-apWorld->GetFogEnd());
 			mvCurrentOcclusionPlanes.push_back(fogPlane);
 		}
@@ -605,23 +605,23 @@ namespace hpl {
 			// General states
 			mpLowLevelGraphics->SetClearColor(mpCurrentSettings->mClearColor);
 			mpLowLevelGraphics->SetClearDepth(1);
-			
+
 			/////////////////////////
 			// Render states
 			mpLowLevelGraphics->SetColorWriteActive(true, true, true, true);
-			
+
 			mpLowLevelGraphics->SetCullActive(true);
 			mpLowLevelGraphics->SetCullMode(eCullMode_CounterClockwise);
-			
+
 			mpLowLevelGraphics->SetDepthTestActive(true);
 			mpLowLevelGraphics->SetDepthWriteActive(true);
 			mpLowLevelGraphics->SetDepthTestFunc(eDepthTestFunc_LessOrEqual);
-			
+
 			mpLowLevelGraphics->SetColor(cColor(1,1,1,1));
 
 			for(int i=0; i<kMaxTextureUnits; ++i)
 				mpLowLevelGraphics->SetTexture(i, NULL);
-		
+
 			//////////////////////////////
 			//Clear screen
 			if(mbClearFrameBufferAtBeginRendering && abAtStartOfRendering)
@@ -629,7 +629,7 @@ namespace hpl {
 				ClearFrameBuffer(eClearFrameBufferFlag_Depth | eClearFrameBufferFlag_Color, true);
 			}
 
-			
+
 			//////////////////////////////////////////////////
 			// Projection matrix
 			SetNormalFrustumProjection();
@@ -641,7 +641,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void iRenderer::EndRendering(bool abAtEndOfRendering)
 	{
 		///////////////////////////////
@@ -666,14 +666,14 @@ namespace hpl {
 		// Reset the cull mode setup
 		mbInvertCullMode = false;
 		mpLowLevelGraphics->SetCullMode(eCullMode_CounterClockwise);
-		
+
 		/////////////////////////////////////////////
 		// Unbind all rendering data
 		for(int i=0; i<kMaxTextureUnits; ++i)
 		{
 			if(mvCurrentTexture[i]) mpLowLevelGraphics->SetTexture(i, NULL);
 		}
-		
+
 		if(mpCurrentProgram) mpCurrentProgram->UnBind();
 		if(mpCurrentVtxBuffer) mpCurrentVtxBuffer->UnBind();
 
@@ -707,7 +707,7 @@ namespace hpl {
 		pData->mpTexture->CreateFromRawData(avSize, aFormat, NULL);
 		pData->mpTexture->SetCompareMode(eTextureCompareMode_RToTexture);
 		pData->mpTexture->SetCompareFunc(eTextureCompareFunc_LessOrEqual);
-		pData->mpTexture->SetFilter(eTextureFilter_Nearest);	
+		pData->mpTexture->SetFilter(eTextureFilter_Nearest);
 		pData->mpTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
 
 		//Hack to avoid ATI drier failure:
@@ -733,7 +733,7 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 
-    
+
 	cShadowMapData* iRenderer::GetShadowMapData(eShadowMapResolution aResolution, iLight *apLight)
 	{
 		////////////////////////////
@@ -742,7 +742,7 @@ namespace hpl {
 
 		//////////////////////////
 		//Set up variables
-		cShadowMapData *pBestData = NULL;  
+		cShadowMapData *pBestData = NULL;
 		int lMaxFrameDist = -1;
 
 		////////////////////////////
@@ -751,19 +751,19 @@ namespace hpl {
 		for(size_t i=0; i<mvShadowMapData[aResolution].size(); ++i)
 		{
 			cShadowMapData *pData = mvShadowMapData[aResolution][i];
-			
+
             if(pData->mCache.mpLight == apLight)
 			{
 				pBestData = pData;
 				break;
 			}
-			else 
+			else
 			{
 				int lFrameDist = cMath::Abs(pData->mlFrameCount- mlRenderFrameCount);
 				if(lFrameDist > lMaxFrameDist)
 				{
 					lMaxFrameDist = lFrameDist;
-					pBestData = pData;	
+					pBestData = pData;
 				}
 			}
 		}
@@ -774,8 +774,8 @@ namespace hpl {
 		{
 			pBestData->mlFrameCount = mlRenderFrameCount;
 		}
-		
-		
+
+
 		return pBestData;
 	}
 
@@ -788,7 +788,7 @@ namespace hpl {
 		if(apLight->GetOcclusionCullShadowCasters()) return true;
 
 		cShadowMapLightCache& cacheData = apShadowData->mCache;
-		
+
 		///////////////////////////
 		// Check if texture map and light are valid
 		bool bValid =	cacheData.mpLight == apLight &&	cacheData.mlTransformCount == apLight->GetTransformUpdateCount() &&
@@ -816,10 +816,10 @@ namespace hpl {
 			cacheData.SetFromLight(apLight);
 			apLight->SetShadowCasterCacheFromVec(mvShadowCasters);
 		}
-		
+
 		return bValid ? false : true;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void iRenderer::DestroyShadowMaps()
@@ -836,7 +836,7 @@ namespace hpl {
 			}
 			STLDeleteAll(mvShadowMapData[res]);
 		}
-		
+
 	}
 
 	//-----------------------------------------------------------------------
@@ -851,17 +851,17 @@ namespace hpl {
 		//Set up render modes
 		SetBlendMode(eMaterialBlendMode_None);
 		SetAlphaLimit(mfDefaultAlphaLimit);
-		SetAlphaMode( pMaterial->GetTexture(eMaterialTexture_Alpha) || renderMode==eMaterialRenderMode_Z_Dissolve ? 
+		SetAlphaMode( pMaterial->GetTexture(eMaterialTexture_Alpha) || renderMode==eMaterialRenderMode_Z_Dissolve ?
 						eMaterialAlphaMode_Trans : eMaterialAlphaMode_Solid);
 
 		////////////////////////
 		//Set up textures
         SetMaterialTextures(renderMode, pMaterial);
-		
+
         ////////////////////////
 		//Set up program
 		SetMaterialProgram(renderMode,pMaterial);
-			
+
 
 		////////////////////////
 		//Matrix
@@ -878,7 +878,7 @@ namespace hpl {
 		//Draw
 		DrawCurrentMaterial(renderMode, apObject);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void iRenderer::CheckNodesAndAddToListIterative(iRenderableContainerNode *apNode, tRenderableFlag alNeededFlags)
@@ -890,9 +890,9 @@ namespace hpl {
 		///////////////////////////////////////
 		//Get frustum collision, if previous was inside, then this is too!
 		eCollision frustumCollision = mpCurrentFrustum->CollideNode(apNode);
-		
+
 		////////////////////////////////
-		//Do a visible check but always iterate the root node!	
+		//Do a visible check but always iterate the root node!
 		if(apNode->GetParent())
 		{
 			if(	frustumCollision == eCollision_Outside) return;
@@ -988,16 +988,16 @@ namespace hpl {
 			////////////////////////////////////////////////////////
 			// Frustum origin is outside of node. Do intersection test.
 			else
-			{	
+			{
 				cVector3f vIntersection;
-				cMath::CheckAABBLineIntersection(pChildNode->GetMin(), pChildNode->GetMax(), 
+				cMath::CheckAABBLineIntersection(pChildNode->GetMin(), pChildNode->GetMax(),
 												mpCurrentFrustum->GetOrigin(), pChildNode->GetCenter(),
 												&vIntersection, NULL);
 				cVector3f vViewSpacePos = cMath::MatrixMul(mpCurrentFrustum->GetViewMatrix(), vIntersection);
 				pChildNode->SetViewDistance(vViewSpacePos.z);
 				pChildNode->SetInsideView(false);
 			}
-			
+
 			////////////////////////////////////////////////////////
 			// Add to sorted stack.
 			a_setNodeStack.insert(pChildNode);
@@ -1010,7 +1010,7 @@ namespace hpl {
 	{
 		//DEBUG
 		// Skip using a query and just render the node.
-		if(	mbOnlyRenderPrevVisibleOcclusionObjects && 
+		if(	mbOnlyRenderPrevVisibleOcclusionObjects &&
 			mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount >= 1)
 		{
 			RenderNodeBoundingBox(apNode,NULL);
@@ -1028,9 +1028,9 @@ namespace hpl {
 
 		/////////////////////
 		// Render node AABB
-		RenderNodeBoundingBox(apNode, noPair.mpQuery);		
-		
-		
+		RenderNodeBoundingBox(apNode, noPair.mpQuery);
+
+
 		/////////////////////
 		// Add to list
 		apList->push_back(noPair);
@@ -1063,7 +1063,7 @@ namespace hpl {
 		/////////////////////////
 		//Vertex buffer
 		SetVertexBuffer(mpShapeBox);
-		
+
 
 		/////////////////////////
 		//Draw
@@ -1072,7 +1072,7 @@ namespace hpl {
 		if(apQuery) apQuery->End();
 
 		mpCurrentSettings->mlNumberOfOcclusionQueries++;
-		
+
 		//Debug:
 		//mpCurrentSettings->mlstRenderedNodes.push_back(apNode);
 	}
@@ -1083,7 +1083,7 @@ namespace hpl {
 	{
 		return apRenderer->RenderObjectZAndAddToRenderList(apObject);
 	}
-	
+
 	bool iRenderer::RenderObjectZAndAddToRenderList(iRenderable *apObject)
 	{
 		cMaterial *pMaterial = apObject->GetMaterial();
@@ -1091,7 +1091,7 @@ namespace hpl {
 		/////////////////////////////
 		// Add to render list
 		mpCurrentRenderList->AddObject(apObject);
-		
+
 		////////////////////////////
 		//Check if object is translucent or has no material
 		// If so, do not render it.
@@ -1123,14 +1123,14 @@ namespace hpl {
 		for(tRenderableListIt it = apNode->GetObjectList()->begin(); it != apNode->GetObjectList()->end(); ++it)
 		{
 			iRenderable *pObject = *it;
-			
+
 			//////////////////////
 			// Check if object is visible
 			if(CheckObjectIsVisible(pObject, alNeededFlags)==false) continue;
 
 			/////////////////////////////
 			//Check if inside frustum, skip test node was inside
-			if(	apNode->GetPrevFrustumCollision() != eCollision_Inside && 
+			if(	apNode->GetPrevFrustumCollision() != eCollision_Inside &&
 				pObject->CollidesWithFrustum(mpCurrentFrustum)==false)
 			{
 				continue;
@@ -1144,19 +1144,19 @@ namespace hpl {
 
 		return lRenderedObjects;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	cVisibleRCNodeTracker *gpCurrentVisibleNodeTracker = NULL;
     void iRenderer::PushUpVisibility(iRenderableContainerNode *apNode)
 	{
 		gpCurrentVisibleNodeTracker->SetNodeVisible(apNode);
-		
+
 		if(apNode->GetParent()) PushUpVisibility(apNode->GetParent());
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	static void PrintNodeDebugContents(tRendererSortedNodeSet &a_setNodes)
 	{
 		Log("  Nodes:\n");
@@ -1164,8 +1164,8 @@ namespace hpl {
 		for(; it != a_setNodes.end(); ++it)
 		{
 			iRenderableContainerNode *pNode = *it;
-            
-			Log("   Node: %d, inside: %d, children %d, objects: %d\n", pNode, pNode->IsInsideView(), 
+
+			Log("   Node: %d, inside: %d, children %d, objects: %d\n", pNode, pNode->IsInsideView(),
 																	pNode->GetChildNodeList()->size(),
 																	pNode->GetObjectNum());
 		}
@@ -1206,7 +1206,7 @@ namespace hpl {
 
 		// Set up output variables
 		mpCurrentSettings->mlNumberOfOcclusionQueries =0;
-		
+
 		// Switch sets, so that the last frames set is not current.
 		apVisibleNodeTracker->SwitchAndClearVisibleNodeSet();
 
@@ -1237,7 +1237,7 @@ namespace hpl {
 			if(vContainerFlags[i] & alObjectTypes)
 			{
 				iRenderableContainerNode *pNode = pContainers[i]->GetRoot();
-				pNode->UpdateBeforeUse();	//Make sure node is updated.	
+				pNode->UpdateBeforeUse();	//Make sure node is updated.
 				pNode->SetInsideView(true);	//We never want to check root! Assume player is inside.
 				setNodeStack.insert(pNode);
 			}
@@ -1245,8 +1245,8 @@ namespace hpl {
 
 
 		//Render at least X objects without rendering nodes, to some occluders
-		int lMinRenderedObjects = mpCurrentSettings->mlMinimumObjectsBeforeOcclusionTesting;	
-				
+		int lMinRenderedObjects = mpCurrentSettings->mlMinimumObjectsBeforeOcclusionTesting;
+
 		////////////////////////////
 		//Iterate the nodes on the stack.
 		while(setNodeStack.empty()==false || lstNodeOcclusionPairs.empty()==false)
@@ -1262,7 +1262,7 @@ namespace hpl {
 				setNodeStack.erase(firstIt); //This is most likely very slow... use list?
 
 				//////////////////////////
-				// Check if node is a leaf  
+				// Check if node is a leaf
 				bool bNodeIsLeaf = pNode->HasChildNodes()==false;
 
 				//////////////////////////
@@ -1276,10 +1276,10 @@ namespace hpl {
 				//////////////////////////
 				//Render nodes and queue queries
 				// Only do this if:
-				// - Near plane is not inside node AABB 
+				// - Near plane is not inside node AABB
 				// - All of the closest objects have been rendered (so there are some blockers)
 				// - Node was not visible or node is leaf (always draw leaves!)
-				if(	bNearPlaneInsideNode==false && lMinRenderedObjects<=0 && 
+				if(	bNearPlaneInsideNode==false && lMinRenderedObjects<=0 &&
 					(bWasVisible==false || bNodeIsLeaf) )
 				{
 					////////////////
@@ -1287,18 +1287,18 @@ namespace hpl {
 					// Rendering directly can be good as it may result in extra blocker for next node test.
 					bool bRenderObjects = false;
 					if(bNodeIsLeaf && bWasVisible) bRenderObjects = true;
-															
+
 					/////////////////////////////////////
 					// Render AABB and add query to list
 					AddAndRenderNodeOcclusionQuery(&lstNodeOcclusionPairs, pNode, bRenderObjects);
-					
+
 					//////////////////////////
 					//Render node objects after AABB so that an object does not occlude its own node.
 					if(bRenderObjects) RenderAndAddNodeObjects(pNode,pRenderCallback, alNeededFlags);
 
 					//Debug:
 					// Skipping any queries, so must push up visible if this node was visible
-					if(mbOnlyRenderPrevVisibleOcclusionObjects && 
+					if(mbOnlyRenderPrevVisibleOcclusionObjects &&
 						mlOnlyRenderPrevVisibleOcclusionObjectsFrameCount >= 1 &&
 						bRenderObjects && bWasVisible)
 					{
@@ -1316,7 +1316,7 @@ namespace hpl {
 						else
 							Log("CHC: Near plane inside node %d, pushing children and rendering nodes!\n",pNode);
 					}
-					
+
 					////////////////
 					//Add child nodes to stack if any (also checks if they have needed flags are in frustum)
 					PushNodeChildrenToStack(setNodeStack, pNode, alNeededFlags);
@@ -1341,7 +1341,7 @@ namespace hpl {
 			{
 				cNodeOcclusionPair& noPair = lstNodeOcclusionPairs.front();
 
-							
+
 				//////////////////////////////////////
 				//Check if the query is done
 				if(noPair.mpQuery->FetchResults()==false)
@@ -1356,10 +1356,10 @@ namespace hpl {
 					//Get data, release query and pop front
 					bool bObjectsRendered = noPair.mbObjectsRendered;
 					iRenderableContainerNode *pNode = noPair.mpNode;
-					
+
 					int lSampleCount = noPair.mpQuery->GetSampleCount();
 					ReleaseOcclusionQuery(noPair.mpQuery);
-					
+
 					lstNodeOcclusionPairs.pop_front(); //Makes noPair invalid
 
 					if(mbLog)Log("CHC: Fetching query %d on node: %d, samples: %d\n",noPair.mpQuery, pNode, lSampleCount);
@@ -1373,7 +1373,7 @@ namespace hpl {
 						////////////////
 						//Set node and all of its parents as visible.
 						PushUpVisibility(pNode);
-						
+
 						////////////////
 						//Add child nodes to stack if any (also checks if they have needed flags are in frustum)
 						PushNodeChildrenToStack(setNodeStack, pNode, alNeededFlags);
@@ -1402,7 +1402,7 @@ namespace hpl {
 
 		END_RENDER_PASS();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	static tRenderableVec* gpLightShadowCasterVec=NULL;
@@ -1413,7 +1413,7 @@ namespace hpl {
 	static bool gbLightBehindNearPlane;
 
 	//-----------------------------------------------------------------------
-	
+
 	static bool BoxIntersectOrInsidePlane(const cPlanef& aPlane,cVector3f *apCornerVec)
 	{
 		for(int corner =0; corner < 8; ++corner)
@@ -1464,9 +1464,9 @@ namespace hpl {
 
 			const cPlanef& nearPlane = gpViewFrustum->GetPlane(eFrustumPlane_Near);
 			float fDist = cMath::PlaneToPointDist(nearPlane, pBV->GetWorldCenter());
-			
-			//Object is outside of near plane. 
-			if(fDist < -pBV->GetRadius()) return true; 
+
+			//Object is outside of near plane.
+			if(fDist < -pBV->GetRadius()) return true;
 
 			//Object is not really inside near plane, test more accurately later
 			if(fDist < pBV->GetRadius())
@@ -1476,7 +1476,7 @@ namespace hpl {
 		}
 
 		eCollision frustumCollision = eCollision_Inside;
-		
+
 		//Log("2\n");
 		////////////////////////////
 		// Sphere test
@@ -1486,9 +1486,9 @@ namespace hpl {
 		{
 			eFrustumPlane frustumPlane = gvBeyondLightAndViewPlanes[i];
 			const cPlanef& cameraPlane = gpViewFrustum->GetPlane(frustumPlane);
-			
+
 			float fDist = cMath::PlaneToPointDist(cameraPlane, pBV->GetWorldCenter());
-			
+
 			//Test if inside of plane
 			if(fDist > pBV->GetRadius())
 			{
@@ -1500,7 +1500,7 @@ namespace hpl {
 				break;
 			}
 		}
-		
+
 		//Log("3\n");
 		// If all was inside, then we are sure it contributes
 		if(lInsideCount == glBeyondLightAndViewPlaneNum) return true;
@@ -1508,7 +1508,7 @@ namespace hpl {
 		//Log("4\n");
 		// If any was outside, we are sure it does NOT contribute
 		if(lOutsideCount > 0 && bObjectMightOnNearPlane==false) return false;
-				
+
 		////////////////////
 		// Create corners
 		const cVector3f& vMax = pBV->GetMax();
@@ -1521,7 +1521,7 @@ namespace hpl {
 				cVector3f(vMin.x,vMax.y,vMax.z), cVector3f(vMin.x,vMax.y,vMin.z),
 				cVector3f(vMin.x,vMin.y,vMax.z), cVector3f(vMin.x,vMin.y,vMin.z),
 		};
-		
+
 		//Log("5\n");
 		////////////////////////////
 		// Check near plane intersection
@@ -1534,10 +1534,10 @@ namespace hpl {
 			}
 			bObjectMightOnNearPlane = false;//Reset so it is not tested again.
 		}
-		
+
 		////////////////////////////
 		// Box Test
-		
+
 		//Log("6\n");
 		//If needed check so that it is inside the near plane
 		if(bObjectMightOnNearPlane)
@@ -1548,7 +1548,7 @@ namespace hpl {
 				return true;
 			}
 		}
-		
+
 		//Log("7\n");
 		//Iterate all planes separating between contributing and not.
 		bool bContributes;
@@ -1556,14 +1556,14 @@ namespace hpl {
 		{
 			eFrustumPlane frustumPlane = gvBeyondLightAndViewPlanes[plane];
 			const cPlanef& cameraPlane = gpViewFrustum->GetPlane(frustumPlane);
-			
+
 			bContributes = BoxIntersectOrInsidePlane(cameraPlane, vCorners);
 
 			//Log("plane %d contribute: %d\n",frustumPlane, bContributes);
 
 			if(bContributes==false) break;
 		}
-		
+
 		return bContributes;
 	}
 
@@ -1579,10 +1579,10 @@ namespace hpl {
 		///////////////////////////////////////
 		//Get frustum collision, if previous was inside, then this is too!
 		eCollision frustumCollision = aPrevCollision == eCollision_Inside ? aPrevCollision : gpLightFrustum->CollideNode(apNode);
-		
+
 		///////////////////////////////////
-		//Check if visible but always iterate the root node!	
-		if(apNode->GetParent()) 
+		//Check if visible but always iterate the root node!
+		if(apNode->GetParent())
 		{
 			if(frustumCollision == eCollision_Outside) return;
 			if(CheckNodeIsVisible(apNode)==false) return;
@@ -1606,7 +1606,7 @@ namespace hpl {
 			for(tRenderableListIt it = apNode->GetObjectList()->begin(); it != apNode->GetObjectList()->end(); ++it)
 			{
 				iRenderable *pObject = *it;
-				
+
 				/////////
 				//Check so visible and shadow caster
 				if(	CheckObjectIsVisible(pObject, eRenderableFlag_ShadowCaster)==false ||
@@ -1615,7 +1615,7 @@ namespace hpl {
 				{
 					continue;
 				}
-				
+
 				/////////
 				//Check if in frustum
 				if(	frustumCollision != eCollision_Inside &&
@@ -1623,21 +1623,21 @@ namespace hpl {
 				{
 					continue;
 				}
-				
+
 				/////////
 				// Check if it contributes to scene
 				if(CheckShadowCasterContributesToView(pObject)==false) continue;
 
-				
+
 				///////////////////////////////
 				// Add object!
-				
+
 				//Calculate the view space Z (just a squared distance)
-				pObject->SetViewSpaceZ(cMath::Vector3DistSqr(pObject->GetBoundingVolume()->GetWorldCenter(), 
+				pObject->SetViewSpaceZ(cMath::Vector3DistSqr(pObject->GetBoundingVolume()->GetWorldCenter(),
 															gpLightFrustum->GetOrigin()));
 
 				//Add to list
-				gpLightShadowCasterVec->push_back(pObject);				
+				gpLightShadowCasterVec->push_back(pObject);
 			}
 		}
 	}
@@ -1702,7 +1702,7 @@ namespace hpl {
 
 		//Set the view frustum, needed in some functions cause the current is set for the light during rendering.
 		gpViewFrustum = mpCurrentFrustum;
-		
+
 		/////////////////////////
 		// Get the camera planes that face away from the light
 		glBeyondLightAndViewPlaneNum =0;
@@ -1715,18 +1715,18 @@ namespace hpl {
 			// Above 0 because GetForward from frustum is inverted.
 			// Note that this is not optimal, but good enough for now. Should have some other way of choosing to make it better.
 			cVector3f vPlaneNormal = cameraPlane.GetNormal();
-			if(cMath::Vector3Dot(vPlaneNormal, vLightForward) > 0)	
+			if(cMath::Vector3Dot(vPlaneNormal, vLightForward) > 0)
 			{
 				gvBeyondLightAndViewPlanes[glBeyondLightAndViewPlaneNum] = (eFrustumPlane)i;
 				++glBeyondLightAndViewPlaneNum;
 			}
 		}
-		
+
 		/////////////////////////
 		// See if light is behind near plane
 		if(cMath::PlaneToPointDist(gpViewFrustum->GetPlane(eFrustumPlane_Near), pLightFrustum->GetOrigin()) < 0)
 		{
-			gbLightBehindNearPlane = true;	
+			gbLightBehindNearPlane = true;
 		}
 		else
 		{
@@ -1760,7 +1760,7 @@ namespace hpl {
 
 		//Sort the list
 		std::sort(mvShadowCasters.begin(), mvShadowCasters.end(), SortFunc_ShadowCasters);
-		
+
 		return true;
 	}
 
@@ -1771,7 +1771,7 @@ namespace hpl {
 	{
 		return apRenderer->RenderShadowCasterCHC(apObject);
 	}
-	
+
 	bool iRenderer::RenderShadowCasterCHC(iRenderable *apObject)
 	{
 		cMaterial *pMaterial = apObject->GetMaterial();
@@ -1786,7 +1786,7 @@ namespace hpl {
 		if(CheckShadowCasterContributesToView(apObject)==false) return false;
 
 		//mvShadowCasters.push_back(apObject); //Debug. Only to see what object are rendered.
-		
+
 		//Render the object
 		RenderShadowCaster(apObject,gpTempLightFrustum);
 
@@ -1806,7 +1806,7 @@ namespace hpl {
 	void iRenderer::RenderShadowCastersNormal(cFrustum *apLightFrustum)
 	{
 		////////////////////////////////
-		// Iterate the objects to be rendered 
+		// Iterate the objects to be rendered
 		for(size_t i=0; i<mvShadowCasters.size(); ++i)
 		{
 			RenderShadowCaster(mvShadowCasters[i], apLightFrustum);
@@ -1816,7 +1816,7 @@ namespace hpl {
 
 	void iRenderer::RenderShadowMap(iLight *apLight, iFrameBuffer *apShadowBuffer)
 	{
-		if(mbLog){ 
+		if(mbLog){
 			Log("---\nBegin Rendering Shadow Map for light '%s' / %d to buffer %d\n",apLight->GetName().c_str(), apLight, apShadowBuffer);
 		}
 		/////////////////////////
@@ -1825,8 +1825,8 @@ namespace hpl {
 
         cLightSpot *pSpotLight = static_cast<cLightSpot*>(apLight);
 		cFrustum *pLightFrustum = pSpotLight->GetFrustum();
-	
-       		
+
+       
 		/////////////////////////
 		// Setup render states
 		SetDepthTest(true);
@@ -1842,22 +1842,22 @@ namespace hpl {
 		SetOcclusionPlanesActive(false);
 
 		mpLowLevelGraphics->SetPolygonOffsetActive(true);
-		mpLowLevelGraphics->SetPolygonOffset(mpCurrentSettings->mfShadowMapBias * apLight->GetShadowMapBiasMul(), 
+		mpLowLevelGraphics->SetPolygonOffset(mpCurrentSettings->mfShadowMapBias * apLight->GetShadowMapBiasMul(),
 											 mpCurrentSettings->mfShadowMapSlopeScaleBias * apLight->GetShadowMapSlopeScaleBiasMul());
-		
+
 		/////////////////////////
 		// Setup render target
 		SetFrameBuffer(apShadowBuffer,false, false);
 
 		mpLowLevelGraphics->SetClearDepth(1);
 		ClearFrameBuffer(eClearFrameBufferFlag_Depth, false);
-		
+
 		/////////////////////////
 		// Setup projection
 		cFrustum *pLastFrustum = mpCurrentFrustum;
 		mpCurrentFrustum = pLightFrustum;	//Is this a little too hackish? Not sure...
 		SetFrustumProjection(pLightFrustum);
-		
+
 		/////////////////////////
 		// Render the shadow casters
 		if(apLight->GetOcclusionCullShadowCasters())
@@ -1865,16 +1865,16 @@ namespace hpl {
 			gpTempLightFrustum = pLightFrustum;
 			CheckForVisibleObjectsAddToListAndRenderZ(	apLight->GetVisibleNodeTracker(),
 														apLight->GetShadowCastersAffected(),
-														eRenderableFlag_ShadowCaster, 
-														false, 
+														eRenderableFlag_ShadowCaster,
+														false,
 														RenderShadowCasterCHCStaticCallback);
 		}
 		else
 		{
 			RenderShadowCastersNormal(pLightFrustum);
 		}
-		
-        
+
+
 		/////////////////////////
 		// Reset states
 		SetTexture(0,NULL);
@@ -1888,7 +1888,7 @@ namespace hpl {
 		mpCurrentFrustum = pLastFrustum;
 		SetNormalFrustumProjection();
 
-        
+
 		if(mbLog) Log("End Rendering Shadow Map\n---\n");
 	}
 
@@ -1931,7 +1931,7 @@ namespace hpl {
 		/////////////////////////////////////
 		//If no queries added, then skip any rendering
 		if(mpCurrentSettings->mlCurrentOcclusionObject <=0) return;
-		
+
 		START_RENDER_PASS(OcclusionObjects);
 
 		////////////////////////////////////
@@ -2028,7 +2028,7 @@ namespace hpl {
 			ReleaseOcclusionQuery(pQuery);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void iRenderer::RenderBasicSkyBox()
@@ -2042,7 +2042,7 @@ namespace hpl {
 		SetBlendMode(eMaterialBlendMode_None);
 		SetAlphaMode(eMaterialAlphaMode_Solid);
 		SetChannelMode(eMaterialChannelMode_RGBA);
-				
+
 		/////////////////////////
 		//Calculate and set matrix
 		m_mtxSkyBox = cMatrixf::Identity;
@@ -2055,18 +2055,18 @@ namespace hpl {
 		m_mtxSkyBox.m[2][2] = fSide;
 
 		m_mtxSkyBox.SetTranslation(mpCurrentFrustum->GetOrigin());
-		
+
 		SetMatrix(&m_mtxSkyBox);
 
 		/////////////////////////
 		//Program
         SetProgram(NULL);
-		
+
 		/////////////////////////
 		//Texture and vertex buffer
 		SetTexture(0,mpCurrentWorld->GetSkyBoxTexture());
 		SetTextureRange(NULL,1);
-        
+
 		SetVertexBuffer(mpCurrentWorld->GetSkyBoxVertexBuffer());
 
 		DrawCurrent();
@@ -2082,26 +2082,26 @@ namespace hpl {
 		{
 			mfScissorLastTanHalfFov = tan(mpCurrentFrustum->GetFOV()*0.5f);
 		}
-	
+
 		/*cMath::GetClipRectFromBV(mTempClipRect,*apLight->GetBoundingVolume(),mpCurrentFrustum,
 								mvScreenSize, mfScissorLastTanHalfFov);*/
-		
+
 
 		mTempClipRect = cMath::GetClipRectFromSphere(apViewSpaceMatrix->GetTranslation(),
 													apLight->GetRadius(), mpCurrentFrustum,
 													mvRenderTargetSize,true,mfScissorLastTanHalfFov);
-		
+
 		return SetScissorRect(mTempClipRect, true);
 	}
 
 	//-----------------------------------------------------------------------
 
-	
+
 	void iRenderer::SetMaterialProgram(eMaterialRenderMode aRenderMode, cMaterial *apMaterial)
 	{
 		iMaterialType *pMatType = apMaterial->GetType();
 		iGpuProgram *pProgram = apMaterial->GetProgram(0,aRenderMode);
-		
+
 		///////////////////////////////////////
 		// Check if program is set
 		bool bNewProgramSet = false;
@@ -2111,14 +2111,14 @@ namespace hpl {
 			if(pProgram)
 			{
 				if(mbLog) Log("  Setting gpu program %d : '%s'\n", pProgram, pProgram->GetName().c_str());
-				pProgram->Bind();	
+				pProgram->Bind();
 			}
 			else
 			{
 				if(mbLog) Log("  Setting gpu program NULL\n");
 				mpCurrentProgram->UnBind();
 			}
-			
+
 			mpCurrentProgram = pProgram;
 		}
 
@@ -2144,8 +2144,8 @@ namespace hpl {
 			}
 		}
 
-		
-		
+
+
 		//TODO: If Cg is to be used, the worldviewproj matrix need to be setup!
 	}
 
@@ -2154,12 +2154,12 @@ namespace hpl {
 	void iRenderer::SetMaterialTextures(eMaterialRenderMode aRenderMode, cMaterial *apMaterial)
 	{
 		iMaterialType *pType = apMaterial->GetType();
-		
+
 		for(int i=0; i<kMaxTextureUnits; ++i)
 		{
 			//Set texture, if special textures are used, check for those too!
 			iTexture *pTexture = apMaterial->GetTextureInUnit(aRenderMode,i);
-			
+
 			if(mvCurrentTexture[i] != pTexture)
 			{
 				if(mbLog) {
@@ -2192,16 +2192,16 @@ namespace hpl {
 
 		DrawCurrent();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool iRenderer::CheckRenderablePlaneIsVisible(iRenderable *apObject, cFrustum *apFrustum)
 	{
 		if(apObject->GetRenderType() != eRenderableType_SubMesh) return true;
-		
+
 		cSubMeshEntity *pSubMeshEnt = static_cast<cSubMeshEntity*>(apObject);
 		cSubMesh *pSubMesh = pSubMeshEnt->GetSubMesh();
-		
+
 		if(pSubMesh->GetIsOneSided()==false) return true;
 
 		cVector3f vNormal = cMath::MatrixMul3x3(apObject->GetWorldMatrix(), pSubMesh->GetOneSidedNormal());
@@ -2209,7 +2209,7 @@ namespace hpl {
 
 		float fDot = cMath::Vector3Dot(vPos - apFrustum->GetOrigin(), vNormal);
 
-		return fDot < 0;		
+		return fDot < 0;
 	}
 
 	//-----------------------------------------------------------------------
@@ -2219,7 +2219,7 @@ namespace hpl {
 		cBoundingVolume *pBV = apObject->GetBoundingVolume();
 
 		cRect2l clipRect;
-		if(afHalfFovTan ==0)	
+		if(afHalfFovTan ==0)
 			afHalfFovTan = tan(apFrustum->GetFOV()*0.5f);
 		cMath::GetClipRectFromBV(clipRect, *pBV, apFrustum, avScreenSize, afHalfFovTan);
 
@@ -2235,7 +2235,7 @@ namespace hpl {
 		return clipRect;
 	}
 
-	
+
 	//-----------------------------------------------------------------------
 
 	bool iRenderer::CheckObjectIsVisible(iRenderable *apObject, tRenderableFlag alNeededFlags)
@@ -2257,11 +2257,11 @@ namespace hpl {
 			for(size_t i=0; i<mvCurrentOcclusionPlanes.size(); ++i)
 			{
 				cPlanef& plane = mvCurrentOcclusionPlanes[i];
-				
+
 				if(cMath::CheckPlaneBVCollision(plane, *pBV)==eCollision_Outside) return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -2276,7 +2276,7 @@ namespace hpl {
 		{
 			cPlanef& plane = mvCurrentOcclusionPlanes[i];
 
-			if(cMath::CheckPlaneAABBCollision(	plane, apNode->GetMin(), apNode->GetMax(), 
+			if(cMath::CheckPlaneAABBCollision(	plane, apNode->GetMin(), apNode->GetMax(),
 												apNode->GetCenter(), apNode->GetRadius())==eCollision_Outside)
 			{
 				return false;
@@ -2322,16 +2322,16 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	static const cVector3f gvFogBoxPlaneNormals[6] = {
 			cVector3f(-1,0,0), //Left
 			cVector3f(1,0,0), //Right
 
-			cVector3f(0,-1,0), //Bottom	
+			cVector3f(0,-1,0), //Bottom
 			cVector3f(0,1,0), //Top
 
 			cVector3f(0,0,-1), //Back
-			cVector3f(0,0,1), //Front	
+			cVector3f(0,0,1), //Front
 	};
 	static const cVector3f gvFogBoxCompareSize = cVector3f(0.5001f);
 
@@ -2357,7 +2357,7 @@ namespace hpl {
 			float fT = fNegDist / fMul;
 			if(fT <0) continue;
 			cVector3f vAbsNrmIntersect = cMath::Vector3Abs(vBoxSpaceDir*fT + avBoxSpaceRayStart);
-			
+
 			///////////////////////////////////
 			// Check if the intersection is inside the cube
 			if(cMath::Vector3LessEqual(vAbsNrmIntersect,  gvFogBoxCompareSize))
@@ -2381,7 +2381,7 @@ namespace hpl {
 		}
 
 		if(afExitDist<0) return false;
-		
+
 		return bFoundIntersection;
 	}
 
@@ -2389,7 +2389,7 @@ namespace hpl {
 
 	static bool SortFunc_FogAreaData(const cFogAreaRenderData& aFogDataA, const cFogAreaRenderData& aFogDataB)
 	{
-		return aFogDataA.mpFogArea->GetViewSpaceZ() < aFogDataB.mpFogArea->GetViewSpaceZ();		
+		return aFogDataA.mpFogArea->GetViewSpaceZ() < aFogDataB.mpFogArea->GetViewSpaceZ();
 	}
 
 
@@ -2431,7 +2431,7 @@ namespace hpl {
 		{
 			return 1.0f;
 		}
-		
+
 		if(apFogData->mbInsideNearFrustum==false && fCameraDistance < fEntryDist)
 		{
 			return 1.0f;
@@ -2458,17 +2458,17 @@ namespace hpl {
 		//////////////////////////////
 		//Calculate the alpha
 		if(fFogDist <=0) return 1.0f;
-		
+
 		float fFogStart = pFogArea->GetStart();
 		float fFogEnd = pFogArea->GetEnd();
 		float fFogAlpha = 1 - pFogArea->GetColor().a;
 
 		if(fFogDist < fFogStart) return 1.0f;
-		
+
 		if(fFogDist > fFogEnd) return fFogAlpha;
 
 		float fAlpha = (fFogDist - fFogStart) / (fFogEnd - fFogStart);
-		if(pFogArea->GetFalloffExp()!=1) 
+		if(pFogArea->GetFalloffExp()!=1)
 			fAlpha = powf(fAlpha, pFogArea->GetFalloffExp());
 
 		return (1.0f-fAlpha) + fFogAlpha * fAlpha;
@@ -2481,11 +2481,11 @@ namespace hpl {
 	{
 		mbOcclusionPlanesActive = abX;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	iVertexBuffer* iRenderer::CreateQuadVertexBuffer(	eVertexBufferType aType,
-		const cVector3f& avPos, const cVector2f& avSize, 
+		const cVector3f& avPos, const cVector2f& avSize,
 		const cVector2f& avMinUV, const cVector2f& avMaxUV,
 		bool abInvertY)
 	{
@@ -2500,16 +2500,16 @@ namespace hpl {
 		float fMinUV_Y = abInvertY ? avMaxUV.y : avMinUV.y;
 		float fMaxUV_Y = abInvertY ? avMinUV.y : avMaxUV.y;
 
-		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMinUV_Y,0)); 
+		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMinUV_Y,0));
 		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position, cVector3f(avPos.x, avPos.y,avPos.z));
 
-		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMinUV_Y,0)); 
+		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMinUV_Y,0));
 		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x+avSize.x, avPos.y,avPos.z));
 
-		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMaxUV_Y,0)); 
+		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMaxUV.x, fMaxUV_Y,0));
 		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x+avSize.x, avPos.y+avSize.y,avPos.z));
 
-		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMaxUV_Y,0)); 
+		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Texture0, cVector3f(avMinUV.x, fMaxUV_Y,0));
 		pVtxBuffer->AddVertexVec3f(eVertexBufferElement_Position,  cVector3f(avPos.x, avPos.y+avSize.y,avPos.z));
 
 		pVtxBuffer->Compile(0);
@@ -2600,7 +2600,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	iOcclusionQuery *iRenderer::GetOcclusionQuery()
 	{
 		iOcclusionQuery *pOcclusionQuery = NULL;
@@ -2619,14 +2619,14 @@ namespace hpl {
 
 		return pOcclusionQuery;
 	}
-	
+
 	void iRenderer::ReleaseOcclusionQuery(iOcclusionQuery * apQuery)
 	{
 		mlActiveOcclusionQueryNum--;
 
 		mvOcclusionQueryPool.push_back(apQuery);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 

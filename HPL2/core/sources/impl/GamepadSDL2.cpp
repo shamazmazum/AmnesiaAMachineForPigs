@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -27,7 +27,7 @@
 #include <limits>
 
 namespace hpl {
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	//////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ namespace hpl {
 		if(mpHandle)
 		{
             SDL_Joystick *joy = SDL_GameControllerGetJoystick(mpHandle);
-			
+
             mlInstance = SDL_JoystickInstanceID(joy);
 
 			msGamepadName = tString(SDL_GameControllerName(mpHandle));
@@ -56,18 +56,18 @@ namespace hpl {
 			mvButtonArray.assign(SDL_CONTROLLER_BUTTON_MAX, false);
 
 			mvAxisArray.assign(SDL_CONTROLLER_AXIS_MAX, 0.0f);
-            
+
             // @todo open up the assiciated haptic device and provide rumble!
 		}
 		//ClearKeyList();
-		
+
 #ifdef WIN32
 		mvRemappedAxisArray.resize(mvAxisArray.size());
 		mvRemappedButtonArray.resize(mvButtonArray.size());
 		mvHatArray.resize(mvButtonArray.size());
 #endif
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
@@ -117,18 +117,18 @@ namespace hpl {
                     if (mlInstance == pEvent->caxis.which) {
                         eGamepadAxis axis = SDLToAxis(pEvent->caxis.axis);
                         float fAxisValue = SDLToAxisValue(pEvent->caxis.value);
-                        
+
                         if(cMath::Abs(fAxisValue) < mfDeadZoneRadius)
                             fAxisValue = 0.0f;
-                        
+
                         if(fAxisValue!=mvAxisArray[axis])
                         {
                             inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, axis, fAxisValue);
-                            
+
                             mlstAxisChanges.push_back(inputUpdate);
                             mlstInputUpdates.push_back(inputUpdate);
                         }
-                        mvAxisArray[axis] = fAxisValue;                        
+                        mvAxisArray[axis] = fAxisValue;
                     }
                     break;
                 case SDL_CONTROLLERBUTTONDOWN:
@@ -150,9 +150,9 @@ namespace hpl {
                             mlstButtonsPressed.push_back(inputUpdate);
                             bPressed = true;
                         }
-                        
+
                         mlstInputUpdates.push_back(inputUpdate);
-                        mvButtonArray[button] = bPressed;                        
+                        mvButtonArray[button] = bPressed;
                     }
                     break;
             }
@@ -185,7 +185,7 @@ namespace hpl {
 			mvRemappedButtonArray[9] = mvButtonArray[8];
 
 			mvHatArray[0] = eGamepadHatState_Centered;
-			
+
 			bool bUp = mvButtonArray[11];
 			bool bDown = mvButtonArray[12];
 			bool bLeft = mvButtonArray[13];
@@ -372,7 +372,7 @@ namespace hpl {
 	{
 		return cGamepadInputData();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cVector2l cGamepadSDL2::GetBallAbsPos(eGamepadBall aBall)
@@ -384,15 +384,15 @@ namespace hpl {
 	{
 		return cVector2l(0,0);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	/////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 	/////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	eGamepadButton cGamepadSDL2::SDLToButton(Uint8 alButton)
 	{
 		return static_cast<eGamepadButton>(alButton);
@@ -407,7 +407,7 @@ namespace hpl {
 	{
 		return cMath::Clamp((float)alAxisValue*mfInvAxisMax, -1.0f, 1.0f);
 	}
-	
+
 	eGamepadHat cGamepadSDL2::SDLToHat(Uint8 alHat)
 	{
 		return static_cast<eGamepadHat>(alHat);

@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -100,15 +100,15 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
 	mpGuiSkin = mpGui->CreateSkin("gui_main_menu.skin");
 	mpGuiSet = mpGui->CreateSet("MainMenu",mpGuiSkin);
 	mpGuiSet->SetDrawMouse(false);//Init
-	
-	
+
+
 	///////////////////////////////
 	//Create Viewport
 	mpViewport = mpScene->CreateViewport();
 	mpViewport->SetActive(false);
 	mpViewport->SetVisible(false);
 	mpGuiSet->SetActive(false);
-	
+
 	//Tonemapping
 	cGraphics *pGraphics = gpBase->mpEngine->GetGraphics();
 	cPostEffectComposite *pPostEffectComp = pGraphics->CreatePostEffectComposite();
@@ -124,7 +124,7 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
 	mvWindows[eLuxMainMenuWindow_Options] = hplNew(cLuxMainMenu_Options, (mpGuiSet, mpGuiSkin));
 	mvWindows[eLuxMainMenuWindow_KeyConfig] = hplNew(cLuxMainMenu_KeyConfig, (mpGuiSet, mpGuiSkin));
 	mvWindows[eLuxMainMenuWindow_LoadGame] = hplNew(cLuxMainMenu_LoadGame, (mpGuiSet, mpGuiSkin));
-	
+
 	cLuxMainMenu_CustomStory* pCustomStoryWindow = hplNew(cLuxMainMenu_CustomStory,(mpGuiSet, mpGuiSkin));
 	mvWindows[eLuxMainMenuWindow_CustomStoryList] = hplNew(cLuxMainMenu_CustomStoryList, (mpGuiSet, mpGuiSkin, pCustomStoryWindow));
 	mvWindows[eLuxMainMenuWindow_CustomStory] = pCustomStoryWindow;
@@ -136,29 +136,29 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
 	mfMainFadeInTime = gpBase->mpMenuCfg->GetFloat("Main","MainFadeInTime", 0);
 	mfMainFadeOutTimeFast = gpBase->mpMenuCfg->GetFloat("Main","MainFadeOutTimeFast", 0);
 	mfMainFadeOutTimeSlow = gpBase->mpMenuCfg->GetFloat("Main","MainFadeOutTimeSlow", 0);
-	 
+
 	mfTopMenuFadeInTime = gpBase->mpMenuCfg->GetFloat("Main","TopMenuFadeInTime", 0);
 	mfTopMenuFadeOutTime = gpBase->mpMenuCfg->GetFloat("Main","TopMenuFadeOutTime", 0);
-	
+
 	mvTopMenuStartPos = gpBase->mpMenuCfg->GetVector2f("Main","TopMenuStartRelativePos", 0) * mvScreenSize;
 	mvTopMenuStartPos.z = 2;
 	mvTopMenuFontSize = gpBase->mpMenuCfg->GetVector2f("Main","TopMenuFontRelativeSize", 0) * mvScreenSize;
 
 	mvTopMenuStartPosInGame = gpBase->mpMenuCfg->GetVector2f("Main", "TopMenuStartRelativePosInGame", 0) * mvScreenSize;
 	mvTopMenuStartPosInGame.z = 2;
-	
+
 	mvTopMenuFontSize.x  *= (mvScreenSize.y / mvScreenSize.x) / (3.0f/4.0f);//Make font more narrow to compensate for wide screen.
 
 	mvLogoPos = gpBase->mpMenuCfg->GetVector2f("Main", "MainMenuLogoStartRelativePos", 0) * mvScreenSize;
 	mvLogoPos.z = 2;
 	mvLogoSize = gpBase->mpMenuCfg->GetVector2f("Main", "MainMenuLogoRelativeSize", 0) * mvScreenSize;
-	
+
 	msMusic = gpBase->mpMenuCfg->GetString("Main", "Music", "");
 	msZoomSound = gpBase->mpMenuCfg->GetString("Main", "ZoomSound", "");
 
 	mfBgCamera_FOV= cMath::ToRad(gpBase->mpMenuCfg->GetFloat("Main", "BGCamera_FOV", 0.1));
-	mfBgCamera_ZoomedFOV = cMath::ToRad(gpBase->mpMenuCfg->GetFloat("Main", "BGCamera_ZoomedFOV", 1)); 
-	
+	mfBgCamera_ZoomedFOV = cMath::ToRad(gpBase->mpMenuCfg->GetFloat("Main", "BGCamera_ZoomedFOV", 1));
+
 	///////////////////////////////
 	//Load data
 	mpFont = NULL;
@@ -171,7 +171,7 @@ cLuxMainMenu::cLuxMainMenu() : iLuxUpdateable("LuxDebugHandler")
 	{
 		cParserVarContainer programVars;
 		if(i==0) programVars.Add("BlurHorisontal");
-		
+
 		mpBlurProgram[i] = mpGraphics->CreateGpuProgramFromShaders("MainMenuBlur"+cString::ToString(i),
 																	"mainmenu_screen_blur_vtx.glsl",
 																	"mainmenu_screen_blur_frag.glsl",
@@ -224,7 +224,7 @@ void cLuxMainMenu::LoadUserConfig()
 
 void cLuxMainMenu::SaveUserConfig()
 {
-	 
+
 }
 
 void cLuxMainMenu::OnClearFonts()
@@ -278,7 +278,7 @@ void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 	mpViewport->SetActive(true);
 	mpViewport->SetVisible(true);
 
-	
+
 //	gpBase->SetDrawOnLiveCursor(false);
 
 	mpGuiSet->SetActive(true);
@@ -312,7 +312,7 @@ void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 	//Set up menu variables
 
 	mfMenuFadeAlpha = 1.0f;	//Fade in from black or from sharp -> blurry if ingame
-	
+
 	mbExiting = false;
 
 	mCurrentWindow = eLuxMainMenuWindow_LastEnum;
@@ -326,7 +326,7 @@ void cLuxMainMenu::OnEnterContainer(const tString& asOldContainer)
 	{
 		SetWindowActive(eLuxMainMenuWindow_Profiles);
 	}
-	
+
 	//Always fade in top menu:
 	mfTopMenuAlpha =0.01f;
 	UpdateTopMenu(1.0f/60.0f);
@@ -366,7 +366,7 @@ void cLuxMainMenu::OnLeaveContainer(const tString& asNewContainer)
 		cMusicHandler* pMusHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
 		pMusHandler->Stop(0.33f);
 	}
-	
+
 	////////////////////////////
 	//Set up states
 	mpViewport->SetActive(false);
@@ -413,9 +413,9 @@ void cLuxMainMenu::OnDraw(float afFrameTime)
 	//Screen background
 	if(mpScreenGfx)
 	{
-		if(mpScreenGfx && mfMenuFadeAlpha>0) 
+		if(mpScreenGfx && mfMenuFadeAlpha>0)
 			mpGuiSet->DrawGfx(mpScreenGfx,cVector3f(0,0,0),mvScreenSize);
-		
+
 		if(mpScreenBlurGfx)
 			mpGuiSet->DrawGfx(mpScreenBlurGfx,cVector3f(0,0,0.2f),mvScreenSize,cColor(1, 1-mfMenuFadeAlpha));
 
@@ -510,7 +510,7 @@ void cLuxMainMenu::ExitPressed()
 	else
 	{
 		iLuxMainMenuWindow *pWindow = mvWindows[mCurrentWindow];
-        if(pWindow) pWindow->ExitPressed();		
+        if(pWindow) pWindow->ExitPressed();
 	}
 
 }
@@ -551,7 +551,7 @@ void cLuxMainMenu::OnQuit()
         gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
         gpBase->SetCustomStory(NULL);
     }
-    
+
     //Quit Game
     mExitMessage = eLuxMainMenuExit_QuitGame;
     OnMenuExit();
@@ -612,12 +612,12 @@ void cLuxMainMenu::OnMenuExit()
 			gpBase->mpEngine->GetUpdater()->SetContainer("DemoEnd");
 		else
 			gpBase->mpEngine->Exit();
-		
+
 		break;
 	////////////////
 	// Return To Game
 	case eLuxMainMenuExit_ReturnToGame:
-		
+
 		ProgLog(eLuxProgressLogLevel_Low, "Return to game from menu");
 
 		gpBase->mpInputHandler->ChangeState(eLuxInputState_Game);
@@ -639,7 +639,7 @@ void cLuxMainMenu::OnMenuExit()
 				gpBase->SetProfile(gpBase->msDefaultProfileName);
 				gpBase->InitUserConfig();
 			}
-			
+
 			gpBase->mpEngine->GetUpdater()->SetContainer("Default");
 
 			gpBase->StartGame("", "", ""); //""= using user config values.
@@ -681,7 +681,7 @@ void cLuxMainMenu::OnMenuExit()
 			OnEnterContainer("");
 		}
 		break;
-	
+
 	////////////////
 	// Quit And Save
 	case eLuxMainMenuExit_QuitAndSave:
@@ -697,7 +697,7 @@ void cLuxMainMenu::OnMenuExit()
 			{
 				mpMapHandler->DestroyMap(mpMapHandler->GetCurrentMap(),false);
 			}
-			
+
 			//Reset game
 			gpBase->mpEngine->GetUpdater()->BroadcastMessageToAll(eUpdateableMessage_Reset);
 			gpBase->SetCustomStory(NULL);
@@ -707,7 +707,7 @@ void cLuxMainMenu::OnMenuExit()
 			OnEnterContainer("");
 		}
 		break;
-        
+
 	}
 }
 
@@ -823,7 +823,7 @@ void cLuxMainMenu::SetTopMenuVisible(bool abVisible)
 			if(pLabel->HasFocus())
 			{
 				mpLastFocusedItem = pLabel;
-				
+
 				break;
 			}
 		}
@@ -844,7 +844,7 @@ void cLuxMainMenu::CreateGui()
 	//////////////////////////
 	// Create the gui parts
 	CreateTopMenuGui();
-	
+
 
 	//////////////////////
 	// Create the windows
@@ -894,10 +894,10 @@ void cLuxMainMenu::CreateTopMenuGui()
 	///////////////////
 	//Set up variables
 	cWidgetLabel *pLabel =0;
-	
+
 	float fInvScreenRatio = mvScreenSize.y / mvScreenSize.x;
 	float fWidthMul = fInvScreenRatio / (3.0f/4.0f);
-	
+
 	cVector2f vSize(mvScreenSize.x*0.15f, mvTopMenuFontSize.y);
 	cVector3f vPos = gpBase->mpMapHandler->MapIsLoaded() ? mvTopMenuStartPosInGame : mvTopMenuStartPos;
 
@@ -909,7 +909,7 @@ void cLuxMainMenu::CreateTopMenuGui()
 	//TODO: Move these?
 	mbTopMenuVisible = true;
 	mfTopMenuAlpha = 1.0f;
-	
+
 	///////////////////
 	//Create labels
 
@@ -966,17 +966,17 @@ void cLuxMainMenu::CreateTopMenuGui()
 	///////////////
 	//Continue
 	if(	gpBase->mbPTestActivated==false &&
-		gpBase->mpMapHandler->MapIsLoaded()==false && gpBase->mpSaveHandler->SaveFileExists()) 
+		gpBase->mpMapHandler->MapIsLoaded()==false && gpBase->mpSaveHandler->SaveFileExists())
 	{
 		pLabel = mpGuiSet->CreateWidgetLabel(vPos,0,kTranslate("MainMenu","Continue"));
 		pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(PressContinue));
 		SetupTopMenuLabel(pLabel);
 		vPos.y += fRowAdd;
 	}
-	
+
 	///////////////
 	//Start game
-	if(gpBase->mpMapHandler->MapIsLoaded()) 
+	if(gpBase->mpMapHandler->MapIsLoaded())
 	{
 		pLabel = mpGuiSet->CreateWidgetLabel(vPos,0,kTranslate("MainMenu","Back To Game"));
 		pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(PressBackToGame));
@@ -1005,7 +1005,7 @@ void cLuxMainMenu::CreateTopMenuGui()
 	/*
 	#ifndef LUX_DEMO_VERSION
 		if(	gpBase->mbPTestActivated==false &&
-			gpBase->mpMapHandler->MapIsLoaded()==false) 
+			gpBase->mpMapHandler->MapIsLoaded()==false)
 		{
 			pLabel = mpGuiSet->CreateWidgetLabel(vPos,0,kTranslate("MainMenu","Custom Map"));
 			pLabel->AddCallback(eGuiMessage_MouseDown, this, kGuiCallback(PressCustomStory));
@@ -1024,7 +1024,7 @@ void cLuxMainMenu::CreateTopMenuGui()
 
 	///////////////
 	//Change profile
-	if(gpBase->mpMapHandler->MapIsLoaded()==false) 
+	if(gpBase->mpMapHandler->MapIsLoaded()==false)
 	{
 		pLabel = mpGuiSet->CreateWidgetLabel(vPos,0,kTranslate("MainMenu","Change Profile"));
 		pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(PressChangeProfile));
@@ -1034,7 +1034,7 @@ void cLuxMainMenu::CreateTopMenuGui()
 
 	///////////////
 	//Exit
-	if(gpBase->mpMapHandler->MapIsLoaded()==false || gpBase->mbExitMenuDirectly) 
+	if(gpBase->mpMapHandler->MapIsLoaded()==false || gpBase->mbExitMenuDirectly)
 	{
 		pLabel = mpGuiSet->CreateWidgetLabel(vPos,0,kTranslate("MainMenu","Exit"));
 		pLabel->AddCallback(eGuiMessage_MouseDown,this, kGuiCallback(PressExit));
@@ -1094,11 +1094,11 @@ void cLuxMainMenu::CreateBackground()
 		// World set up (from menu config)
 		tString sBGWorldFile = gpBase->mpMenuCfg->GetString("Main", "BGScene", "");
 		if(gbDebug_SkipBGScene) sBGWorldFile = "";
-		
+
 		if(sBGWorldFile != "")	mpBgWorld = mpScene->LoadWorld(sBGWorldFile, 0);
 		else					mpBgWorld = NULL;
 
-		mpBgCamera = mpScene->CreateCamera(eCameraMoveMode_Fly);	
+		mpBgCamera = mpScene->CreateCamera(eCameraMoveMode_Fly);
 		mpBgCamera->SetRotateMode(eCameraRotateMode_Matrix);
 
 		//Camera Settings
@@ -1118,7 +1118,7 @@ void cLuxMainMenu::CreateBackground()
 			else
 				Error("Could not find start pos entity CameraPos in '%s'\n", sBGWorldFile.c_str());
 		}
-		
+
 		mpBgCamera->SetRotationMatrix(cMath::MatrixInverse(mtxCamMatrix.GetRotation()));
 		mpBgCamera->SetPosition(mtxCamMatrix.GetTranslation());
 
@@ -1141,7 +1141,7 @@ void cLuxMainMenu::CreateScreenTextures()
 
 	mpScreenBlurTexture = mpGraphics->CreateTexture("ScreenBlur",eTextureType_Rect,eTextureUsage_RenderTarget);
 	mpScreenBlurTexture->CreateFromRawData(vTexSize,ePixelFormat_RGBA,NULL);
-	
+
 	mpScreenGfx = mpGui->CreateGfxTexture(mpScreenTexture,false,eGuiMaterial_Diffuse);
 	mpScreenBlurGfx = mpGui->CreateGfxTexture(mpScreenBlurTexture,false,eGuiMaterial_Alpha);
 }
@@ -1180,7 +1180,7 @@ void cLuxMainMenu::RenderBlurTexture()
 	iTexture* pTempBlurTexture = mpGraphics->CreateTexture("TempBlur",eTextureType_Rect,eTextureUsage_RenderTarget);
 	pTempBlurTexture->CreateFromRawData(cVector3l((int)mvScreenSize.x, (int)mvScreenSize.y,0),ePixelFormat_RGBA,NULL);
 	pTempBlurTexture->SetWrapSTR(eTextureWrap_ClampToEdge);
-	
+
 	iFrameBuffer *pBlurBuffer[2];
 	for(int i=0; i<2; ++i)
 	{
@@ -1190,7 +1190,7 @@ void cLuxMainMenu::RenderBlurTexture()
 
 		pBlurBuffer[i]->CompileAndValidate();
 	}
-	
+
 	//////////////////////////////
 	// Render
 
@@ -1198,13 +1198,13 @@ void cLuxMainMenu::RenderBlurTexture()
 	pLowGfx->SetBlendActive(false);
 	pLowGfx->SetDepthTestActive(false);
 	pLowGfx->SetDepthWriteActive(false);
-	
+
 	pLowGfx->SetOrthoProjection(mvScreenSize,-1000,1000);
 	pLowGfx->SetIdentityMatrix(eMatrix_ModelView);
 
 	//Copy screen to screen texture
 	pLowGfx->CopyFrameBufferToTexure(mpScreenTexture,0,pLowGfx->GetScreenSizeInt(),0);
-	
+
 	RenderBlur(mpScreenTexture,pTempBlurTexture,pBlurBuffer);
 
 	for(int i=0; i<6; ++i)
@@ -1221,7 +1221,7 @@ void cLuxMainMenu::RenderBlurTexture()
 	//Flush the rendering
 	pLowGfx->FlushRendering();
 	pLowGfx->WaitAndFinishRendering();
-	
+
 	//Destroy data
 	mpGraphics->DestroyTexture(pTempBlurTexture);
 	for(int i=0; i<2; ++i)
@@ -1326,7 +1326,7 @@ bool cLuxMainMenu::PressContinue(iWidget* apWidget, const cGuiMessageData& aData
 		return true;
 
 	SetTopMenuVisible(false);
-	
+
 	mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
 	cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Continue old game?"),
 										kTranslate("MainMenu","Yes"), kTranslate("MainMenu","No"),
@@ -1366,7 +1366,7 @@ bool cLuxMainMenu::PressStartGame(iWidget* apWidget, const cGuiMessageData& aDat
 		return true;
 
 	SetTopMenuVisible(false);
-	
+
 	mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
 	cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Start a new game?"),
 									kTranslate("MainMenu","Yes"), kTranslate("MainMenu","No"),
@@ -1384,7 +1384,7 @@ bool cLuxMainMenu::ClickedStartGamePopup(iWidget* apWidget, const cGuiMessageDat
 {
 	bool bStartGame = aData.mlVal ==0 ? true : false;
 	mpGuiSet->SetDrawFocus(false);
-	
+
 	if(bStartGame)
 	{
 		gpBase->SetCustomStory(NULL);
@@ -1394,7 +1394,7 @@ bool cLuxMainMenu::ClickedStartGamePopup(iWidget* apWidget, const cGuiMessageDat
 	{
 		SetTopMenuVisible(true);
 	}
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedStartGamePopup);
@@ -1407,7 +1407,7 @@ bool cLuxMainMenu::PressBackToGame(iWidget* apWidget, const cGuiMessageData& aDa
 		return true;
 
 	ExitMenu(eLuxMainMenuExit_ReturnToGame);
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressBackToGame);
@@ -1427,7 +1427,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressLoadGame);
 
 bool cLuxMainMenu::ClickedLoadGamePopup(iWidget* apWidget, const cGuiMessageData& aData)
 {
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, ClickedLoadGamePopup);
@@ -1453,7 +1453,7 @@ bool cLuxMainMenu::PressExit(iWidget* apWidget, const cGuiMessageData& aData)
 		return true;
 
 	SetTopMenuVisible(false);
-	
+
 	mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
 	cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to quit?"),
 									kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),
@@ -1500,7 +1500,7 @@ bool cLuxMainMenu::PressExitToMainMenu(iWidget* apWidget, const cGuiMessageData&
 																kGuiCallback(ClickedExitToMainMenuPopup));
 	pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
 	pPopUp->SetKillOnEscapeKey(false);
-		
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressExitToMainMenu);
@@ -1508,7 +1508,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu, PressExitToMainMenu);
 bool cLuxMainMenu::ClickedExitToMainMenuPopup(iWidget* apWidget, const cGuiMessageData& aData)
 {
 	bool bExit = aData.mlVal ==0 ? true : false;
-	
+
 	mpGuiSet->SetDrawFocus(false);
 	if(bExit)
 	{
@@ -1531,7 +1531,7 @@ bool cLuxMainMenu::PressExitAndSave(iWidget* apWidget, const cGuiMessageData& aD
 		return true;
 
 	SetTopMenuVisible(false);
-	
+
 	mpGuiSet->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());
 	cGuiPopUpMessageBox *pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu", "Sure you want to exit and save?"),
 		kTranslate("MainMenu", "Yes"), kTranslate("MainMenu", "No"),

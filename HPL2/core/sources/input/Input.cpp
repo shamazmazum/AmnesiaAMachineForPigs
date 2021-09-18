@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -31,14 +31,14 @@
 #include "impl/GamepadXInput.h"
 #endif
 
-namespace hpl 
+namespace hpl
 {
 	//////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cInput::cInput(iLowLevelInput *apLowLevelInput) : iUpdateable("HPL_Input")
 	{
 		mpLowLevelInput = apLowLevelInput;
@@ -53,7 +53,7 @@ namespace hpl
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cInput::~cInput()
 	{
 		Log("Exiting Input Module\n");
@@ -71,16 +71,16 @@ namespace hpl
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
-	// PUBLIC METHODS				
+	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
 
 	void cInput::Update(float afTimeStep)
 	{
-		
+
 		mpLowLevelInput->BeginInputUpdate();
-		
+
 		for(tInputDeviceListIt it = mlstInputDevices.begin(); it!= mlstInputDevices.end();++it)
 		{
 			(*it)->Update();
@@ -93,9 +93,9 @@ namespace hpl
 			it->second->Update(afTimeStep);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	cAction * cInput::CreateAction(const tString& asName, int alId)
 	{
 		cAction *pAction = hplNew( cAction, (asName, alId,this) );
@@ -105,12 +105,12 @@ namespace hpl
 
 		tActionIdMap::value_type val2 = tActionIdMap::value_type(alId,pAction);
 		m_mapActionIds.insert(val2);
-		
+
 		return pAction;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	bool cInput::IsTriggerd(const tString& asName)
 	{
 		cAction *pAction = GetAction(asName);
@@ -136,7 +136,7 @@ namespace hpl
 
 		return pAction->WasTriggerd();
 	}
-	
+
 	bool cInput::WasTriggerd(int alId)
 	{
 		cAction *pAction = GetAction(alId);
@@ -146,7 +146,7 @@ namespace hpl
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cInput::BecameTriggerd(const tString& asName)
 	{
 		cAction *pAction = GetAction(asName);
@@ -254,7 +254,7 @@ namespace hpl
 
 		return NULL;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cAction* cInput::GetAction(const tString& asName)
@@ -315,7 +315,7 @@ namespace hpl
 		{
 			if(mpMouse->ButtonIsDown((eMouseButton)i)) return true;
 		}
-		
+
 		return false;
 	}
 
@@ -326,17 +326,17 @@ namespace hpl
 		for(tActionMapIt it = m_mapActions.begin(); it!= m_mapActions.end();++it)
 		{
 			cAction *pAction = it->second;
-			pAction->ResetToCurrentState();			
+			pAction->ResetToCurrentState();
 		}
 
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	iSubAction* cInput::InputToSubAction()
 	{
 		iSubAction *pSubAction=NULL;
-		
+
 		//////////////////////
 		//Keyboard
 		for(int i=0; i< eKey_LastEnum; ++i)
@@ -356,7 +356,7 @@ namespace hpl
 			{
 				if(mpMouse->ButtonIsDown((eMouseButton)i))
 				{
-					pSubAction = hplNew( cActionMouseButton, (this,(eMouseButton)i));					
+					pSubAction = hplNew( cActionMouseButton, (this,(eMouseButton)i));
 					break;
 				}
 			}
@@ -364,7 +364,7 @@ namespace hpl
 
 		return pSubAction;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cInput::AppDeviceWasPlugged()

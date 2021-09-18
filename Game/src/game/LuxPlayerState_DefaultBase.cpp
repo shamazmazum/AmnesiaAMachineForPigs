@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -89,7 +89,7 @@ void iLuxPlayerState_DefaultBase::OnLeaveState(eLuxPlayerState aNewState)
 
 void iLuxPlayerState_DefaultBase::OnMapEnter(cLuxMap *apMap)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -108,7 +108,7 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
 	// Get the entity currently in focus
 	cCamera *pCam = mpPlayer->GetCamera();
 
-	gpBase->mpMapHelper->GetClosestEntity(	pCam->GetPosition(), pCam->GetForward(), 20.0f, 
+	gpBase->mpMapHelper->GetClosestEntity(	pCam->GetPosition(), pCam->GetForward(), 20.0f,
 											&mfFocusDistance,&mpBodyInFocus,&mpEntityInFocus);
 	mvFocusPos = pCam->GetPosition() + pCam->GetForward()*mfFocusDistance;
 
@@ -130,7 +130,7 @@ void iLuxPlayerState_DefaultBase::Update(float afTimeStep)
 
 void iLuxPlayerState_DefaultBase::PostUpdate(float afTimeStep)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -171,7 +171,7 @@ bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPre
 			return false;
 		}
 	}
-	
+
 
 	return true;
 }
@@ -179,7 +179,7 @@ bool iLuxPlayerState_DefaultBase::OnDoAction(eLuxPlayerAction aAction,bool abPre
 //-----------------------------------------------------------------------
 
 cGuiGfxElement* iLuxPlayerState_DefaultBase::GetCrosshair()
-{ 
+{
 	if(mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance())
 	{
 		eLuxFocusCrosshair crossHair = mpEntityInFocus->GetFocusCrosshair(mpBodyInFocus, mvFocusPos);
@@ -238,7 +238,7 @@ bool iLuxPlayerState_DefaultBase::ShowOutlineOnEntity(iLuxEntity *apEntity, iPhy
 
 bool iLuxPlayerState_DefaultBase::CanInteractWithEntity()
 {
-	if(	mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance() && 
+	if(	mpEntityInFocus && mfFocusDistance < mpEntityInFocus->GetMaxFocusDistance() &&
 		mpEntityInFocus->CanInteract(mpBodyInFocus) && mpEntityInFocus->GetInteractionDisabled()==false)
 	{
 		return true;
@@ -261,9 +261,9 @@ static bool BodyIsAdded(iPhysicsBody *apBody, tPhysicsBodyList &alstBodies)
 void iLuxPlayerState_DefaultBase::AddOutlineObjects(iPhysicsBody *apBody, iLuxEntity *apEntity, const cVector3f &avFocusPos)
 {
 	gpBase->mpEffectRenderer->ClearOutlineObjects();
-	if(	apEntity==NULL || 
-		apEntity->GetEntityType()!= eLuxEntityType_Prop || 
-		mfFocusDistance > apEntity->GetMaxFocusDistance() || 
+	if(	apEntity==NULL ||
+		apEntity->GetEntityType()!= eLuxEntityType_Prop ||
+		mfFocusDistance > apEntity->GetMaxFocusDistance() ||
 		ShowOutlineOnEntity(apEntity, apBody, avFocusPos)==false)
 	{
 		mbCurrentEntityHasOutline = false;
@@ -279,20 +279,20 @@ void iLuxPlayerState_DefaultBase::AddOutlineObjects(iPhysicsBody *apBody, iLuxEn
     }
 
     mbCurrentEntityHasOutline = true;
-	
+
 	/////////////////////////////
 	//Show all connected bodies
 	if(pProp->ShowOutlinesOnConnectedBodies())
 	{
 		tPhysicsBodyList lstAttachedBodies;
 		GetAttachedBodies(apBody, lstAttachedBodies);
-		
+
 		cMeshEntity *pMeshEntity = pProp->GetEffectMeshEntity();
 		if(pMeshEntity==NULL) return;
 		for(int i=0; i<pMeshEntity->GetSubMeshEntityNum(); ++i)
 		{
 			cSubMeshEntity *pSubEnt = pMeshEntity->GetSubMeshEntity(i);
-	        
+
 			if(BodyIsAdded(static_cast<iPhysicsBody*>(pSubEnt->GetEntityParent()), lstAttachedBodies))
 			{
 				gpBase->mpEffectRenderer->AddOutlineObject(pSubEnt, pProp->GetGlowOutlineColor());

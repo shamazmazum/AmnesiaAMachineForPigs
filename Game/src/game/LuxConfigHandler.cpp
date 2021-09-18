@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -96,7 +96,7 @@ void cLuxConfigHandler::LoadMainConfig()
 	mbShadowsActive =	gpBase->mpMainConfig->GetBool("Graphics", "ShadowsActive", true);
 	mlShadowQuality =	gpBase->mpMainConfig->GetInt("Graphics", "ShadowQuality", eShadowMapQuality_Medium);
 	mlShadowRes =		gpBase->mpMainConfig->GetInt("Graphics", "ShadowResolution", eShadowMapResolution_High);
-	
+
 	// Misc
 	mbWorldReflection = gpBase->mpMainConfig->GetBool("Graphics", "WorldReflection", true);
 	mbRefraction =		gpBase->mpMainConfig->GetBool("Graphics", "Refraction", true);
@@ -106,11 +106,11 @@ void cLuxConfigHandler::LoadMainConfig()
 	mbSSAOActive =		gpBase->mpMainConfig->GetBool("Graphics","SSAOActive", true);
 	mlSSAOSamples =		gpBase->mpMainConfig->GetInt("Graphics","SSAOSamples", 8);
 	mlSSAOResolution =	gpBase->mpMainConfig->GetInt("Graphics","SSAOResolution", 0);
-	
+
 	// Parallax
 	mbParallaxEnabled = gpBase->mpMainConfig->GetBool("Graphics", "ParallaxEnabled", true);
 	mlParallaxQuality = gpBase->mpMainConfig->GetInt("Graphics", "ParallaxQuality", 0);
-	
+
 	// Texture
 	mlTextureQuality =	gpBase->mpMainConfig->GetInt("Graphics", "TextureQuality", 0);
 	mlTextureFilter =	gpBase->mpMainConfig->GetInt("Graphics", "TextureFilter", eTextureFilter_Bilinear);
@@ -168,7 +168,7 @@ void cLuxConfigHandler::SaveMainConfig()
 	gpBase->mpMainConfig->SetFloat("Graphics","Gamma",gpBase->mpEngine->GetGraphics()->GetLowLevel()->GetGammaCorrection());
 	gpBase->mpMainConfig->SetInt("Graphics","GBufferType", cRendererDeferred::GetGBufferType());
 	gpBase->mpMainConfig->SetInt("Graphics","NumOfGBufferTextures", cRendererDeferred::GetNumOfGBufferTextures());
-	
+
 	gpBase->mpMainConfig->SetBool("Graphics", "OcclusionTestLights", mbOcclusionTestLights);
 
 	gpBase->mpMainConfig->SetInt("Graphics","TextureQuality", mlTextureQuality);
@@ -178,10 +178,10 @@ void cLuxConfigHandler::SaveMainConfig()
 	gpBase->mpMainConfig->SetBool("Graphics","SSAOActive",mbSSAOActive);
 	gpBase->mpMainConfig->SetInt("Graphics","SSAOResolution",mlSSAOResolution);
 	gpBase->mpMainConfig->SetInt("Graphics","SSAOSamples",mlSSAOSamples);
-	
+
 	gpBase->mpMainConfig->SetBool("Graphics", "WorldReflection", mbWorldReflection);
 	gpBase->mpMainConfig->SetBool("Graphics", "Refraction", mbRefraction);
-	
+
 	gpBase->mpMainConfig->SetBool("Graphics", "ShadowsActive", mbShadowsActive);
 	gpBase->mpMainConfig->SetInt("Graphics","ShadowQuality", mlShadowQuality);
 	gpBase->mpMainConfig->SetInt("Graphics","ShadowResolution", mlShadowRes);
@@ -220,7 +220,7 @@ bool cLuxConfigHandler::ShowRestartWarning(cGuiSet* apSet, void* apObject, tGuiC
 	{
 		mbRestartDialogShown = true;
 		cGuiPopUpMessageBox* pPopUp = apSet->CreatePopUpMessageBox(kTranslate("OptionsMenu", "ReqRestartLabel"),
-									 kTranslate("OptionsMenu", "ReqRestartMessage"), 
+									 kTranslate("OptionsMenu", "ReqRestartMessage"),
 									 kTranslate("MainMenu","OK"), _W(""),
 									 apObject, apCallback);
 		pPopUp->GetGuiSet()->SetDrawFocus(gpBase->mpInputHandler->IsGamepadPresent());

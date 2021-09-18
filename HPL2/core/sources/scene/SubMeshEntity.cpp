@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -84,7 +84,7 @@ namespace hpl {
 		// -1 = Matrix was not identity
 		// 1 = matrix was identiy
 		mlStaticNullMatrixCount =0;
-		mlBoneMatricesUpdateCount = -2; 
+		mlBoneMatricesUpdateCount = -2;
 	}
 
 	cSubMeshEntity::~cSubMeshEntity()
@@ -93,7 +93,7 @@ namespace hpl {
 
 		if(mpDynVtxBuffer) hplDelete(mpDynVtxBuffer);
 
-		/* Clear any custom textures here*/	
+		/* Clear any custom textures here*/
 		if(mpMaterial) mpMaterialManager->Destroy(mpMaterial);
 	}
 
@@ -102,9 +102,9 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// BODY CALLBACK
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cSubMeshEntityBodyUpdate::OnTransformUpdate(iEntity3D* apEntity)
 	{
 		/*cSubMeshEntity *pSubEntity = static_cast<cSubMeshEntity*>(apEntity);
@@ -121,7 +121,7 @@ namespace hpl {
 			}
 		}*/
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ namespace hpl {
 
 	void cSubMeshEntity::UpdateLogic(float afTimeStep)
 	{
-		
+
 	}
 
 	//-----------------------------------------------------------------------
@@ -145,9 +145,9 @@ namespace hpl {
 			//Error("Materials for sub entity %s are NULL!\n",GetName().c_str());
 		}
 
-		if(mpMaterial) 
+		if(mpMaterial)
 			return mpMaterial;
-		else 
+		else
 			return mpSubMesh->GetMaterial();
 	}
 
@@ -186,7 +186,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cSubMeshEntity::UpdateGraphicsForViewport(cFrustum *apFrustum,float afFrameTime)
 	{
 		/////////////////
@@ -215,7 +215,7 @@ namespace hpl {
 			{
 				return; //dont update paused animations
 			}
-			
+
 			mlBoneMatricesUpdateCount = mpMeshEntity->mlBoneMatricesUpdateCount;
 			mbGraphicsUpdated = true;
 
@@ -241,8 +241,8 @@ namespace hpl {
 				const unsigned char *pBoneIdx = &mpSubMesh->mpVertexBones[vtx*4];
 
 				const cMatrixf &mtxTransform = mpMeshEntity->mvBoneMatrices[*pBoneIdx];
-				
-				
+
+
 				MatrixFloatTransformSet(pSkinPos,mtxTransform, pBindPos, *pWeight);
 
 				MatrixFloatRotateSet(pSkinNormal,mtxTransform, pBindNormal, *pWeight);
@@ -254,7 +254,7 @@ namespace hpl {
 				//Iterate weights until 0 is found or count < 4
 				while(*pWeight != 0 && lCount < 4)
 				{
-					//Log("Boneidx: %d Count %d Weight: %f\n",(int)*pBoneIdx,lCount, *pWeight);				
+					//Log("Boneidx: %d Count %d Weight: %f\n",(int)*pBoneIdx,lCount, *pWeight);
 					const cMatrixf &mtxTransform = mpMeshEntity->mvBoneMatrices[*pBoneIdx];
 
 					//Transform with the local movement of the bone.
@@ -291,7 +291,7 @@ namespace hpl {
 
 			//Update buffer
 			mpDynVtxBuffer->UpdateData(eVertexElementFlag_Position | eVertexElementFlag_Normal | eVertexElementFlag_Texture1,false);
-			
+
 			//No stencil shadows:
 			/*if(mpMeshEntity->GetRenderFlagBit(eRenderableFlag_ShadowCaster))
 			{
@@ -301,7 +301,7 @@ namespace hpl {
 					pSkinPosArray, lVtxStride, lVtxNum);
 			}*/
 		}
-		
+
 	}
 
 	//-----------------------------------------------------------------------
@@ -327,13 +327,13 @@ namespace hpl {
 		if(mpMeshEntity->GetMesh()->GetSkeleton())
 		{
 			return mpMeshEntity->GetBoundingVolume();
-		}	
+		}
 		else
 		{
-			return GetSubMeshBoundingVolume();	
+			return GetSubMeshBoundingVolume();
 		}
 	}
-	
+
 	cBoundingVolume* cSubMeshEntity::GetSubMeshBoundingVolume()
 	{
 		if(mbUpdateBoundingVolume)
@@ -369,7 +369,7 @@ namespace hpl {
 
 				if(mlStaticNullMatrixCount == 1)return NULL;
 				else							return &GetWorldMatrix();
-					
+
 			}
 			else
 			{
@@ -415,7 +415,7 @@ namespace hpl {
 			RemoveCallback(mpEntityCallback);
 		}*/
 	}
-	
+
 	bool cSubMeshEntity::GetUpdateBody()
 	{
 		return mbUpdateBody;
@@ -424,14 +424,14 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	cTriangleData& cSubMeshEntity::GetTriangle(int alIndex)
-	{ 
+	{
 		if(mpDynVtxBuffer)
 			return mvDynTriangles[alIndex];
 		else
 			return (*mpSubMesh->GetTriangleVecPtr())[alIndex];
 	}
 	int cSubMeshEntity::GetTriangleNum()
-	{ 
+	{
 		if(mpDynVtxBuffer)
 			return (int)mvDynTriangles.size();
 		else
@@ -439,15 +439,15 @@ namespace hpl {
 	}
 
 	tTriangleDataVec* cSubMeshEntity::GetTriangleVecPtr()
-	{ 
+	{
 		if(mpDynVtxBuffer)
 			return &mvDynTriangles;
 		else
 			return mpSubMesh->GetTriangleVecPtr();
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cSubMeshEntity::SetCustomMaterial(cMaterial *apMaterial, bool abDestroyOldCustom)
 	{
 		if(abDestroyOldCustom)
@@ -457,9 +457,9 @@ namespace hpl {
 
         mpMaterial = apMaterial;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////

@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -108,11 +108,11 @@ namespace hpl {
 		STLDeleteAll(mlstDepthStencilBuffers);
 		STLDeleteAll(mlstGpuPrograms);
 		STLDeleteAll(mlstTextures);
-		
+
 		hplDelete(mpMeshCreator);
 		hplDelete(mpTextureCreator);
 		hplDelete(mpDecalCreator);
-		
+
 		Log("--------------------------------------------------------\n\n");
 	}
 
@@ -123,8 +123,8 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
-	bool cGraphics::Init(	int alWidth, int alHeight, int alDisplay, int alBpp, int abFullscreen, 
+
+	bool cGraphics::Init(	int alWidth, int alHeight, int alDisplay, int alBpp, int abFullscreen,
 							int alMultisampling,eGpuProgramFormat aGpuProgramFormat,
 							const tString &asWindowCaption, const cVector2l &avWindowPos,
 							cResources* apResources,
@@ -132,7 +132,7 @@ namespace hpl {
 	{
 		Log("Initializing Graphics Module\n");
 		Log("--------------------------------------------------------\n");
-		
+
 		mpResources = apResources;
 
 		////////////////////////////////////////////////
@@ -140,7 +140,7 @@ namespace hpl {
 		apResources->AddResourceDir(_W("core/shaders"),false);
 		apResources->AddResourceDir(_W("core/textures"),false);
 		apResources->AddResourceDir(_W("core/models"),false);
-		
+
 		////////////////////////////////////////////////
 		// LowLevel Init
 		if(alHplSetupFlags & eHplSetup_Screen)
@@ -154,7 +154,7 @@ namespace hpl {
 		{
 			mbScreenIsSetup = false;
 		}
-		
+
 
 		////////////////////////////////////////////////
 		// Create systems
@@ -189,9 +189,9 @@ namespace hpl {
 		}
 		else
 		{
-			
+
 		}
-		
+
 		////////////////////////////////////////////////
 		// Create Data
 		if(alHplSetupFlags & eHplSetup_Screen)
@@ -215,9 +215,9 @@ namespace hpl {
 			AddPostEffectType(hplNew( cPostEffectType_RadialBlur, (this, apResources)) );
 			AddPostEffectType(hplNew( cPostEffectType_ColorGrading, (this, apResources)) );
 		}
-		
+
 		Log("--------------------------------------------------------\n\n");
-		
+
 		return true;
 	}
 
@@ -256,7 +256,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	iFrameBuffer* cGraphics::CreateFrameBuffer(const tString& asName)
 	{
 		iFrameBuffer* pFrameBuffer = mpLowLevelGraphics->CreateFrameBuffer(asName);
@@ -270,7 +270,7 @@ namespace hpl {
 
 		return pFrameBuffer;
 	}
-	
+
 	void cGraphics::DestroyFrameBuffer(iFrameBuffer* apFrameBuffer)
 	{
 		STLFindAndDelete(mlstFrameBuffers,apFrameBuffer);
@@ -285,7 +285,7 @@ namespace hpl {
 		for(size_t i=0; i<mvTempFrameBuffers.size(); ++i)
 		{
 			cTempFrameBuffer &tempBuffer = mvTempFrameBuffers[i];
-			if(	tempBuffer.mvSize == avSize && tempBuffer.mPixelFormat == aPixelFormat && 
+			if(	tempBuffer.mvSize == avSize && tempBuffer.mPixelFormat == aPixelFormat &&
 				tempBuffer.mlIndex == alIndex)
 			{
 				return tempBuffer.mpFrameBuffer;
@@ -326,7 +326,7 @@ namespace hpl {
 	iDepthStencilBuffer* cGraphics::CreateDepthStencilBuffer(const cVector2l& avSize, int alDepthBits, int alStencilBits, bool abLookForMatchingFirst)
 	{
 		iDepthStencilBuffer* pBuffer = NULL;
-		
+
 		//////////////////////////////////////////
 		// Check for matching
 		if(abLookForMatchingFirst)
@@ -346,7 +346,7 @@ namespace hpl {
 
 			mlstDepthStencilBuffers.push_back(pBuffer);
 		}
-		
+
 		//////////////////////////////////////////
 		// Increase user count and return
 		pBuffer->IncUserCount();
@@ -362,9 +362,9 @@ namespace hpl {
 		for(; it != mlstDepthStencilBuffers.end(); ++it)
 		{
 			iDepthStencilBuffer *pBuffer = *it;
-            
-			if(	pBuffer->GetSize() == avSize && 
-				pBuffer->GetDepthBits() >= alMinDepthBits && 
+
+			if(	pBuffer->GetSize() == avSize &&
+				pBuffer->GetDepthBits() >= alMinDepthBits &&
 				pBuffer->GetStencilBits() >= alMinStencilBits)
 			{
 				return pBuffer;
@@ -378,7 +378,7 @@ namespace hpl {
 	void cGraphics::DestoroyDepthStencilBuffer(iDepthStencilBuffer* apBuffer)
 	{
 		apBuffer->DecUserCount();
-		
+
 		if(apBuffer->HasUsers()==false)
 		{
 			STLFindAndDelete(mlstDepthStencilBuffers,apBuffer);
@@ -388,7 +388,7 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	iTexture* cGraphics::CreateTexture(const tString &asName,eTextureType aType,   eTextureUsage aUsage)
-	{	
+	{
 		iTexture *pTexture = mpLowLevelGraphics->CreateTexture(asName,aType, aUsage);
 		mlstTextures.push_back(pTexture);
 		return pTexture;
@@ -400,7 +400,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cPostEffectComposite* cGraphics::CreatePostEffectComposite()
 	{
 		cPostEffectComposite *pComposite = hplNew( cPostEffectComposite, (this) );
@@ -408,7 +408,7 @@ namespace hpl {
 
 		return pComposite;
 	}
-	
+
 	void cGraphics::DestroyPostEffectComposite(cPostEffectComposite* apComposite)
 	{
 		STLFindAndDelete(mlstPostEffectComposites, apComposite);
@@ -438,7 +438,7 @@ namespace hpl {
 
 		return pPostEffect;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cGraphics::DestroyPostEffect(iPostEffect* apPostEffect)
@@ -473,23 +473,23 @@ namespace hpl {
 		pProgram->SetShader(eGpuShaderType_Fragment, pFragShader);
 		pProgram->Link();
 
-        return pProgram;		
+        return pProgram;
 	}
-	
+
 	void cGraphics::DestroyGpuProgram(iGpuProgram* apProgram)
 	{
 		STLFindAndDelete(mlstGpuPrograms, apProgram);
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cGraphics::AddMaterialType(iMaterialType *apType, const tString& asName)
 	{
 		apType->SetName(asName);
 		apType->LoadData();
 		m_mapMaterialTypes.insert(tMaterialTypeMap::value_type(asName, apType));
 	}
-	
+
 	iMaterialType *cGraphics::GetMaterialType(const tString& asName)
 	{
 		tString sLowName = cString::ToLowerCase(asName);

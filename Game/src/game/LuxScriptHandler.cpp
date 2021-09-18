@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -87,7 +87,7 @@ cLuxScriptHandler::cLuxScriptHandler() : iLuxUpdateable("LuxScriptHandler")
 {
 	mpLowLevelSystem = gpBase->mpEngine->GetSystem()->GetLowLevel();
 
-	
+
 	InitScriptFunctions();
 }
 
@@ -108,7 +108,7 @@ cLuxScriptHandler::~cLuxScriptHandler()
 
 void cLuxScriptHandler::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -130,7 +130,7 @@ void cLuxScriptHandler::Update(float afTimeStep)
 
 void cLuxScriptHandler::OnDraw(float afFrameTime)
 {
-	
+
 }
 
 
@@ -249,7 +249,7 @@ bool cLuxScriptHandler::GetEntities(const tString& asName,tLuxEntityList &alstEn
 			Warning("Entity '%s' with type %d and subtype %d does not exist!\n", asName.c_str(), aType, alSubType);
 			return false;
 		}
-		        
+
 		alstEntities.push_back(pEntity);
 	}
 	///////////////////
@@ -268,19 +268,19 @@ bool cLuxScriptHandler::GetEntities(const tString& asName,tLuxEntityList &alstEn
 			{
 				bool bContainsStrings = true;
 				int lLastPos = -1;
-				
+
 				//Iterate wanted strings and name make sure they exist and show up in correct order.
 				for(size_t i=0; i<vWantedStrings.size(); ++i)
 				{
 					int lPos = cString::GetFirstStringPos(pEntity->GetName(), vWantedStrings[i]);
-                    if(lPos <= lLastPos) 
+                    if(lPos <= lLastPos)
 					{
 						bContainsStrings = false;
 						break;
 					}
 				}
 
-				if(bContainsStrings) alstEntities.push_back(pEntity);	
+				if(bContainsStrings) alstEntities.push_back(pEntity);
 			}
 		}
 
@@ -313,7 +313,7 @@ bool cLuxScriptHandler::GetParticleSystems(const tString& asName,std::list<cPart
 			Warning("Particle system '%s' does not exist!\n", asName.c_str());
 			return false;
 		}
-		        
+
 		alstParticleSystems.push_back(pPS);
 	}
 	///////////////////
@@ -330,19 +330,19 @@ bool cLuxScriptHandler::GetParticleSystems(const tString& asName,std::list<cPart
 			cParticleSystem *pPS = it.Next();
 			bool bContainsStrings = true;
 			int lLastPos = -1;
-				
+
 			//Iterate wanted strings and name make sure they exist and show up in correct order.
 			for(size_t i=0; i<vWantedStrings.size(); ++i)
 			{
 				int lPos = cString::GetFirstStringPos(pPS->GetName(), vWantedStrings[i]);
-                if(lPos <= lLastPos) 
+                if(lPos <= lLastPos)
 				{
 					bContainsStrings = false;
 					break;
 				}
 			}
 
-			if(bContainsStrings) alstParticleSystems.push_back(pPS);	
+			if(bContainsStrings) alstParticleSystems.push_back(pPS);
 		}
 
 		if(alstParticleSystems.empty())
@@ -424,7 +424,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetLocalVarInt(string &in asName, int alVal)",(void *)SetLocalVarInt);
 	AddFunc("void SetLocalVarFloat(string &in asName, float afVal)",(void *)SetLocalVarFloat);
 	AddFunc("void SetLocalVarString(string &in asName, string &in asVal)",(void *)SetLocalVarString);
-	
+
 	AddFunc("void AddLocalVarInt(string &in asName, int alVal)",(void *)AddLocalVarInt);
 	AddFunc("void AddLocalVarFloat(string &in asName, float afVal)",(void *)AddLocalVarFloat);
 	AddFunc("void AddLocalVarString(string &in asName, string &in asVal)",(void *)AddLocalVarString);
@@ -462,7 +462,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetSkyBoxActive(bool abActive)",(void *)SetSkyBoxActive);
 	AddFunc("void SetSkyBoxTexture(string &in asTexture)",(void *)SetSkyBoxTexture);
 	AddFunc("void SetSkyBoxColor(float afR, float afG, float afB, float afA)",(void *)SetSkyBoxColor);
-      
+
 	AddFunc("void UnlockAchievement(string &in asName)", (void *)UnlockAchievement);
 
 	AddFunc("void SetFogActive(bool abActive)",(void *)SetFogActive);
@@ -470,7 +470,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetFogProperties(float afStart, float afEnd, float afFalloffExp, bool abCulling)",(void *)SetFogProperties);
 
 	AddFunc("void SetupLoadScreen(string &in asTextCat, string &in asTextEntry, int alRandomNum, string &in asImageFile)",(void *)SetupLoadScreen);
-	
+
 	AddFunc("void FadeIn(float afTime)",(void *)FadeIn);
 	AddFunc("void FadeOut(float afTime)",(void *)FadeOut);
 	AddFunc("void FadeImageTrailTo(float afAmount, float afSpeed)",(void *)FadeImageTrailTo);
@@ -483,7 +483,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 
 	AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePostion,  string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice);
 	AddFunc("void AddEffectVoice(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, bool abUsePostion,  string &in asPosEnitity, float afMinDistance, float afMaxDistance, int alPriority, bool abStopInterrupted)",(void *)AddEffectVoiceExt);
-	
+
 	AddFunc("void AddEffectVoice2(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, float afTextDelay, string &in asText2Entry, float afText2Delay, bool abUsePostion,  string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice2);
 	AddFunc("void AddEffectVoice3(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, float afTextDelay, string &in asText2Entry, float afText2Delay, string &in asText3Entry, float afText3Delay, bool abUsePostion,  string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice3);
 	AddFunc("void AddEffectVoice4(string &in asVoiceFile, string &in asEffectFile, string &in asTextCat, string &in asTextEntry, float afTextDelay, string &in asText2Entry, float afText2Delay, string &in asText3Entry, float afText3Delay, string &in asText4Entry, float afText4Delay, bool abUsePostion, string &in asPosEnitity, float afMinDistance, float afMaxDistance)",(void *)AddEffectVoice4);
@@ -515,7 +515,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetPlayerCrouching(bool abCrouch)",(void *)SetPlayerCrouching);
 	AddFunc("void AddPlayerBodyForce(float afX, float afY, float afZ, bool abUseLocalCoords)",(void *)AddPlayerBodyForce);
 	AddFunc("void ShowPlayerCrossHairIcons(bool abX)",(void *)ShowPlayerCrossHairIcons);
-	
+
 	AddFunc("void SetInfectionFauxMode(bool abFauxMode)",(void *)SetInfectionFauxMode);
 	AddFunc("void SetPlayerInfection(float afInfection)",(void *)SetPlayerInfection);
 	AddFunc("void AddPlayerInfection(float afInfection)",(void *)AddPlayerInfection);
@@ -523,7 +523,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetPlayerHealth(float afHealth)",(void *)SetPlayerHealth);
 	AddFunc("void AddPlayerHealth(float afHealth)",(void *)AddPlayerHealth);
 	AddFunc("float GetPlayerHealth()",(void *)GetPlayerHealth);
-	
+
 	AddFunc("float GetPlayerSpeed()",(void *)GetPlayerSpeed);
 	AddFunc("float GetPlayerYSpeed()",(void *)GetPlayerYSpeed);
 	AddFunc("void MovePlayerForward(float afAmount)",(void *)MovePlayerForward);
@@ -557,7 +557,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetJournalDisabled(bool abX)",(void *)SetJournalDisabled);
 
 	AddFunc("void SetLanternFlickerActive(bool abX)",(void *)SetLanternFlickerActive);
-	
+
 	AddFunc("void SetMessage(string &in asTextCategory, string &in asTextEntry, float afTime)",(void *)SetMessage);
 	AddFunc("void SetDeathHint(string &in asTextCategory, string &in asTextEntry)",(void *)SetDeathHint);
 	AddFunc("void DisableDeathStartSound()",(void *)DisableDeathStartSound);
@@ -589,7 +589,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	//AddFunc("void ExitInventory()",(void *)ExitInventory);
 	//AddFunc("void SetInventoryDisabled(bool abX)",(void *)SetInventoryDisabled);
 	//AddFunc("void SetInventoryMessage(string &in asTextCategory, string &in asTextEntry, float afTime)",(void *)SetInventoryMessage);
-	
+
 	AddFunc("void GiveItem(string &in asName, string &in asType, string &in asSubTypeName, string &in asImageName, float afAmount)",(void *)GiveItem);
 	AddFunc("void GiveItemFromFile(string &in asName, string &in asFileName)",(void *)GiveItemFromFile);
 	AddFunc("void RemoveItem(string &in asName)",(void *)RemoveItem);
@@ -606,9 +606,9 @@ void cLuxScriptHandler::InitScriptFunctions()
 
 	AddFunc("void CreateParticleSystemAtEntity(string &in asPSName, string &in asPSFile, string &in asEntity, bool abSavePS)",(void *)CreateParticleSystemAtEntity);
 	AddFunc("void CreateParticleSystemAtEntityExt(	string &in asPSName, string &in asPSFile, string &in asEntity, bool abSavePS, float afR, float afG, float afB, float afA, bool abFadeAtDistance, float afFadeMinEnd, float afFadeMinStart, float afFadeMaxStart, float afFadeMaxEnd)", (void *)CreateParticleSystemAtEntityExt);
-	AddFunc("void DestroyParticleSystem(string &in asName)",(void *)DestroyParticleSystem); 
-	AddFunc("void DestroyParticleSystemInstantly(string &in asName)",(void *)DestroyParticleSystemInstantly); 
-	
+	AddFunc("void DestroyParticleSystem(string &in asName)",(void *)DestroyParticleSystem);
+	AddFunc("void DestroyParticleSystemInstantly(string &in asName)",(void *)DestroyParticleSystemInstantly);
+
 	AddFunc("void PlaySoundAtEntity(string &in asSoundName, string &in asSoundFile, string &in asEntity, float afFadeSpeed, bool abSaveSound)",(void *)PlaySoundAtEntity);
 	AddFunc("void PlaySoundAtPosition(string &in asSoundName, string &in asSoundFile, float afX, float afY, float afZ, float afFadeSpeed, bool abSaveSound)",(void *)PlaySoundAtPosition);
 
@@ -618,7 +618,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void StopMusic(float afFadeTime, int alPrio)",(void *)StopMusic);
 	AddFunc("void FadeGlobalSoundVolume(float afDestVolume, float afTime)",(void *)FadeGlobalSoundVolume);
 	AddFunc("void FadeGlobalSoundSpeed(float afDestSpeed, float afTime)",(void *)FadeGlobalSoundSpeed);
-	
+
 	AddFunc("void SetLightVisible(string &in asLightName, bool abVisible)",(void *)SetLightVisible);
 	AddFunc("void FadeLightTo(string &in asLightName, float afR, float afG, float afB, float afA, float afRadius, float afTime)",(void *)FadeLightTo);
 	AddFunc("void SetLightFlickerActive(string &in asLightName, bool abActive)", (void *)SetLightFlickerActive);
@@ -641,13 +641,13 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetEntityConnectionStateChangeCallback(string &in asName, string &in asCallback)", (void *)SetEntityConnectionStateChangeCallback);
 	AddFunc("void SetEntityInteractionDisabled(string &in asName, bool abDisabled)", (void *)SetEntityInteractionDisabled);
 	AddFunc("bool GetEntitiesCollide(string &in asEntityA, string &in asEntityB)",(void *)GetEntitiesCollide);
-	
+
 	AddFunc("void SetPropEffectActive(string &in asName, bool abActive, bool abFadeAndPlaySounds)", (void *)SetPropEffectActive);
 	AddFunc("void SetPropActiveAndFade(string &in asName, bool abActive, float afFadeTime)",(void *)SetPropActiveAndFade);
 	AddFunc("void SetPropStaticPhysics(string &in asName, bool abX)", (void *)SetPropStaticPhysics);
 	AddFunc("bool GetPropIsInteractedWith(string &in asName)", (void *)GetPropIsInteractedWith);
-	AddFunc("void RotatePropToSpeed(string &in asName, float afAcc, float afGoalSpeed, float afAxisX, float afAxisY, float afAxisZ, bool abResetSpeed, string &in asOffsetArea)", (void *)RotatePropToSpeed);	
-	AddFunc("void StopPropMovement(string &in asName)", (void *)StopPropMovement);	
+	AddFunc("void RotatePropToSpeed(string &in asName, float afAcc, float afGoalSpeed, float afAxisX, float afAxisY, float afAxisZ, bool abResetSpeed, string &in asOffsetArea)", (void *)RotatePropToSpeed);
+	AddFunc("void StopPropMovement(string &in asName)", (void *)StopPropMovement);
 
 	AddFunc("void AttachPropToBone(string &in asChildEntityName, string &in asParentEntityName, string &in asParentBoneName, float fPosX, float fPosY, float fPosZ, float fRotX, float fRotY, float fRotZ)",(void *)AttachPropToBone);
 	AddFunc("void DetachPropFromBone(string &in asChildEntityName)",(void *)DetachPropFromBone);
@@ -655,9 +655,9 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void AddAttachedPropToProp(string &in asPropName, string &in asAttachName, string &in asAttachFile, float fPosX, float fPosY, float fPosZ, float fRotX, float fRotY, float fRotZ)",(void *)AddAttachedPropToProp);
 	AddFunc("void RemoveAttachedPropFromProp(string &in asPropName, string &in asAttachName)",(void *)RemoveAttachedPropFromProp);
 
-	AddFunc("void SetLampCanBeLitByPlayer(string &in asName, bool abLit)",(void *)SetLampCanBeLitByPlayer); 
+	AddFunc("void SetLampCanBeLitByPlayer(string &in asName, bool abLit)",(void *)SetLampCanBeLitByPlayer);
 
-	AddFunc("void SetLampLit(string &in asName, bool abLit, bool abEffects)",(void *)SetLampLit); 
+	AddFunc("void SetLampLit(string &in asName, bool abLit, bool abEffects)",(void *)SetLampLit);
 	AddFunc("void SetSwingDoorLocked(string &in asName, bool abLocked, bool abEffects)",(void *)SetSwingDoorLocked);
 	AddFunc("void SetSwingDoorClosed(string &in asName, bool abClosed, bool abEffects)",(void *)SetSwingDoorClosed);
 	AddFunc("void SetSwingDoorDisableAutoClose(string &in asName, bool abDisableAutoClose)",(void *)SetSwingDoorDisableAutoClose);
@@ -675,10 +675,10 @@ void cLuxScriptHandler::InitScriptFunctions()
 	AddFunc("void SetWheelInteractionDisablesStuck(string &in asName, bool abX)",(void *)SetWheelInteractionDisablesStuck);
 	AddFunc("void SetLeverInteractionDisablesStuck(string &in asName, bool abX)",(void *)SetLeverInteractionDisablesStuck);
 	AddFunc("int GetLeverState(string &in asName)",(void *)GetLeverState);
-	
+
 	AddFunc("void SetMultiSliderStuckState(string &in asName, int alStuckState, bool abEffects)",(void *)SetMultiSliderStuckState);
 	AddFunc("void SetMultiSliderCallback(string &in asName, string &in asCallback)",(void *)SetMultiSliderCallback);
-	
+
 	AddFunc("void SetButtonSwitchedOn(string &in asName, bool abSwitchedOn, bool abEffects)",(void *)SetButtonSwitchedOn);
 	AddFunc("void SetButtonCanBeSwitchedOn(string &in asName, bool abCanBeSwitchedOn)",(void *)SetButtonCanBeSwitchedOn);
 	AddFunc("void SetButtonCanBeSwitchedOff(string &in asName, bool abCanBeSwitchedOff)",(void *)SetButtonCanBeSwitchedOff);
@@ -750,7 +750,7 @@ void cLuxScriptHandler::InitScriptFunctions()
 
 	AddFunc("void InteractConnectPropWithRope(string &in asName, string &in asLeverName, string &in asPropName, bool abInteractOnly, float afSpeedMul,float afMinSpeed, float afMaxSpeed, bool abInvert, int alStatesUsed)",(void *)InteractConnectPropWithRope);
 	AddFunc("void InteractConnectPropWithMoveObject(string &in asName, string &in asPropName, string &in asMoveObjectName, bool abInteractOnly,bool abInvert, int alStatesUsed)",(void *)InteractConnectPropWithMoveObject);
-	AddFunc("void ConnectEntities(string &in asName, string &in asMainEntity, string &in asConnectEntity, bool abInvertStateSent, int alStatesUsed, string &in asCallbackFunc)",(void *)ConnectEntities); 
+	AddFunc("void ConnectEntities(string &in asName, string &in asMainEntity, string &in asConnectEntity, bool abInvertStateSent, int alStatesUsed, string &in asCallbackFunc)",(void *)ConnectEntities);
 
 }
 //-----------------------------------------------------------------------
@@ -780,7 +780,7 @@ void __stdcall cLuxScriptHandler::ProgLog(string& asLevel, string& asMessage)
 	if(sLowType == "medium") level = eLuxProgressLogLevel_Medium;
 	if(sLowType == "high") level = eLuxProgressLogLevel_High;
 
-    gpBase->mpProgressLogHandler->AddLog(level, asMessage);	
+    gpBase->mpProgressLogHandler->AddLog(level, asMessage);
 }
 
 //-----------------------------------------------------------------------
@@ -1113,7 +1113,7 @@ void __stdcall cLuxScriptHandler::DestroyDataCache()
 {
 	gpBase->mpMapHandler->DestroyDataCache();
 }
- 
+
 void __stdcall cLuxScriptHandler::UnlockAchievement(string& asName)
 {
 	if (asName == "TheHeart")
@@ -1147,7 +1147,7 @@ void __stdcall cLuxScriptHandler::SetSkyBoxTexture(string& asTexture)
 		pTexture = gpBase->mpEngine->GetResources()->GetTextureManager()->CreateCubeMap(asTexture,true);
 	else
 		pTexture = NULL;
-    
+
 	pWorld->SetSkyBox(pTexture, true);
 }
 
@@ -1267,7 +1267,7 @@ void __stdcall cLuxScriptHandler::HideScreenImageWithFade(float afFadeOut)
 //-----------------------------------------------------------------------
 
 void __stdcall cLuxScriptHandler::AddEffectVoice(string& asVoiceFile, string& asEffectFile,
-												string& asTextCat, string& asTextEntry, bool abUsePostion, 
+												string& asTextCat, string& asTextEntry, bool abUsePostion,
 												string& asPosEntity, float afMinDistance, float afMaxDistance)
 {
 	cVector3f vPos(0);
@@ -1279,7 +1279,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice(string& asVoiceFile, string& as
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(asVoiceFile, asEffectFile, asTextCat, asTextEntry, abUsePostion, vPos, afMinDistance, afMaxDistance);
 }
 
@@ -1300,7 +1300,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice2(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1336,7 +1336,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice3(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1373,7 +1373,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice4(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1411,7 +1411,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice5(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1450,7 +1450,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice6(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1490,7 +1490,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice7(	string& asVoiceFile, string& 
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddMultiSubbedVoice(
 		asVoiceFile,
 		asEffectFile,
@@ -1511,7 +1511,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoice7(	string& asVoiceFile, string& 
 //-----------------------------------------------------------------------
 
 void __stdcall cLuxScriptHandler::AddEffectVoiceExt(string& asVoiceFile, string& asEffectFile,
-												string& asTextCat, string& asTextEntry, bool abUsePostion, 
+												string& asTextCat, string& asTextEntry, bool abUsePostion,
 												string& asPosEntity, float afMinDistance, float afMaxDistance, int alPriority, bool abStopInterrupt)
 {
 	cVector3f vPos(0);
@@ -1523,7 +1523,7 @@ void __stdcall cLuxScriptHandler::AddEffectVoiceExt(string& asVoiceFile, string&
 			vPos = pEntity->GetBody(0)->GetLocalPosition();
 		}
 	}
-    
+
 	gpBase->mpEffectHandler->GetPlayVoice()->AddVoice(asVoiceFile, asEffectFile, asTextCat, asTextEntry, abUsePostion, vPos, afMinDistance, afMaxDistance, alPriority, abStopInterrupt);
 }
 
@@ -1609,9 +1609,9 @@ void __stdcall cLuxScriptHandler::PlayGuiSound(string& asSoundEntFile, float afV
 	{
 		cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
 		pSoundHandler->PlayGui(asSoundEntFile,false, afVolume);
-		
+
 	}
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -1750,7 +1750,7 @@ void __stdcall cLuxScriptHandler::GivePlayerDamage(float afAmount, string& asTyp
 	eLuxDamageType type = eLuxDamageType_BloodSplat;
 	if(sLowType == "claws") type = eLuxDamageType_Claws;
 	if(sLowType == "slash") type = eLuxDamageType_Slash;
-	
+
 	gpBase->mpPlayer->GiveDamage(afAmount, 1, type, abSpinHead,abLethal);
 }
 
@@ -1950,7 +1950,7 @@ void __stdcall cLuxScriptHandler::AddHint(string& asNameAndTextEntry, string& as
 	{
 		gpBase->mpMessageHandler->StarQuestAddedMessage();
 		gpBase->mpHintHandler->Add("QuestAdded", kTranslate("Hints", "QuestAdded"), 0);
-		
+
 	}
 }
 
@@ -1982,13 +1982,13 @@ void __stdcall cLuxScriptHandler::AddQuest(string& asName, string& asNameAndText
 	if(gpBase->mpJournal->AddQuestNote(asName, asNameAndTextEntry))
 	{
 		gpBase->mpProgressLogHandler->AddLog(eLuxProgressLogLevel_High, "Added Memento "+ asName);
-		
+
 		gpBase->mpHintHandler->Add("QuestAdded", kTranslate("Hints", "QuestAdded"), 0);
-		
+
 		gpBase->mpMessageHandler->StarQuestAddedMessage();
-		
+
 		//tWString sMess = kTranslate("Quest", "QuestAdded") + _W("\n") + kTranslate("Journal", sTextEntry);
-		//gpBase->mpMessageHandler->SetMessage(sMess, 0);	
+		//gpBase->mpMessageHandler->SetMessage(sMess, 0);
 		//gpBase->mpHelpFuncs->PlayGuiSoundData("quest_added", eSoundEntryType_Gui);
 	}
 }
@@ -2007,7 +2007,7 @@ void __stdcall cLuxScriptHandler::CompleteQuest(string& asName, string& asNameAn
 		//tWString sMess = kTranslate("Quest", "QuestCompleted") + _W("\n") + kTranslate("Journal", sTextEntry);
 		//gpBase->mpMessageHandler->SetMessage(sMess, 0);
 		//gpBase->mpHelpFuncs->PlayGuiSoundData("quest_completed", eSoundEntryType_Gui);
-		
+
 		cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 		if(pMap) pMap->AddCompletionAmount(gpBase->mpCompletionCountHandler->mlQuestCompletionValue, 6.0f);
 	}
@@ -2105,7 +2105,7 @@ void __stdcall cLuxScriptHandler::GiveItemFromFile(string& asName, string& asFil
 				gpBase->mpInventory->AddItem(	asName, pItem->GetItemType(), pItem->GetSubItemTypeName(), pItem->GetImageFile(), pItem->GetAmount(), "", "");
 			}
 		}
-		
+
 		pMap->DestroyEntity(pEntity);
 	}
 }
@@ -2157,7 +2157,7 @@ void __stdcall cLuxScriptHandler::RemoveUseItemCallback(string& asName)
 void __stdcall cLuxScriptHandler::PreloadParticleSystem(string& asPSFile)
 {
 	cResources *pResources = gpBase->mpEngine->GetResources();
-	pResources->GetParticleManager()->Preload(asPSFile);	
+	pResources->GetParticleManager()->Preload(asPSFile);
 }
 
 void __stdcall cLuxScriptHandler::PreloadSound(string& asSoundFile)
@@ -2173,9 +2173,9 @@ void __stdcall cLuxScriptHandler::CreateParticleSystemAtEntity(string& asPSName,
 	CreateParticleSystemAtEntityExt(asPSName, asPSFile, asEntity, abSavePS, 1,1,1,1, false, 1,2,100,110);
 }
 
-void __stdcall cLuxScriptHandler::CreateParticleSystemAtEntityExt(	string& asPSName, string& asPSFile, string& asEntity, bool abSavePS, 
+void __stdcall cLuxScriptHandler::CreateParticleSystemAtEntityExt(	string& asPSName, string& asPSFile, string& asEntity, bool abSavePS,
 																	float afR, float afG, float afB, float afA,
-																	bool abFadeAtDistance, float afFadeMinEnd, float afFadeMinStart, 
+																	bool abFadeAtDistance, float afFadeMinEnd, float afFadeMinStart,
 																	float afFadeMaxStart, float afFadeMaxEnd)
 {
 	cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
@@ -2200,7 +2200,7 @@ void __stdcall cLuxScriptHandler::CreateParticleSystemAtEntityExt(	string& asPSN
 	else
 	{
 		iLuxEntity* pEntity = GetEntity(asEntity, eLuxEntityType_LastEnum, -1);
-		if(pEntity==NULL) return;	
+		if(pEntity==NULL) return;
 
 		pPS = pMap->GetWorld()->CreateParticleSystem(asPSName,asPSFile,1.0f);
 		if(pPS)
@@ -2283,7 +2283,7 @@ void __stdcall cLuxScriptHandler::PlaySoundAtPosition(string& asSoundName, strin
 	cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 	if(pMap==NULL) return;
 	cSoundEntity *pSound= pMap->GetWorld()->CreateSoundEntity(asSoundName, asSoundFile,bRemoveWhenOver);
-	
+
 	if(pSound)
 	{
 		cVector3f position = cVector3f(afX, afY, afZ);
@@ -2310,7 +2310,7 @@ void __stdcall cLuxScriptHandler::PlaySoundAtEntity(string& asSoundName, string&
 		if(pSound)
 		{
 			pSound->SetForcePlayAsGUISound(true);
-			
+
 			pSound->SetIsSaved(abSaveSound);
 			if(afFadeTime >0) pSound->FadeIn(fFadeSpeed);
 		}
@@ -2336,7 +2336,7 @@ void __stdcall cLuxScriptHandler::PlaySoundAtEntity(string& asSoundName, string&
 			{
 				pSound->SetPosition(pEntity->GetAttachEntity()->GetWorldPosition());
 			}
-			
+
 			pSound->SetIsSaved(abSaveSound);
 			if(afFadeTime >0) pSound->FadeIn(fFadeSpeed);
 		}
@@ -2351,7 +2351,7 @@ void __stdcall cLuxScriptHandler::FadeInSound(string& asSoundName, float afFadeT
 	if(pMap==NULL) return;
 
 	float fFadeSpeed = afFadeTime ==0 ? 0 : 1.0f/afFadeTime;
-	
+
 	cSoundEntity *pSound = pMap->GetWorld()->GetSoundEntity(asSoundName);
 	if(pSound)
 	{
@@ -2423,13 +2423,13 @@ void __stdcall cLuxScriptHandler::FadeLightTo(string& asLightName, float afR, fl
 	}
 
 	pLight->SetFlickerActive(false);
-	
+
     cColor newColor(
-		afR >=0 ? afR : pLight->GetDiffuseColor().r,	
+		afR >=0 ? afR : pLight->GetDiffuseColor().r,
 		afG >=0 ? afG : pLight->GetDiffuseColor().g,
 		afB >=0 ? afB : pLight->GetDiffuseColor().b,
 		afA >=0 ? afA : pLight->GetDiffuseColor().a);
-	
+
 	float fNewRadius = afRadius >=0 ? afRadius : pLight->GetRadius();
 
 	pLight->SetVisible(true);
@@ -2478,7 +2478,7 @@ void __stdcall cLuxScriptHandler::SetPhysicsAutoDisable(string& asName, bool abA
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop,-1)
 
 		iLuxProp *pProp = ToProp(pEntity);
-		
+
 		pProp->GetMainBody()->SetAutoDisable( abAutoDisable );
 
 	END_SET_PROPERTY
@@ -2559,7 +2559,7 @@ bool __stdcall cLuxScriptHandler::GetEntityActive(string& asName)
 static eLuxFocusCrosshair StringToCrossHair(const tString &asCrossHair)
 {
 	tString sLowCross = cString::ToLowerCase(asCrossHair);
-	
+
 	if(sLowCross=="default")	return eLuxFocusCrosshair_Default;
 	if(sLowCross=="grab")		return eLuxFocusCrosshair_Grab;
 	if(sLowCross=="push")		return eLuxFocusCrosshair_Push;
@@ -2602,7 +2602,7 @@ void __stdcall cLuxScriptHandler::CreateEntityAtArea(string& asEntityName, strin
 	iLuxEntity *pEntity = pMap->GetLatestEntity();
 	if(pEntity && pEntity->GetName() == asEntityName)
 	{
-		pEntity->SetFullGameSave(abFullGameSave);	
+		pEntity->SetFullGameSave(abFullGameSave);
 	}
 	else
 	{
@@ -2662,7 +2662,7 @@ void __stdcall cLuxScriptHandler::SetEntityInteractionDisabled(string& asName, b
 
 		iLuxProp *pProp = ToProp(pEntity);
 		pProp->SetInteractionDisabled(abDisabled);
-	
+
 	END_SET_PROPERTY
 
 }
@@ -2688,7 +2688,7 @@ void __stdcall cLuxScriptHandler::SetPropEffectActive(string& asName, bool abAct
 
 		iLuxProp *pProp = ToProp(pEntity);
 		pProp->SetEffectsActive(abActive, abFadeAndPlaySounds);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -2709,7 +2709,7 @@ void __stdcall cLuxScriptHandler::SetPropActiveAndFade(string& asName, bool abAc
 		{
 			gpBase->mpMapHandler->GetCurrentMap()->AddDissolveEntity(pProp->GetMeshEntity(), afFadeTime);
 		}
-			
+
 
 	END_SET_PROPERTY
 }
@@ -2754,7 +2754,7 @@ void __stdcall cLuxScriptHandler::RotatePropToSpeed(string& asName, float afAcc,
 			cMatrixf mtxInvLoad = cMath::MatrixInverse(pProp->GetMainBody()->GetWorldMatrix());
 			cVector3f vLocalOffset = cMath::MatrixMul(mtxInvLoad, pArea->GetPosition());
 
-			pProp->RotateAtSpeed(afAcc, afGoalSpeed, cVector3f(afAxisX, afAxisY, afAxisZ), abResetSpeed, true, 
+			pProp->RotateAtSpeed(afAcc, afGoalSpeed, cVector3f(afAxisX, afAxisY, afAxisZ), abResetSpeed, true,
 								pArea->GetPosition(), vLocalOffset);
 		}
 		else
@@ -2773,7 +2773,7 @@ void __stdcall  cLuxScriptHandler::StopPropMovement(string& asName)
 
 		iLuxProp *pProp = ToProp(pEntity);
 		pProp->StopMove();
-		
+
 
 	END_SET_PROPERTY
 }
@@ -2810,7 +2810,7 @@ void __stdcall cLuxScriptHandler::AttachPropToBone(string& asChildEntityName, st
 		Error("Could not find parent entity '%s'\n", asParentEntityName.c_str());
 		return;
 	}
-	
+
 	cMeshEntity * pChildMeshEntity = pChildProp->GetMeshEntity();
 
 	if ( pChildMeshEntity == NULL )
@@ -2915,7 +2915,7 @@ void __stdcall cLuxScriptHandler::SetLampLit(string& asName, bool abLit, bool ab
 void __stdcall cLuxScriptHandler::SetSwingDoorLocked(string& asName, bool abLocked, bool abEffects)
 {
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop,eLuxPropType_SwingDoor)
-    
+
 		cLuxProp_SwingDoor *pSwingDoor = ToSwingDoor(pEntity);
 		pSwingDoor->SetLocked(abLocked, abEffects);
 
@@ -2980,7 +2980,7 @@ int __stdcall cLuxScriptHandler::GetSwingDoorState(string &asName)
 {
 	cLuxProp_SwingDoor *pSwingDoor = ToSwingDoor(GetEntity(asName,eLuxEntityType_Prop,eLuxPropType_SwingDoor));
 	if(pSwingDoor==NULL) return 0;
-	
+
 	return pSwingDoor->GetDoorState();
 }
 
@@ -3168,16 +3168,16 @@ void __stdcall cLuxScriptHandler::AttachPropToStickyArea(string& asAreaName, str
 {
 	cLuxArea_Sticky *pStickyArea = ToStickyArea(GetEntity(asAreaName,eLuxEntityType_Area,eLuxAreaType_Sticky));
 	iLuxProp *pProp = ToProp(GetEntity(asProp,eLuxEntityType_Prop,-1));
-	
+
 	if(pProp==NULL || pStickyArea==NULL) return;
 
-	pStickyArea->AttachBody(pProp->GetMainBody() ? pProp->GetMainBody() : pProp->GetBody(0));	
+	pStickyArea->AttachBody(pProp->GetMainBody() ? pProp->GetMainBody() : pProp->GetBody(0));
 }
 
 void __stdcall cLuxScriptHandler::AttachAreaToProp(string& asAreaName, string& asProp, int alBody)
 {
 	iLuxArea *pArea = ToArea(GetEntity(asAreaName,eLuxEntityType_Area,-1));
-	
+
 	if(pArea==NULL)
 	{
 #if 1
@@ -3193,7 +3193,7 @@ void __stdcall cLuxScriptHandler::AttachBodyToStickyArea(string& asAreaName, str
 {
 	cLuxArea_Sticky *pStickyArea = ToStickyArea(GetEntity(asAreaName,eLuxEntityType_Area,eLuxAreaType_Sticky));
 	if(pStickyArea==NULL) return;
-	
+
 	cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 	iPhysicsBody *pBody = pMap->GetPhysicsWorld()->GetBody(asBody);
 	if(pBody==NULL)
@@ -3208,7 +3208,7 @@ void __stdcall cLuxScriptHandler::AttachBodyToStickyArea(string& asAreaName, str
 void __stdcall cLuxScriptHandler::DetachFromStickyArea(string& asAreaName)
 {
 	cLuxArea_Sticky *pStickyArea = ToStickyArea(GetEntity(asAreaName,eLuxEntityType_Area,eLuxAreaType_Sticky));
-	
+
 	if(pStickyArea) pStickyArea->DetachBody();
 }
 
@@ -3293,7 +3293,7 @@ void __stdcall cLuxScriptHandler::SetEnemyMoveType(string& asName, string& asMov
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->SetNativeMoveType(moveType);
-	
+
 	END_SET_PROPERTY*/
 }
 
@@ -3337,7 +3337,7 @@ string& __stdcall cLuxScriptHandler::GetEnemyStateName(string& asName)
 void __stdcall cLuxScriptHandler::SetManPigType(string& asName, string& asManPigType)
 {
 	/*eLuxEnemyPigType manPigType = eLuxEnemyPigType_Rod;
-	
+
 	if ( asManPigType == "Rod" )
 	{
 		manPigType = eLuxEnemyPigType_Rod;
@@ -3355,7 +3355,7 @@ void __stdcall cLuxScriptHandler::SetManPigType(string& asName, string& asManPig
 
 		cLuxEnemy_ManPig *pEnemy = ToManPig(pEntity);
 		pEnemy->SetManPigType( manPigType );
-	
+
 	END_SET_PROPERTY*/
 }
 
@@ -3367,7 +3367,7 @@ void __stdcall cLuxScriptHandler::SendEnemyTimeOut(string& asName, float afTimeO
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->SendMessage(eLuxEnemyMessage_TimeOut, afTimeOut);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3379,7 +3379,7 @@ void __stdcall cLuxScriptHandler::StopAnimationAndContinue(string& asName, float
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->SendMessage(eLuxEnemyMessage_StopPatrolAnimation, afTimeOut);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3391,7 +3391,7 @@ void __stdcall cLuxScriptHandler::PlayScriptedAnimation(string& asName, string& 
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->PlayScriptedAnimation(asAnimationName, abLoopAnimation);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3424,7 +3424,7 @@ void __stdcall cLuxScriptHandler::SetTeslaPigFadeDisabled(string& asName, bool a
 		cLuxEnemy_ManPig *pEnemy = ToManPig(pEntity);
 		if (!pEnemy) continue;
 		pEnemy->SetTeslaFadeDisabled(abX);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3437,7 +3437,7 @@ void __stdcall cLuxScriptHandler::SetTeslaPigSoundDisabled(string& asName, bool 
 		cLuxEnemy_ManPig *pEnemy = ToManPig(pEntity);
 		if (!pEnemy) continue;
 		pEnemy->SetTeslaSoundDisabled(abX);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3450,7 +3450,7 @@ void __stdcall cLuxScriptHandler::SetTeslaPigEasyEscapeDisabled(string& asName, 
 		cLuxEnemy_ManPig *pEnemy = ToManPig(pEntity);
 		if (!pEnemy) continue;
 		pEnemy->SetTeslaEasyEscapeDisabled(abX);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3463,7 +3463,7 @@ void __stdcall cLuxScriptHandler::ForceTeslaPigSighting(string& asName)
 		cLuxEnemy_ManPig *pEnemy = ToManPig(pEntity);
 		if (!pEnemy) continue;
 		pEnemy->ForceTeslaSighting();
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3475,7 +3475,7 @@ void __stdcall cLuxScriptHandler::SetEnemyDisabled(string& asName, bool abDisabl
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->SetDisabled(abDisabled);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3487,7 +3487,7 @@ void __stdcall cLuxScriptHandler::SetEnemyActivationDistance(string& asName, flo
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->SetActivationDistance(afX);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3521,7 +3521,7 @@ void __stdcall cLuxScriptHandler::ShowEnemyPlayerPosition(string& asName)
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->ShowPlayerPosition();
-		
+
 		eLuxEnemyState state = pEnemy->GetCurrentEnemyState();
 		if(	state != eLuxEnemyState_Hunt &&
 			state != eLuxEnemyState_HuntPause &&
@@ -3531,7 +3531,7 @@ void __stdcall cLuxScriptHandler::ShowEnemyPlayerPosition(string& asName)
 		{
 			pEnemy->ChangeState(eLuxEnemyState_Hunt);
 		}
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3543,7 +3543,7 @@ void __stdcall cLuxScriptHandler::ForceEnemyWaitState(string& asName)
 
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->ChangeState(eLuxEnemyState_Wait);
-	
+
 	END_SET_PROPERTY
 }
 
@@ -3565,7 +3565,7 @@ void __stdcall cLuxScriptHandler::SetEnemyDisableTriggers(string& asName, bool a
 void __stdcall cLuxScriptHandler::AddEnemyPatrolNode(string& asName, string& asNodeName, float afWaitTime, string& asAnimation, bool abLoopAnimation)
 {
 	BEGIN_SET_PROPERTY(eLuxEntityType_Enemy,-1)
-		
+
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		cAINodeContainer *pAINodeCont = pEnemy->GetPathFinder()->GetNodeContainer();
 		if(pAINodeCont==NULL)
@@ -3575,7 +3575,7 @@ void __stdcall cLuxScriptHandler::AddEnemyPatrolNode(string& asName, string& asN
 		}
 
 		cAINode *pNode = pAINodeCont->GetNodeFromName(asNodeName);
-		
+
 		if(pNode==NULL)
 		{
 			Error("Could not find node '%s' for enemy '%s'\n", asNodeName.c_str(), pEntity->GetName().c_str());
@@ -3583,14 +3583,14 @@ void __stdcall cLuxScriptHandler::AddEnemyPatrolNode(string& asName, string& asN
 		}
 
 		pEnemy->AddPatrolNode(pNode, afWaitTime, asAnimation, abLoopAnimation);
-	
+
 	END_SET_PROPERTY
 }
 
 void __stdcall cLuxScriptHandler::ClearEnemyPatrolNodes(string& asName)
 {
 	BEGIN_SET_PROPERTY(eLuxEntityType_Enemy,-1)
-		
+
 		iLuxEnemy *pEnemy = ToEnemy(pEntity);
 		pEnemy->ClearPatrolNodes();
 
@@ -3618,7 +3618,7 @@ void __stdcall cLuxScriptHandler::TeleportEnemyToNode(string & asName, string & 
 			Error("Could not find node '%s' for enemy '%s'\n", asNodeName.c_str(), pEnemy->GetName().c_str());
 			continue;
 		}
-		
+
 		cVector3f vNodePos = pNode->GetPosition();
 		if(abChangeY==false) vNodePos.y = pEnemy->GetCharacterBody()->GetFeetPosition().y;
 
@@ -3683,7 +3683,7 @@ void __stdcall cLuxScriptHandler::SetPropHealth(string& asName, float afHealth)
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop, -1)
 
 		iLuxProp *pProp = ToProp(pEntity);
-		pProp->SetHealth(afHealth);	
+		pProp->SetHealth(afHealth);
 
 	END_SET_PROPERTY
 }
@@ -3693,7 +3693,7 @@ void __stdcall cLuxScriptHandler::AddPropHealth(string& asName, float afHealth)
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop, -1)
 
 		iLuxProp *pProp = ToProp(pEntity);
-		pProp->SetHealth(pProp->GetHealth() + afHealth);	
+		pProp->SetHealth(pProp->GetHealth() + afHealth);
 
 	END_SET_PROPERTY
 }
@@ -3718,7 +3718,7 @@ void __stdcall cLuxScriptHandler::ResetProp(string& asName)
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop, -1)
 
 		iLuxProp *pProp = ToProp(pEntity);
-		pProp->ResetProperties();	
+		pProp->ResetProperties();
 
 	END_SET_PROPERTY
 }
@@ -3807,14 +3807,14 @@ void __stdcall cLuxScriptHandler::AddEntityCollideCallback(string& asName, strin
 	if(pChild==NULL) return;
 	if(asName == "Player")
 	{
-		gpBase->mpPlayer->AddCollideCallback(pChild, asFunction, abDeleteOnCollide,alStates);	
+		gpBase->mpPlayer->AddCollideCallback(pChild, asFunction, abDeleteOnCollide,alStates);
 	}
 	else
 	{
 		BEGIN_SET_PROPERTY(eLuxEntityType_LastEnum, -1)
 
 			pEntity->AddCollideCallback(pChild, asFunction, abDeleteOnCollide, alStates);
-		
+
 		END_SET_PROPERTY
 	}
 }
@@ -3823,7 +3823,7 @@ void __stdcall cLuxScriptHandler::RemoveEntityCollideCallback(string& asName, st
 {
 	//Just to check so entity exist!
 	GetEntity(asChildName, eLuxEntityType_LastEnum, -1);
-	
+
 	if(asName == "Player")
 	{
 		gpBase->mpPlayer->RemoveCollideCallback(asChildName);
@@ -3859,7 +3859,7 @@ void __stdcall cLuxScriptHandler::AddPropForce(string& asName, float afX, float 
 		iLuxProp* pProp = ToProp(pEntity);
 		if(pProp==NULL) return;
 		cVector3f vVec(afX, afY, afZ);
-    
+
 		for(int i=0; i<pProp->GetBodyNum(); ++i)
 		{
 			iPhysicsBody *pBody = pProp->GetBody(i);
@@ -3888,7 +3888,7 @@ void __stdcall cLuxScriptHandler::AddPropImpulse(string& asName, float afX, floa
 void __stdcall cLuxScriptHandler::StartPhoneRinging(string & asName)
 {
 	BEGIN_SET_PROPERTY(eLuxEntityType_Prop,-1)
-        
+
         cLuxProp_PhoneBox * phone = static_cast<cLuxProp_PhoneBox*>(pEntity);
 
         if ( phone )
@@ -3902,7 +3902,7 @@ void __stdcall cLuxScriptHandler::StartPhoneRinging(string & asName)
 void __stdcall cLuxScriptHandler::StopPhoneRinging(string & asName)
 {
     BEGIN_SET_PROPERTY(eLuxEntityType_Prop,-1)
-        
+
         cLuxProp_PhoneBox * phone = static_cast<cLuxProp_PhoneBox*>(pEntity);
 
         if ( phone )
@@ -3916,7 +3916,7 @@ void __stdcall cLuxScriptHandler::StopPhoneRinging(string & asName)
 void __stdcall cLuxScriptHandler::HangUpPhone(string & asName)
 {
     BEGIN_SET_PROPERTY(eLuxEntityType_Prop,-1)
-        
+
         cLuxProp_PhoneBox * phone = static_cast<cLuxProp_PhoneBox*>(pEntity);
 
         if ( phone )
@@ -3950,7 +3950,7 @@ void __stdcall cLuxScriptHandler::AddBodyImpulse(string& asName, float afX, floa
 		return;
 	}
 	cVector3f vVec(afX, afY, afZ);
-	
+
 	pBody->AddImpulse(VecToCoordSystem(pBody, vVec, asCoordSystem));
 }
 
@@ -3969,7 +3969,7 @@ void __stdcall cLuxScriptHandler::BreakJoint(string& asName)
 
 //-----------------------------------------------------------------------
 
-void __stdcall cLuxScriptHandler::InteractConnectPropWithRope(	string& asName, string& asPropName, string& asRopeName, bool abInteractOnly, 
+void __stdcall cLuxScriptHandler::InteractConnectPropWithRope(	string& asName, string& asPropName, string& asRopeName, bool abInteractOnly,
 																float afSpeedMul,float afMinSpeed, float afMaxSpeed,
 																bool abInvert, int alStatesUsed)
 {
@@ -3978,14 +3978,14 @@ void __stdcall cLuxScriptHandler::InteractConnectPropWithRope(	string& asName, s
 
 	iLuxProp *pProp = ToProp(GetEntity(asPropName, eLuxEntityType_Prop, -1));
 	if(pProp==NULL) return;
-	
+
     iPhysicsRope *pRope = pPhysicsWorld->GetRope(asRopeName);
 	if(pRope == NULL)
 	{
 		Error("Could not find rope '%s'!\n", asRopeName.c_str());
 		return;
 	}
-	
+
 	cLuxInteractConnection_Rope *pConnection = hplNew(cLuxInteractConnection_Rope, (asName, pProp,pRope, afSpeedMul,
 														-cMath::Abs(afMinSpeed), cMath::Abs(afMaxSpeed),
 														abInvert, alStatesUsed));
@@ -4022,7 +4022,7 @@ void __stdcall cLuxScriptHandler::InteractConnectPropWithMoveObject(	string& asN
 void __stdcall cLuxScriptHandler::ConnectEntities(string& asName, string& asMainEntity, string& asConnectEntity, bool abInvertStateSent, int alStatesUsed, string& asCallbackFunc)
 {
 	iLuxEntity *pMainEntity = GetEntity(asMainEntity, eLuxEntityType_LastEnum, -1);
-	if(pMainEntity==NULL) return;	
+	if(pMainEntity==NULL) return;
 
 	iLuxEntity *pConnectEntity = GetEntity(asConnectEntity, eLuxEntityType_LastEnum, -1);
 	if(pConnectEntity==NULL) return;
@@ -4032,8 +4032,8 @@ void __stdcall cLuxScriptHandler::ConnectEntities(string& asName, string& asMain
 
 //-----------------------------------------------------------------------
 
-/*void __stdcall cLuxScriptHandler::CreateRope(string& asName, 
-											string& asStartArea, string& asEndArea, 
+/*void __stdcall cLuxScriptHandler::CreateRope(string& asName,
+											string& asStartArea, string& asEndArea,
 											string& asStartBody, string& asEndBody,
 											float afMinTotalLength, float afMaxTotalLength,
 											float afSegmentLength, float afDamping,
@@ -4071,7 +4071,7 @@ void __stdcall cLuxScriptHandler::ConnectEntities(string& asName, string& asMain
 	pRope->SetUniqueID(mlRopeIdCount++);
 
 	//Log("Total Length: %f\n", pRope->GetTotalLength());
-	
+
 	//////////////////////////
 	//Create graphical entity
 
@@ -4116,7 +4116,7 @@ void __stdcall cLuxScriptHandler::ConnectEntities(string& asName, string& asMain
 		}
 	}
 
-	
+
 }*/
 
 //-----------------------------------------------------------------------

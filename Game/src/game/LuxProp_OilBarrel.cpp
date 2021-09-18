@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -101,7 +101,7 @@ bool cLuxProp_OilBarrel::CanInteract(iPhysicsBody *apBody)
 
 void cLuxProp_OilBarrel::OnSetupAfterLoad(cWorld *apWorld)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -115,7 +115,7 @@ void cLuxProp_OilBarrel::OnResetProperties()
 
 void cLuxProp_OilBarrel::UpdatePropSpecific(float afTimeStep)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -151,10 +151,10 @@ tWString cLuxProp_OilBarrel::GetFocusText()
 			sText = kTranslate("Game", "OilBarrel_FocusText_050");
 		else if(mfOilAmount < 75)
 			sText = kTranslate("Game", "OilBarrel_FocusText_075");
-		else 
+		else
 			sText = kTranslate("Game", "OilBarrel_FocusText_100");
 	}
-		
+
 	return sText;
 }
 
@@ -162,7 +162,7 @@ tWString cLuxProp_OilBarrel::GetFocusText()
 
 void cLuxProp_OilBarrel::OnConnectionStateChange(iLuxEntity *apEntity, int alState)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -200,7 +200,7 @@ void cLuxProp_OilBarrel::SaveToSaveData(iLuxEntity_SaveData* apSaveData)
 	//Set variables
 	kCopyToVar(pData, mbAmountCalculated);
 	kCopyToVar(pData, mfOilAmount);
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -211,7 +211,7 @@ void cLuxProp_OilBarrel::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 	//Init
 	super_class::LoadFromSaveData(apSaveData);
 	cLuxProp_OilBarrel_SaveData *pData = static_cast<cLuxProp_OilBarrel_SaveData*>(apSaveData);
-	
+
 	//////////////////
 	//Set variables
 	kCopyFromVar(pData, mbAmountCalculated);

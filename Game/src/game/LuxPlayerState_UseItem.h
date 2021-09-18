@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -44,7 +44,7 @@ public:
 class cLuxPlayerState_UseItem : public iLuxPlayerState_DefaultBase
 {
 typedef iLuxPlayerState_DefaultBase super_class;
-public:	
+public:
 	cLuxPlayerState_UseItem(cLuxPlayer *apPlayer);
 	virtual ~cLuxPlayerState_UseItem();
 
@@ -58,7 +58,7 @@ public:
 
 	cGuiGfxElement* GetCrosshair();
 	bool OnDrawCrossHair(cGuiGfxElement *apGfx, const cVector3f& avPos, const cVector2f &avSize);
-	
+
 	/////////////////////////////////
 	//Save data stuff
 	virtual bool IsSaved(){ return true; }
@@ -71,7 +71,7 @@ public:
 protected:
 	bool ShowOutlineOnEntity(iLuxEntity *apEntity, iPhysicsBody *apBody, const cVector3f &avFocusPos);
 	void UseItem();
-	
+
 	cLuxInventory_Item *mpCurrentItem;
 	cLinearOscillation mFlashOscill;
 

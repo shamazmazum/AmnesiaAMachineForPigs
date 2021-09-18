@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -133,7 +133,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 	// Get data
 	iPhysicsWorld *pPhysicsWorld = mpMap->GetPhysicsWorld();
 	iPhysicsBody *pAreaBody = mpBody;
-	
+
 	float fSurfaceY =	mpBody->GetWorldPosition().y + mpBody->GetShape()->GetSize().y /2;
 
 	cCollideData collideData;
@@ -143,12 +143,12 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 	// Update count
 	mfTimeCount += afTimeStep;
 
-	
+
 	///////////////////////////
 	// Iterate bodies
 	std::vector<iPhysicsBody*> vBodies;
 	pPhysicsWorld->GetBodiesInBV(mpBody->GetBoundingVolume(),&vBodies);
-	
+
 	for(size_t i=0; i<vBodies.size(); ++i)
 	{
 		iPhysicsBody *pBody = vBodies[i];
@@ -175,7 +175,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 				bInsideWater = false;
 			}
 		}
-		
+
 		/////////////////////////
 		//Character specific
 		if(pBody->IsCharacter())
@@ -189,7 +189,7 @@ void cLuxArea_Liquid::OnUpdate(float afTimeStep)
 			DoBuoyancyOnBody(pBody, fSurfaceY, bInsideWater);
 		}
 	}
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -344,7 +344,7 @@ void cLuxArea_Liquid::SplashEffect(iPhysicsBody *apBody, float afSurfaceY)
 	if(pImpact->GetSoundName() != "")
 	{
 		cSoundEntity *pSound = pWorld->CreateSoundEntity("Splash",pImpact->GetSoundName(),true);
-		
+
 		if(pSound) pSound->SetPosition(vEffectPos);
 	}
 }

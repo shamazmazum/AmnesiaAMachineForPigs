@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -90,12 +90,12 @@ bool InitPaths(const tWString& asInitConfigFile)
 		fl_message("%s",cString::To8Char((_W("Could not load main init file: ")+asInitConfigFile)).c_str());
 		return false;
 	}
-	
-	
+
+
 	//Set the name of the folder (in Lux) that all save stuff will be put.
 	gsMainSaveFolder = pInitCfg->GetStringW("Directories","MainSaveFolder",_W(""));
-	
-	
+
+
 	//Get the config file paths
 #if USE_SDL2
 	gsDefaultMainConfigPath = pInitCfg->GetStringW("ConfigFiles", "DefaultMainSettingsSDL2",_W(""));
@@ -118,7 +118,7 @@ bool InitPaths(const tWString& asInitConfigFile)
 
 	//Various variables
 	gsGameName = pInitCfg->GetString("Variables","GameName","");
-	
+
 
 	//Delete the config file
 	hplDelete(pInitCfg);
@@ -131,7 +131,7 @@ bool InitPaths(const tWString& asInitConfigFile)
                        , true, hpl::cString::To16Char(gsCustomStoriesPath)
 #endif
                        );
-    //Create directories	
+    //Create directories
     hpl::CreateBaseDirs(vDirs, sPersonalDir);
 
 	//Set the base directory from which all saving will take place.
@@ -152,7 +152,7 @@ cConfigFile* LoadConfigFile(const tWString& asDefaultPath, const tWString& asWan
 {
 	cConfigFile *pConfig;
 	bool bLoadedWantedPath = false;
-	
+
 	//////////////////////
 	//Check if wanted exist and created config using existing file
 	if(abForceLoadDefault==false && cPlatform::FileExists(asWantedPath))
@@ -199,7 +199,7 @@ bool LoadLanguage(cEngine* apEngine, const tString& asName, bool abForceReload)
 
 	//if(gsCurrentLanguage != "")
 	//{
-		pResources->ClearTranslations();	
+		pResources->ClearTranslations();
 	//}
 
 	//msCurrentLanguage = sLowName;
@@ -211,15 +211,15 @@ bool LoadLanguage(cEngine* apEngine, const tString& asName, bool abForceReload)
 	//Load the language files
 	pResources->AddLanguageFile(gsBaseLanguageFolder + sBaseFileName, true);
 
-    
+
 	////////////////////////////////////////////
 	//If not default language, add default to so only missing entries are filled in
-    if(sGameFileName != gsDefaultGameLanguage)	
+    if(sGameFileName != gsDefaultGameLanguage)
 		pResources->AddLanguageFile(gsGameLanguageFolder + gsDefaultGameLanguage, false);
 
-	if(sBaseFileName != gsDefaultBaseLanguage)	
+	if(sBaseFileName != gsDefaultBaseLanguage)
 	pResources->AddLanguageFile(gsBaseLanguageFolder + gsDefaultBaseLanguage, false);
-    
+
 	return true;
 }
 
@@ -376,14 +376,14 @@ int hplMain(const tString &asCommandLine)
 	#endif
 
 	gpEngine = CreateHPLEngine(eHplAPI_OpenGL, eHplSetup_Video, &vars);
-	
+
 	/////////////////////////////////////////////////
 	// Load presets
 	gvPresets.push_back(hplNew(cConfigFile, (gsDefaultMainConfigPathLow)));
 	gvPresets.push_back(hplNew(cConfigFile, (gsDefaultMainConfigPathMedium)));
 	gvPresets.push_back(hplNew(cConfigFile, (gsDefaultMainConfigPathHigh)));
 	gvPresets.push_back(NULL);
-	
+
 	for(int i=0;i<(int)gvPresets.size();++i)
 	{
 		if(gvPresets[i]) gvPresets[i]->Load();
@@ -402,11 +402,11 @@ int hplMain(const tString &asCommandLine)
 			cUserInterface* win = hplNew(cUserInterface,(exitflag, pMainConfig, bConfigFileExists, bLastInitCrashed, sCardString, pChooser, gvPresets, gpEngine ));
 
 			int ret = win->Run();
-			if(ret) 
+			if(ret)
 			{
 
-			} 
-			else 
+			}
+			else
 			{
 				ret = exitflag;
 			}
@@ -438,7 +438,7 @@ int hplMain(const tString &asCommandLine)
 	// Call program
     if(exitflag!=0)
 		cPlatform::RunProgram(sGameExe, sParams);
-		
+
 	///////////////////////////////////////
 	// Clean up
 	DestroyHPLEngine(gpEngine);

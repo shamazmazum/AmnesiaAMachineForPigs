@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -85,7 +85,7 @@ namespace hpl {
 		// Load file
 		int lLength;
 		char *pCharBuffer = NULL;
-		
+
 		/////////////////////////////////////
 		// Normal load
 		if(sExt == _W("hps"))
@@ -130,7 +130,7 @@ namespace hpl {
 			tWString sCompFile = cString::SetFileExtW(asFileName,_W("chps"));
 
 			//Only recreate if file does not exist or if out of date.
-			if(	cPlatform::FileExists(sCompFile)==false || 
+			if(	cPlatform::FileExists(sCompFile)==false ||
 				cPlatform::FileModifiedDate(sCompFile) < cPlatform::FileModifiedDate(asFileName))
 			{
 				cBinaryBuffer textBuff;
@@ -145,7 +145,7 @@ namespace hpl {
 				compBuff.Save(sCompFile);
 			}
 		}
-		
+
 		/////////////////////////////////////////
 		// Create module
 		mpModule = mpScriptEngine->GetModule(msModuleName.c_str(), asGM_ALWAYS_CREATE);
@@ -166,7 +166,7 @@ namespace hpl {
 			mpScriptOutput->Display();
 			mpScriptOutput->Clear();
 			Log("------- SCRIPT OUTPUT END ----------------------------\n");
-			
+
 			hplDeleteArray(pCharBuffer);
 			return false;
 		}
@@ -223,7 +223,7 @@ namespace hpl {
 		fseek(pFile,0,SEEK_END);
 		int lLength = (int)ftell(pFile);
 		rewind(pFile);
-		
+
 		alLength = lLength;
 
 		char *pBuffer = hplNewArray(char,lLength);

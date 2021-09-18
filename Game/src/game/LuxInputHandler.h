@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -28,12 +28,12 @@
 //----------------------------------------------
 
 class cLuxAction
-{	
+{
 public:
 	cLuxAction() : msName(""){}
-	cLuxAction(const tString& asName, 
-			   int alId, 
-			   bool abConfigurable, 
+	cLuxAction(const tString& asName,
+			   int alId,
+			   bool abConfigurable,
 			   eLuxActionCategory aCat) : msName(asName), mlId(alId), mbConfigurable(abConfigurable), mCat(aCat){}
 
 	tString msName;
@@ -51,10 +51,10 @@ class cLuxInput
 {
 public:
 	cLuxInput() : msInputType(""){}
-	cLuxInput(const tString& asInputType, int alValue, int alActionId) : 
+	cLuxInput(const tString& asInputType, int alValue, int alActionId) :
 				msInputType(asInputType), mlValue(alValue), mlActionId(alActionId){}
 
-	
+
     tString msInputType;
 	int mlValue;
 	int mlActionId;
@@ -72,13 +72,13 @@ class cLuxPlayer;
 
 class cLuxInputHandler : public iLuxUpdateable
 {
-public:	
+public:
 	cLuxInputHandler();
 	~cLuxInputHandler();
 
 	void LoadUserConfig();
 	void SaveUserConfig();
-	
+
 	void OnStart();
 	void Update(float afTimeStep);
 	void Reset();
@@ -120,7 +120,7 @@ public:
 	void ResetSmoothMousePos();
 	cVector2f GetSmoothMousePos(const cVector2f& avRelPosMouse);
 	cVector2f GetSluggishMousePos(const cVector2f& avRelPosMouse);
-	
+
 #ifdef USE_GAMEPAD
 	bool IsGamepadPresent();
 
@@ -131,12 +131,12 @@ public:
 private:
 	void UpdateGlobalInput();
 	bool UpdateGamepadUIInput();
-	
+
 	void UpdateGameInput();
 	void UpdateGamePlayerInput();
 	void UpdateGameMessageInput();
 	void UpdateGameEffectInput();
-	
+
 	void UpdatePreMenuInput();
 	void UpdateMainMenuInput();
 	void UpdateInventoryInput();

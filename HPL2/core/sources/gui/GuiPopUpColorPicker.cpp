@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -63,8 +63,8 @@ namespace hpl {
 
 	//-------------------------------------------------------------------------------
 
-	iGraphicPickerMode::iGraphicPickerMode(cGuiPopUpColorPicker* apPicker, 
-											const tWString& asName, int alSliderParamIndex, 
+	iGraphicPickerMode::iGraphicPickerMode(cGuiPopUpColorPicker* apPicker,
+											const tWString& asName, int alSliderParamIndex,
 											const cVector3f& avMaxValues) : mpPicker(apPicker), msName(asName), mlSliderParamIndex(alSliderParamIndex), mvMaxValues(avMaxValues)
 	{
 		mpBoxBmp = apPicker->mpColorBoxBitmap;
@@ -111,7 +111,7 @@ namespace hpl {
 	void iGraphicPickerMode::OnSetSlider(float afX)
 	{
 		RebuildBox();
-		
+
 		mfColorSliderPos = afX;
 
 		UpdateSliderMarkerColor();
@@ -126,7 +126,7 @@ namespace hpl {
 
 		SaveSliderValue(GetSliderParamValue());
 		pInputMode->OnInputEnterSpecific(apInput);
-			
+
 		if(IsCurrent() && SliderValueChanged(GetSliderParamValue()))
 		{
 			RebuildBox();
@@ -201,9 +201,9 @@ namespace hpl {
 	void iGraphicPickerMode::UpdateSliderMarkerColor()
 	{
 		unsigned char pixelData[3];
-			
-		mpSliderBmp->GetPixel(0,0, 
-								cVector3l(cMath::FastPositiveFloatToInt(mfColorSliderPos*mpSliderBmp->GetSize().x),0,0), 
+
+		mpSliderBmp->GetPixel(0,0,
+								cVector3l(cMath::FastPositiveFloatToInt(mfColorSliderPos*mpSliderBmp->GetSize().x),0,0),
 								pixelData);
 
 		mSliderMarkerCol.r = 1.0f - UCharColorToFloat(pixelData[0]);
@@ -233,7 +233,7 @@ namespace hpl {
 
 	void cHSBMode::OnSetBox(const cVector2f& avPos)
 	{
-		cVector2f vMapValues = cVector2f(mvMaxValues.v[mlRowIndex]*avPos.x, 
+		cVector2f vMapValues = cVector2f(mvMaxValues.v[mlRowIndex]*avPos.x,
 			mvMaxValues.v[mlColIndex]*(1-avPos.y));
 
 		bool bUpdateBox = false;
@@ -271,7 +271,7 @@ namespace hpl {
 	{
 		int lIndex = apInput->GetUserValue();
 		float fValue = apInput->GetNumericValue()* mvMaxValues.v[lIndex]/apInput->GetUpperBound();
-			
+
 		SetHSBValue(lIndex, fValue, false);
 	}
 
@@ -300,7 +300,7 @@ namespace hpl {
 
 		vStep.x = vStepAmounts.v[mlRowIndex];
 		vStep.y = vStepAmounts.v[mlColIndex];
-		
+
 		////////////////////////////////////////////////////////////////
 		// Build the helper bitmap
 		for(int y=vSize.y-1; y>=0; --y)
@@ -309,7 +309,7 @@ namespace hpl {
 			{
 				// Update temp color
 				cMath::HSBToRGBHelper(vHSB, temp);
-				
+
 				// Convert to byte array
 				byteArray[0] = FloatColorToUChar(temp.r);
 				byteArray[1] = FloatColorToUChar(temp.g);
@@ -320,11 +320,11 @@ namespace hpl {
 
 				vHSB.v[mlRowIndex] += vStep.x;
 			}
-			
+
 			vHSB.v[mlRowIndex] = 0.0f;
 			vHSB.v[mlColIndex] += vStep.y;
 		}
-		
+
 		////////////////////////////////////////////////////////////
 		// Dump helper bitmap onto texture
 		mpBoxTex->SetRawData(0, 0, vSize, ePixelFormat_RGB, mpBoxBmp->GetData(0, 0)->mpData);
@@ -337,7 +337,7 @@ namespace hpl {
 		const cVector3l& vSize = mpSliderBmp->GetSize();
 		cVector3f vHSB;
 		cVector3f vStepAmounts = cVector3f(mvMaxValues.x/float(vSize.x-1), mvMaxValues.y/float(vSize.x-1), mvMaxValues.z/float(vSize.x-1));
-		
+
 		cColor temp;
 		unsigned char byteArray[4];
 		byteArray[3] = 255;
@@ -347,14 +347,14 @@ namespace hpl {
 		vHSB.v[mlColIndex] = mvMaxValues.v[mlColIndex];
 
 		float step = vStepAmounts.v[mlSliderParamIndex];
-		
+
 		bool bHue = mlSliderParamIndex==0;
 		if(bHue)
 		{
 			/////////////////////////////////////////////////////////////////
 			// If Hue, display a nice and wonderful rainbow like slider
 			for(int x=0; x<vSize.x; ++x)
-			{			
+			{
 				cMath::HSBToRGBHelper(vHSB, temp);
 
 				byteArray[0] = FloatColorToUChar(temp.r);
@@ -379,7 +379,7 @@ namespace hpl {
 				vHSB.v[mlSliderParamIndex] += step;
 			}
 		}
-		
+
 
 		////////////////////////////////////////////////////////////
 		// Dump helper bitmap onto texture
@@ -404,7 +404,7 @@ namespace hpl {
 	cVector2f cHSBMode::GetPosInMap()
 	{
 		const cVector3f& vHSB = mpPicker->GetHSB();
-		return cVector2f(vHSB.v[mlRowIndex]/mvMaxValues.v[mlRowIndex], 
+		return cVector2f(vHSB.v[mlRowIndex]/mvMaxValues.v[mlRowIndex],
 							1.0f-vHSB.v[mlColIndex]/mvMaxValues.v[mlColIndex]);
 	}
 
@@ -471,7 +471,7 @@ namespace hpl {
 	{
 		int lIndex = apInput->GetUserValue();
 		float fValue = apInput->GetNumericValue() * mvMaxValues.v[mlSliderParamIndex]/apInput->GetUpperBound();
-			
+
 		SetRGBValue(lIndex, fValue, false);
 	}
 
@@ -485,11 +485,11 @@ namespace hpl {
 		cColor temp;
 		unsigned char byteArray[4];
 		byteArray[3] = 255;
-		
+
 		vRGB.v[mlSliderParamIndex] = mpPicker->GetColor().v[mlSliderParamIndex];
 		vRGB.v[mlRowIndex] = 0.0f;
 		vRGB.v[mlColIndex] = 0.0f;
-				
+
 		for(int y=vSize.y-1; y>=0; --y)
 		{
 			for(int x=0; x<vSize.x; ++x)
@@ -502,11 +502,11 @@ namespace hpl {
 
 				vRGB.v[mlRowIndex] += fStep;
 			}
-			
+
 			vRGB.v[mlRowIndex] = 0.0f;
 			vRGB.v[mlColIndex] += fStep;
 		}
-				
+
 		mpBoxTex->SetRawData(0, 0, vSize, ePixelFormat_RGB, mpBoxBmp->GetData(0, 0)->mpData);
 	}
 
@@ -519,23 +519,23 @@ namespace hpl {
 		unsigned char byteArray[4];
 		byteArray[3] = 255;
 		float step = 1.0f/float(vSize.x-1);
-				
+
 		vRGB.v[mlSliderParamIndex] = 0.0f;
 		vRGB.v[mlRowIndex] = 0.0f;
 		vRGB.v[mlColIndex] = 0.0f;
-		
+
 		for(int x=0; x<vSize.x; ++x)
-		{		
+		{
 			byteArray[0] = FloatColorToUChar(vRGB.x);
 			byteArray[1] = FloatColorToUChar(vRGB.y);
 			byteArray[2] = FloatColorToUChar(vRGB.z);
 
 
 			mpSliderBmp->SetPixel(0, 0, cVector3l(x, 0, 0), byteArray);
-						
+
 			vRGB.v[mlSliderParamIndex] += step;
 		}
-				
+
 		mpSliderTex->SetRawData(0, 0, vSize, ePixelFormat_RGB, mpSliderBmp->GetData(0, 0)->mpData);
 	}
 
@@ -578,8 +578,8 @@ namespace hpl {
 	//-------------------------------------------------------------------------------
 
 	cGuiPopUpColorPicker::cGuiPopUpColorPicker(cGraphics *apGraphics,
-											   cGuiSet* apSet, 
-											   cColor* apDestColor, 
+											   cGuiSet* apSet,
+											   cColor* apDestColor,
 											   void *apCallbackObject, tGuiCallbackFunc apCallback,
 											   void *apUpdateColorCallbackObject, tGuiCallbackFunc apUpdateColorCallback) : iGuiPopUp(apSet, true, cVector2f(600,350))
 	{
@@ -608,7 +608,7 @@ namespace hpl {
 		mpColorBoxTexture->CreateFromBitmap(mpColorBoxBitmap);
 		mpColorBoxTexture->SetWrapSTR(eTextureWrap_Clamp);
 		mpColorBoxTexture->SetFilter(eTextureFilter_Nearest);
-		
+
 		// Color slider
 		mpColorSliderBitmap = hplNew(cBitmap,());
 		mpColorSliderBitmap->SetUpData(1,1);
@@ -620,7 +620,7 @@ namespace hpl {
 		mpColorSliderTexture->CreateFromBitmap(mpColorSliderBitmap);
 		mpColorSliderTexture->SetWrapSTR(eTextureWrap_Clamp);
 		mpColorSliderTexture->SetFilter(eTextureFilter_Nearest);
-		
+
 		////////////////////////////////////////
 		// Set up target color
 		mpDestColor = apDestColor;
@@ -657,9 +657,9 @@ namespace hpl {
 			mpGfxVMarker->AddTexture(pHoriMarkerTexture, cVector2f(1,0), cVector2f(1,1), cVector2f(0,1), cVector2f(0,0));
 			mpGfxVMarker->SetDestroyTexture(true);
 		}
-		
+
 		Init();
-		
+
 		mbImgPressed = false;
 	}
 
@@ -668,7 +668,7 @@ namespace hpl {
 	cGuiPopUpColorPicker::~cGuiPopUpColorPicker()
 	{
 		cGraphics* pGfx = mpGraphics;
-		
+
 		hplDelete(mpColorBoxBitmap);
 		pGfx->DestroyTexture(mpColorBoxTexture);
 
@@ -692,7 +692,7 @@ namespace hpl {
 	}
 
 	//-------------------------------------------------------------------------------
-	
+
 	/////////////////////////////////////////////////////////////////////////////////
 	// COLOR PICKER - PUBLIC METHODS
 	/////////////////////////////////////////////////////////////////////////////////
@@ -711,7 +711,7 @@ namespace hpl {
 
 		mpCurrentMode->RebuildBox();
 		mpCurrentMode->RebuildSlider();
-		mpCurrentMode->UpdateMarkers();		
+		mpCurrentMode->UpdateMarkers();
 	}
 
 	//-------------------------------------------------------------------------------
@@ -722,7 +722,7 @@ namespace hpl {
 	}
 
 	//-------------------------------------------------------------------------------
-	
+
 	void cGuiPopUpColorPicker::SetUpdateColorCallback(void *apCallbackObject, tGuiCallbackFunc apCallback)
 	{
 		mpUpdateCallbackObject = apCallbackObject;
@@ -737,7 +737,7 @@ namespace hpl {
 		for(int i=1; i<=10; ++i)
 		{
 			cColor c = apElem->GetAttributeColor("RecentColor"+cString::ToString(i, 1), cColor(0,1));
-			mlstRecentColors.push_back(c);			
+			mlstRecentColors.push_back(c);
 		}
 	}
 
@@ -754,7 +754,7 @@ namespace hpl {
 	}
 
 	//-------------------------------------------------------------------------------
-	
+
 	/////////////////////////////////////////////////////////////////////////////////
 	// COLOR PICKER - PROTECTED METHODS
 	/////////////////////////////////////////////////////////////////////////////////
@@ -791,7 +791,7 @@ namespace hpl {
 
 	void cGuiPopUpColorPicker::SetRGB(float afR, float afG, float afB)
 	{
-		if(mColor.r==afR && mColor.g==afG && mColor.b==afB) 
+		if(mColor.r==afR && mColor.g==afG && mColor.b==afB)
 			return;
 
 		mColor.r = afR;
@@ -827,11 +827,11 @@ namespace hpl {
 	void cGuiPopUpColorPicker::CreateRGBInputs(iWidget* apParent, cVector3f& avPos)
 	{
 		tColorPickerModeVec vModes;
-		
+
 		vModes.push_back(hplNew(cRGBMode,(this, 0)));
 		vModes.push_back(hplNew(cRGBMode,(this, 1)));
 		vModes.push_back(hplNew(cRGBMode,(this, 2)));
-		
+
 		CreateInputs(apParent, avPos, kGuiCallback(Color_InputValueEnter), tFloatVec(3, 0.0f), tFloatVec(3, 255.0f), mvRGBInputs, mvRGBValueUpdated, vModes);
 	}
 
@@ -853,7 +853,7 @@ namespace hpl {
 			pCBModeSelector->SetUserData(pMode);
 			pCBModeSelector->SetUserValue(i);
 			mvPickerModeSwitches.push_back(pCBModeSelector);
-			
+
 			////////////////////////////////////////////////////////////////////////////////////////
 			// Textbox: Amount of this param
 			cWidgetTextBox* pInput = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize, _W(""), pCBModeSelector, eWidgetTextBoxInputType_Numeric, 1);
@@ -929,7 +929,7 @@ namespace hpl {
 			col = mpFPreviousColor->GetBackGroundColor();
 
 		SetColor(col);
-		
+
 		return true;
 	}
 	kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, RecentColor_OnMouseDown);
@@ -940,7 +940,7 @@ namespace hpl {
 	{
 		cWidgetTextBox* pInput = static_cast<cWidgetTextBox*>(apWidget);
 		mpCurrentMode->OnInputEnter(pInput);
-		
+
 		return true;
 	}
 	kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Color_InputValueEnter);
@@ -1045,7 +1045,7 @@ namespace hpl {
 			tGuiCallbackFunc pCallback = reinterpret_cast<tGuiCallbackFunc>(apWidget->GetUserData());
 			pCallback(this, apWidget, data);
 		}
-		
+
 		return true;
 	}
 	kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, Slider_OnMouseMove);
@@ -1088,7 +1088,7 @@ namespace hpl {
 	bool cGuiPopUpColorPicker::ColorSlider_OnMouseMove(iWidget* apWidget, const cGuiMessageData& aData)
 	{
 		mpCurrentMode->OnSetSlider(aData.mfVal);
-				
+
 		return true;
 	}
 	kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, ColorSlider_OnMouseMove);
@@ -1135,7 +1135,7 @@ namespace hpl {
 	kGuiCallbackDeclaredFuncEnd(cGuiPopUpColorPicker, AlphaSlider_OnDraw);
 
 	//-------------------------------------------------------------------------------
-	
+
 	bool cGuiPopUpColorPicker::HexInput_OnChangeText(iWidget* apWidget, const cGuiMessageData& aData)
 	{
 		apWidget->SetText(cString::ToUpperCaseW(apWidget->GetText()));
@@ -1172,7 +1172,7 @@ namespace hpl {
 	{
 		RestorePreviewToOldColor();
 	}
-	
+
 	//-------------------------------------------------------------------------------
 
 	/** Builds the window and sets up stuff
@@ -1186,9 +1186,9 @@ namespace hpl {
 		// Main window
 		mpWindow->SetText(_W("Color Picker"));
 		mpWindow->SetStatic(false);
-				
+
 		cVector3f vPos = cVector3f(95,50,0.1f);
-		
+
 		//////////////////////////////////////////////////////////////////////////////
 		// Init Color map and slider texture
 		cGuiGfxElement* pImg = NULL;
@@ -1201,7 +1201,7 @@ namespace hpl {
 		mpImgColorBox->AddCallback(eGuiMessage_MouseMove, this, kGuiCallback(ColorBox_OnMouseMove));
 		mpImgColorBox->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ColorBox_OnDraw));
 		mpImgColorBox->SetImage(pImg);
-		
+
 		vPos.x += 255 + 25;
 
 		pImg = mpSet->GetGui()->CreateGfxFilledRect(cColor(1,1), eGuiMaterial_Diffuse);
@@ -1247,7 +1247,7 @@ namespace hpl {
 		mpImgAlphaSlider->SetImage(pImg);
 
 		vPos.x += 20 + 25;
-		
+
 		/////////////////////////////////////////////////////////////////////////////
 		// Init HSB and RGB inputs
 		CreateHSBInputs(mpWindow, vPos);
@@ -1259,7 +1259,7 @@ namespace hpl {
 			mpCBAlpha = mpSet->CreateWidgetCheckBox(vPosA, 0, _W("A"), mpWindow);
 			mpCBAlpha->SetDefaultFontSize(gvInputFontSize);
 			mpCBAlpha->AddCallback(eGuiMessage_CheckChange, this, kGuiCallback(Alpha_Toggle));
-		
+
 			mpInpAlpha = mpSet->CreateWidgetTextBox(gvInputOffset, gvInputSize, _W(""), mpCBAlpha, eWidgetTextBoxInputType_Numeric);
 			mpInpAlpha->SetDefaultFontSize(gvInputFontSize);
 			mpInpAlpha->SetLowerBound(true, 0.0f);
@@ -1319,7 +1319,7 @@ namespace hpl {
 			mpInpVecRGBA->SetDefaultFontSize(gvInputFontSize);
 			mpInpVecRGBA->SetLegalCharCodeLimitEnabled(true);
 		}
-		
+
 		//////////////////////////////////////////////////////////////////////////////
 		// Init color previews
 		vPos = cVector3f(10, 50, 0.7f);
@@ -1327,7 +1327,7 @@ namespace hpl {
 		mpFCurrentColor->AddCallback(eGuiMessage_OnDraw, this, kGuiCallback(ColorFrame_OnDraw));
 		mpFCurrentColor->SetDrawBackground(true);
 		mpFCurrentColor->SetBackgroundZ(0.1f);
-		
+
 		vPos.x += 25;
 		vPos.y += 25;
 		vPos.z -= 0.4f;
@@ -1365,7 +1365,7 @@ namespace hpl {
 		{
 			mvButtons[i] = mpSet->CreateWidgetButton(	0,
 														30,
-														_W(""), 
+														_W(""),
 														mpWindow);
 
 			mvButtons[i]->AddCallback(eGuiMessage_ButtonPressed, this, kGuiCallback(Button_Pressed));
@@ -1376,12 +1376,12 @@ namespace hpl {
 		mvButtons[0]->SetPosition(vPos);
 		mvButtons[0]->SetSize(23);
 
-		vPos = cVector3f(130, 320, 0.1f);		
+		vPos = cVector3f(130, 320, 0.1f);
 		mvButtons[1]->SetText(_W("Ok"));
 		mvButtons[1]->SetPosition(vPos);
 		mvButtons[1]->SetSize(cVector2f(70,20));
 		vPos.x += mvButtons[1]->GetSize().x + 20;
-		
+
 		mvButtons[2]->SetText(_W("Cancel"));
 		mvButtons[2]->SetPosition(vPos);
 		mvButtons[2]->SetSize(cVector2f(70,20));
@@ -1410,7 +1410,7 @@ namespace hpl {
 			RestorePreviewToOldColor();
 
 			RunCallback(mpCallbackObject, mpCallback, NULL, cGuiMessageData(), true);
-			
+
 			AddRecentColor(mColor);
 		}
 	}
@@ -1436,9 +1436,9 @@ namespace hpl {
 
 			// If fValue is Saturation or Brightness, do a lil conversion (from range 0-1 to 0-100) - Hue does not need conversion
 			float fValue = mvHSB.v[i];
-			if(i>0)								
+			if(i>0)
 				fValue*=100.0f;
-			
+
 			mvHSBInputs[i]->SetNumericValue(fValue);
 			mvHSBValueUpdated[i] = false;
 		}
@@ -1455,7 +1455,7 @@ namespace hpl {
 			if(abForce==false && mvRGBValueUpdated[i]==false) continue;
 
 			float fValue = mColor.v[i]*255.0f;
-			
+
 			mvRGBInputs[i]->SetNumericValue(fValue);
 			mvRGBValueUpdated[i] = false;
 		}
@@ -1477,13 +1477,13 @@ namespace hpl {
 		// Apply alpha if active
 		bool bAlphaActive = mpCBAlpha->IsChecked();
 		mColor.a = bAlphaActive? mfAlpha : 1.0f;
-	
+
 		cColor previewColor = mpFCurrentColor->GetBackGroundColor();
 
-		if(abForce==false && 
+		if(abForce==false &&
 			previewColor.r==mColor.r && previewColor.g==mColor.g && previewColor.b==mColor.b &&
-			mColor.a==mfOldAlpha) return; 
-		
+			mColor.a==mfOldAlpha) return;
+
 		/////////////////////////////////////////////////////
 		// Color has changed, GUI needs update
 		previewColor = mColor;
@@ -1497,7 +1497,7 @@ namespace hpl {
 		//mpImgAlphaSlider->SetColorMul(cColor(mColor.r, mColor.g, mColor.b, 1));
 
 		tWString sVecRGBA;
-		for(int i=0;i<4;++i) 
+		for(int i=0;i<4;++i)
 		{
 			if(i>0) sVecRGBA += _W(",");
 			sVecRGBA += cString::ToStringW(mColor.v[i], 3, true);

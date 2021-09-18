@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -63,7 +63,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cConfigFile::Load()
 	{
 		////////////////////////////////////
@@ -71,7 +71,7 @@ namespace hpl {
 		if(mbUseCRC)
 		{
 			/////////////////////////////////
-			// Load 
+			// Load
 			cBinaryBuffer buff;
 			if(buff.Load(msFile)==false)
 			{
@@ -110,7 +110,7 @@ namespace hpl {
 				Error("Unable to open config file '%s'! Invalid filepointer returned!\n", cString::To8Char(msFile).c_str());
 				return false;
 			}
-		
+
 			bool bRet = mpXmlDoc->LoadFile(pFile);
 
 			if(pFile) fclose(pFile);
@@ -145,7 +145,7 @@ namespace hpl {
 			buff.AddCRC_Begin();
 
 			buff.AddCharArray(sData.c_str(), sData.size()+1);
-			
+
 			buff.AddCRC_End(kCRCKey);
 
 			/////////////////////////////
@@ -181,7 +181,7 @@ namespace hpl {
 
 			return bRet;
 		}
-		
+
 	}
 
 	//-----------------------------------------------------------------------
@@ -189,13 +189,13 @@ namespace hpl {
 	void cConfigFile::SetString(const tString& asLevel, const tString& asName, const tString& asVal)
 	{
 		TiXmlElement *pLevelElem = mpXmlDoc->FirstChildElement(asLevel.c_str());
-		
+
 		if(pLevelElem==NULL){
 			TiXmlElement *pNodeChild = hplNew( TiXmlElement, (asLevel.c_str()) );
 			pLevelElem = static_cast<TiXmlElement*>(mpXmlDoc->InsertEndChild(*pNodeChild));
 			hplDelete(pNodeChild);
 		}
-		
+
 		pLevelElem->SetAttribute(asName.c_str(),asVal.c_str());
 	}
 	//-----------------------------------------------------------------------
@@ -207,9 +207,9 @@ namespace hpl {
 
 		SetString(asLevel,asName,sBuffer);
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cConfigFile::SetFloat(const tString& asLevel, const tString& asName, float afVal)
 	{
 		char sBuffer[40];
@@ -217,7 +217,7 @@ namespace hpl {
 
 		SetString(asLevel,asName,sBuffer);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cConfigFile::SetBool(const tString& asLevel, const tString& asName, bool abVal)
@@ -275,10 +275,10 @@ namespace hpl {
 	{
 		const char *sVal = GetCharArray(asLevel,asName);
 		if(sVal==NULL) return alDefault;
-		
+
 		return cString::ToInt(sVal,alDefault);
 	}
-	
+
 	float cConfigFile::GetFloat(const tString& asLevel, const tString& asName,float afDefault)
 	{
 		const char *sVal = GetCharArray(asLevel,asName);
@@ -291,17 +291,17 @@ namespace hpl {
 	{
 		const char *sVal = GetCharArray(asLevel,asName);
 		if(sVal==NULL) return abDefault;
-        
+
 		return cString::ToBool(sVal,abDefault);
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cVector2f cConfigFile::GetVector2f(const tString& asLevel, const tString& asName, const cVector2f& avDefault)
 	{
 		return cString::ToVector2f(GetCharArray(asLevel,asName),avDefault);
 	}
-	
+
 	cVector3f cConfigFile::GetVector3f(const tString& asLevel, const tString& asName, const cVector3f& avDefault)
 	{
 		return cString::ToVector3f(GetCharArray(asLevel,asName),avDefault);
@@ -341,7 +341,7 @@ namespace hpl {
 		if(pLevelElem==NULL){
 			return NULL;
 		}
-		
+
 		return pLevelElem->Attribute(asName.c_str());
 	}
 

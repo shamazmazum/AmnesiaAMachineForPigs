@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -75,7 +75,7 @@ cLuxMusicHandler::~cLuxMusicHandler()
 
 void cLuxMusicHandler::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -90,7 +90,7 @@ void cLuxMusicHandler::Reset()
 	for(int i=0; i<eLuxEnemyMusic_LastEnum; ++i)
 	{
 		m_setEnemies[i].clear();
-		
+
 		if(mbEnemyPlaying[i]) Stop(5.0f, 9 + i, true);
 
 		mbEnemyPlaying[i] = false;
@@ -120,13 +120,13 @@ void cLuxMusicHandler::Update(float afTimeStep)
 
 	///////////////////////////////////
 	//Check if close by music should be played.
-	UpdateDangerMusic(afTimeStep);	
+	UpdateDangerMusic(afTimeStep);
 
 	///////////////////////////////////
 	//Check if attack music should be played.
 	UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Search);
 	UpdateEnemyMusic(afTimeStep, eLuxEnemyMusic_Attack);
-	
+
 	///////////////////////////////////
 	//Check if current song is over
 	if(mlCurrentMaxPrio >=0)
@@ -252,10 +252,10 @@ void cLuxMusicHandler::UpdateDangerMusic(float afTimeStep)
 	{
 		if(mbEnemyPlaying[i]) return;
 	}
-	
+
 	cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 	if(pMap==NULL) return;
-	
+
 	////////////////////////////
 	//Music not playing
 	if(mbEnemyClosePlaying==false)

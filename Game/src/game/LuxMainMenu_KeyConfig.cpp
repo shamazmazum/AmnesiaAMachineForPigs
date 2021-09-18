@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -50,7 +50,7 @@ cLuxInputMenuEntry::cLuxInputMenuEntry(cLuxMainMenu_KeyConfig* apWindow, cLuxAct
 	mpLAction->AddCallback(eGuiMessage_UIArrowPress, this, kGuiCallback(InputEntryUIArrowPress));
 
 	mpLAction->SetUserData(this);
-	
+
 	///////////////////////////////////////////
 	// Set up primary and secondary Key boxes
 	for(int i=0; i<eInputMenuEntryPos_LastEnum; ++i)
@@ -96,7 +96,7 @@ cLuxInputMenuEntry::~cLuxInputMenuEntry()
 void cLuxInputMenuEntry::RetrieveDefaultValue()
 {
 	tLuxInputVec vDefaultInputs = gpBase->mpInputHandler->GetDefaultInputsByActionId(mlActionId);
-	
+
 	size_t i=0;
 	for(;i<vDefaultInputs.size();++i)
 	{
@@ -142,7 +142,7 @@ void cLuxInputMenuEntry::RetrieveInitialValue()
 			break;
 
 		iSubAction* pSubAction = pAction->GetSubAction(i);
-		
+
 		mvSubActions[i] = GetSubActionWrapperFromSubAction(pSubAction);
 	}
 
@@ -216,7 +216,7 @@ void cLuxInputMenuEntry::UpdateEntry()
 	tWStringVec vInputStrings;
 	vInputStrings.resize(eInputMenuEntryPos_LastEnum);
 
-	
+
 	for(int i=0;i<eInputMenuEntryPos_LastEnum;++i)
 	{
 		const cSubActionWrapper& subAction = mvSubActions[i];
@@ -508,13 +508,13 @@ cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromString(const tStrin
 cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromStringVecKeyboard(const tStringVec& avX, int alValue)
 {
 	iKeyboard* pKB = gpBase->mpEngine->GetInput()->GetKeyboard();
-	
+
 	eKey key;
 	if(alValue!=-1)
 		key = (eKey)alValue;
 	else
 		key = pKB->StringToKey(avX[1]);
-	
+
 	return cSubActionWrapper(eInputDeviceType_Keyboard, key);
 }
 
@@ -527,7 +527,7 @@ cSubActionWrapper cLuxInputMenuEntry::GetSubActionWrapperFromStringVecMouse(cons
 		button = (eMouseButton)alValue;
 	else
 		button = pMouse->StringToButton(avX[1]);
-	
+
 	return cSubActionWrapper(eInputDeviceType_Mouse, button);
 }
 
@@ -663,7 +663,7 @@ void cLuxInputMenuEntry::SetWaiting(bool abX, eInputMenuEntryPos aPos)
 		return;
 
 	cWidgetLabel* pWaitingInput = abX ? mvLKeyInputs[aPos]: NULL;
-	
+
 	mpWindow->SetWaitingInput(pWaitingInput);
 
 	if(pWaitingInput)
@@ -693,7 +693,7 @@ bool cLuxInputMenuEntry::InputEntryMouseOver(iWidget* apWidget, const cGuiMessag
 	//This worked when bg was visible
 	//pLabel->SetBackGroundColor(color);
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryMouseOver);
 
@@ -704,7 +704,7 @@ bool cLuxInputMenuEntry::InputEntryMouseEnter(iWidget* apWidget, const cGuiMessa
 	cLuxInputMenuEntry* pEntry = static_cast<cLuxInputMenuEntry*>(apWidget->GetUserData());
 	mpWindow->SetCurrentToolTipEntry(this);
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryMouseEnter);
 
@@ -717,8 +717,8 @@ bool cLuxInputMenuEntry::InputEntryMouseLeave(iWidget* apWidget, const cGuiMessa
 
 	if(pEntry==mpWindow->GetCurrentToolTipEntry())
 		mpWindow->SetCurrentToolTipEntry(NULL);
-	
-	return true; 
+
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryMouseLeave);
 
@@ -735,7 +735,7 @@ bool cLuxInputMenuEntry::InputEntryMouseMove(iWidget* apWidget, const cGuiMessag
 	cAction* pAction = pInput->GetAction(mlActionId);
 	mpWindow->SetCurrentToolTipText(kTranslate("Actions", pAction->GetName() + "Tooltip"));
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryMouseMove);
 */
@@ -745,7 +745,7 @@ kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryMouseMove);
 bool cLuxInputMenuEntry::InputEntryChange(iWidget* apWidget, const cGuiMessageData& aData)
 {
 	mbChanged = true;
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryChange);
 
@@ -763,10 +763,10 @@ bool cLuxInputMenuEntry::InputEntryClick(iWidget* apWidget, const cGuiMessageDat
 	else
 	{
 		SaveSubAction(GetPosFromInput(apWidget),
-					  eInputDeviceType_Mouse, 
+					  eInputDeviceType_Mouse,
 					  gpBase->mpEngine->GetGui()->TranslateGuiMouseToMouse((eGuiMouseButton)aData.mlVal));
 	}
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryClick);
 
@@ -791,7 +791,7 @@ bool cLuxInputMenuEntry::InputEntryKeyPress(iWidget* apWidget, const cGuiMessage
 		}
 	}
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryKeyPress);
 
@@ -805,7 +805,7 @@ bool cLuxInputMenuEntry::InputEntryUIArrowPress(iWidget* apWidget, const cGuiMes
 		return true;
 	}
 
-	return false; 
+	return false;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryUIArrowPress);
 
@@ -827,8 +827,8 @@ bool cLuxInputMenuEntry::InputEntryUIButtonPress(iWidget* apWidget, const cGuiMe
 			SetWaiting(true, eInputMenuEntryPos_Secondary);
 		}
 	}
-	
-	return true; 
+
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryUIButtonPress);
 
@@ -858,14 +858,14 @@ bool cLuxInputMenuEntry::InputEntryGamepadButtonPress(iWidget* apWidget, const c
 
 		mbGamepadButtonPress = true;
 
-		
-		SaveGamepadSubAction(GetPosFromInput(apWidget), 
-								aData.mGamepadInputData.mInputType, 
+
+		SaveGamepadSubAction(GetPosFromInput(apWidget),
+								aData.mGamepadInputData.mInputType,
 								aData.mGamepadInputData.mlInputId,
 								aData.mGamepadInputData.mfInputValue);
 	}
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxInputMenuEntry, InputEntryGamepadButtonPress);
 
@@ -1065,7 +1065,7 @@ void cLuxMainMenu_KeyConfig::CreateGui()
 
 		pWidget->SetFocusNavigation(eUIArrow_Up, mpCBCategory);
 	}
-	
+
 	mpBDefaultKeys->SetFocusNavigation(eUIArrow_Up, mpCBCategory);
 	mpBDefaultKeys->SetFocusNavigation(eUIArrow_Down, mpBOK);
 	mpBOK->SetFocusNavigation(eUIArrow_Up, mpBDefaultKeys);
@@ -1191,7 +1191,7 @@ void cLuxMainMenu_KeyConfig::SetDefaultValues()
 
 	for(size_t i=0; i<mvInputs.size(); ++i)
 	{
-		
+
 		tInputEntryVecIt it = mvInputs[i].begin();
 		for(;it!=mvInputs[i].end();++it)
 		{
@@ -1251,7 +1251,7 @@ void cLuxMainMenu_KeyConfig::SetWaitingInput(iWidget *apWidget)
 		mpGuiSet->PopAttentionWidget();
 		mpGuiSet->PopFocusedWidget();
 	}
-	
+
 	mpGuiSet->SetMouseMovementEnabled(apWidget==NULL);
 }
 
@@ -1267,7 +1267,7 @@ void cLuxMainMenu_KeyConfig::CheckEmptyAndDuplicateInputs()
 	cColor red = cColor(1,0,0,1);
 	cColor white = cColor(1,1);
 
-	
+
 	// Reset marking
 	mbInvalidInputs = false;
 	for(size_t cat=0; cat<mvInputs.size(); ++cat)
@@ -1288,7 +1288,7 @@ void cLuxMainMenu_KeyConfig::CheckEmptyAndDuplicateInputs()
 		for(size_t i=0;i<vInputs.size();++i)
 		{
 			cLuxInputMenuEntry* pEntry1 = vInputs[i];
-		
+
 			for(size_t j=i+1;j<vInputs.size();++j)
 			{
 				cLuxInputMenuEntry* pEntry2 = vInputs[j];
@@ -1311,7 +1311,7 @@ void cLuxMainMenu_KeyConfig::CheckEmptyAndDuplicateInputs()
 					vPositions = pEntry2->GetPosSharingSubAction(pEntry1);
 					for(size_t k=0;k<vPositions.size();++k)
 						pEntry2->SetColor(vPositions[k], red);
-				
+
 				}
 			}
 		}
@@ -1324,7 +1324,7 @@ bool cLuxMainMenu_KeyConfig::WindowOnUpdate(iWidget* apWidget, const cGuiMessage
 {
 	//mpGuiSet->SetDrawMouse(mpWaitingInput==NULL);
 	//gpBase->SetDrawOnLiveCursor(mpWaitingInput==NULL);
-	
+
 	if(mpWaitingInput == NULL)
 		mbWasWaitingOnInput = false;
 
@@ -1345,7 +1345,7 @@ bool cLuxMainMenu_KeyConfig::WindowOnUpdate(iWidget* apWidget, const cGuiMessage
 			mbTipFadeOut=false;
 		}
 
-		mpLTip->SetDefaultFontColor(labelCol);		
+		mpLTip->SetDefaultFontColor(labelCol);
 	}
 
 	if(mbTipFadeRestore)
@@ -1360,7 +1360,7 @@ bool cLuxMainMenu_KeyConfig::WindowOnUpdate(iWidget* apWidget, const cGuiMessage
 		mpLTip->SetDefaultFontColor(labelCol);
 	}
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, WindowOnUpdate);
 
@@ -1386,7 +1386,7 @@ bool cLuxMainMenu_KeyConfig::CategoryChange(iWidget* apWidget, const cGuiMessage
 			mpBDefaultKeys->SetFocusNavigation(eUIArrow_Up, pTailWidget);
 		}
 	}
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, CategoryChange);
 
@@ -1400,7 +1400,7 @@ bool cLuxMainMenu_KeyConfig::CategorySelector_OnUIButtonPress(iWidget* apWidget,
 		return false;
 
 	int lCat = mpCBCategory->GetSelectedItem();
-	
+
 	if(aData.mlVal==eUIButton_PrevPage)
 	{
 		int lPrevCat = lCat-1;
@@ -1426,12 +1426,12 @@ kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, CategorySelector_OnUIButtonP
 
 bool cLuxMainMenu_KeyConfig::PressSetDefault(iWidget* apWidget, const cGuiMessageData& aData)
 {
-	mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"), 
-											kTranslate("KeyConfig", "LoadDefaultsMessage"), 
-											kTranslate("Global", "OK"), 
-											kTranslate("Global", "Cancel"), 
+	mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
+											kTranslate("KeyConfig", "LoadDefaultsMessage"),
+											kTranslate("Global", "OK"),
+											kTranslate("Global", "Cancel"),
 											this, kGuiCallback(LoadDefaultsCallback));
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, PressSetDefault);
 
@@ -1441,10 +1441,10 @@ bool cLuxMainMenu_KeyConfig::PressOK(iWidget* apWidget, const cGuiMessageData& a
 {
 	if(mbInvalidInputs)
 	{
-		mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"), 
-										kTranslate("KeyConfig", "InvalidInputMessage"), 
-										kTranslate("Global", "OK"), 
-										kTranslate("Global", "Cancel"), 
+		mpGuiSet->CreatePopUpMessageBox(kTranslate("Global", "Warning"),
+										kTranslate("KeyConfig", "InvalidInputMessage"),
+										kTranslate("Global", "OK"),
+										kTranslate("Global", "Cancel"),
 										this, kGuiCallback(ExitCallback));
 	}
 	else
@@ -1452,7 +1452,7 @@ bool cLuxMainMenu_KeyConfig::PressOK(iWidget* apWidget, const cGuiMessageData& a
 		ExitCallback(NULL, cGuiMessageData(0));
 	}
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, PressOK);
 
@@ -1462,7 +1462,7 @@ bool cLuxMainMenu_KeyConfig::PressCancel(iWidget* apWidget, const cGuiMessageDat
 {
 	gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_Options);
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, PressCancel);
 
@@ -1481,7 +1481,7 @@ bool cLuxMainMenu_KeyConfig::UIPressCancel(iWidget* apWidget, const cGuiMessageD
 		return true;
 	}
 
-	return false; 
+	return false;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, UIPressCancel);
 
@@ -1492,8 +1492,8 @@ bool cLuxMainMenu_KeyConfig::LoadDefaultsCallback(iWidget* apWidget, const cGuiM
 	bool bOkPressed = aData.mlVal==0? true : false;
 	if(bOkPressed)
 		SetDefaultValues();
-	
-	return true; 
+
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, LoadDefaultsCallback);
 
@@ -1509,7 +1509,7 @@ bool cLuxMainMenu_KeyConfig::ExitCallback(iWidget* apWidget, const cGuiMessageDa
 		gpBase->mpMainMenu->SetWindowActive(eLuxMainMenuWindow_Options);
 	}
 
-	return true; 
+	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_KeyConfig, ExitCallback);
 

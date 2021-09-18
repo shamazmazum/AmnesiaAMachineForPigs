@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -138,7 +138,7 @@ void cLuxHintHandler::LoadFonts()
 
 void cLuxHintHandler::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -323,15 +323,15 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
 	tWString sOutput=_W("");
 	tWString sCommand =_W("");
 	bool bParseVar = false;
-	
+
 	int lPosition = 0;
- 
+
 	/////////////////
 	// Find all the icons
     for(size_t i=0; i<msCurrentText.size(); ++i)
 	{
 		wchar_t lChar = msCurrentText[i];
-		
+
 		////////////////////////
 		// Parse variable
 		if(bParseVar)
@@ -413,9 +413,9 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
 			while(sRowText[lCount] != 0)
 			{
 				wchar_t lGlyphNum = ((wchar_t)sRowText[lCount]);
-			
+
 				//Check if the glyph is valid (in range)
-				if(	lGlyphNum < mpFont->GetFirstChar() || 
+				if(	lGlyphNum < mpFont->GetFirstChar() ||
 					lGlyphNum > mpFont->GetLastChar())
 				{
 					lCount++;
@@ -423,14 +423,14 @@ void cLuxHintHandler::ParseStringForGamepadIcons()
 				}
 				//Get actual number of the glyph in the font.
 				lGlyphNum -= mpFont->GetFirstChar();
-			
+
 				//Get glyph data and draw.
 				cGlyph *pGlyph = mpFont->GetGlyph(lGlyphNum);
 
 				if(pGlyph)
 				{
 					cVector2f vSize(pGlyph->mvSize * mvFontSize);
-					vPos.x += pGlyph->mfAdvance*mvFontSize.x; 
+					vPos.x += pGlyph->mfAdvance*mvFontSize.x;
 				}
 
 				if(lPosition == mvHintIcons[lIconIdx].mlCharacterPosition)
@@ -508,7 +508,7 @@ tWString cLuxHintHandler::AddGamepadIconAtPosition(const tWString& asCommand, in
 	{
 		eGamepadHat hat = iGamepad::StringToHat(vInputParts[1]);
 		eGamepadAxis axis = iGamepad::StringToAxis(vInputParts[1]);
-								
+
 		if(hat!=eGamepadHat_LastEnum)
 		{
 			eGamepadHatState state = iGamepad::StringToHatState(vInputParts[2]);

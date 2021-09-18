@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -94,7 +94,7 @@ class cLuxEntityConnection
 friend class cLuxEntityConnection_SaveData;
 public:
 	cLuxEntityConnection(){}
-	cLuxEntityConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString& asCallbackFunc) 
+	cLuxEntityConnection(const tString& asName, iLuxEntity *apEntity, bool abInvertStateSent, int alStatesUsed, const tString& asCallbackFunc)
 		: msName(asName), mpEntity(apEntity), mbInvertStateSent(abInvertStateSent), mlStatesUsed(alStatesUsed), msCallbackFunc(asCallbackFunc) {}
 
 	const tString& GetName(){ return msName; }
@@ -123,7 +123,7 @@ class iLuxEntity : public iLuxCollideCallbackContainer
 friend class cLuxMap;
 friend class cLuxSavedGameEntity;
 friend class cLuxSavedGameMap;
-public:	
+public:
 	iLuxEntity(const tString &asName, int alID, cLuxMap *apMap,eLuxEntityType aEntityType);
 	virtual ~iLuxEntity();
 
@@ -135,7 +135,7 @@ public:
 
 	virtual bool CanInteract(iPhysicsBody *apBody)=0;
 	virtual bool OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)=0;
-	
+
 	virtual void AfterWorldLoad(){}
 	virtual void OnMapEnter(){}
 
@@ -153,7 +153,7 @@ public:
 	//////////////////
 	// Properties
 	eLuxEntityType GetEntityType()const{ return mEntityType;}
-	
+
 	const tString& GetName()const{ return msName;}
 	int GetID(){ return mlID;}
 
@@ -195,7 +195,7 @@ public:
 
 	void AddCollideCallbackParent(iLuxCollideCallbackContainer* apCallback);
 	void RemoveCollideCallbackParent(iLuxCollideCallbackContainer* apCallback);
-	
+
 	//////////////////
 	// Connection
 	int GetConnectionNum(){ return (int)mvConnections.size();}
@@ -206,7 +206,7 @@ public:
 	// Debug
 	virtual float DrawDebug(cGuiSet *apSet,iFontData *apFont,float afStartY){ return afStartY;}
 
-		
+
 	//////////////////////
 	//Save data stuff
 	void SetSaveData(iLuxEntity_SaveData *apData){ mpSaveData = apData;}
@@ -264,7 +264,7 @@ protected:
 
 	bool mbDestroyMe;
 
-	
+
 	iLuxEntity_SaveData *mpSaveData;
 
 	std::vector<cMesh*> mvPreloadedMeshes;

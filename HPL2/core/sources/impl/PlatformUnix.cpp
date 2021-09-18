@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -61,7 +61,7 @@ namespace hpl {
 		};
 		return statbuf.st_size;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cPlatform::CopyFileToBuffer(const tWString& asFileName, void *apBuffer, unsigned long alSize)
@@ -69,7 +69,7 @@ namespace hpl {
 		FILE *pFile = OpenFile(asFileName, _W("r"));
 		if (pFile==NULL) return false;
 		fread(apBuffer, sizeof(char), alSize, pFile);
-		
+
 		fclose(pFile);
 		return true;
 	}
@@ -108,7 +108,7 @@ namespace hpl {
 	{
 		return mkdir(cString::To8Char(asPath).c_str(),0755) == 0;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cPlatform::RemoveFolder(const tWString& asPath, bool abDeleteAllFiles, bool abDeleteAllSubFolders)
@@ -125,7 +125,7 @@ namespace hpl {
 				RemoveFile(sFilePath);
 			}
 		}
-		
+
 		////////////////////
 		// Remove any sub folders in the directory
 		if(abDeleteAllSubFolders)
@@ -138,7 +138,7 @@ namespace hpl {
 				RemoveFolder(sFolderPath, abDeleteAllFiles,abDeleteAllSubFolders);
 			}
 		}
-		
+
 		if(rmdir(cString::To8Char(asPath).c_str())!=0)
 		{
 //			wchar_t sTempString[2048];
@@ -167,12 +167,12 @@ namespace hpl {
 	{
 		char rpath[PATH_MAX];
 		realpath(cString::To8Char(asFilePath).c_str(), rpath);
-		tWString ret = cString::To16Char(tString(rpath)); 
+		tWString ret = cString::To16Char(tString(rpath));
 		return ret;
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	FILE *cPlatform::OpenFile(const tWString& asFileName, const tWString asMode)
 	{
 		return fopen(cString::To8Char(asFileName).c_str(), cString::To8Char(asMode).c_str());
@@ -219,11 +219,11 @@ namespace hpl {
 		struct tm pClock;
 		struct stat attrib;
 		stat(cString::To8Char(asFilePath).c_str(), &attrib);
-		
+
 		gmtime_r(&(attrib.st_mtime), &pClock);	// Get the last modified time and put it into the time structure
-		
+
 		cDate date = DateFromGMTime(&pClock);
-		
+
 		return date;
 	}
 
@@ -277,13 +277,13 @@ namespace hpl {
 		{
 			case _W('\0'):
 				return !string[0];
-				
+
 			case _W('*') :
 				return patiMatch(pattern+1, string) || (string[0] && patiMatch(pattern, string+1));
-				
+
 			case _W('?') :
 				return string[0] && patiMatch(pattern+1, string+1);
-				
+
 			default  :
 				return (towupper(pattern[0]) == towupper(string[0])) && patiMatch(pattern+1, string+1);
       }
@@ -298,22 +298,22 @@ namespace hpl {
 		dirent *_entry;
 		struct stat statbuff;
 		tWString fileentry;
-		
+
 		if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL) return;
-		
+
 		while ((_entry = readdir(dirhandle)) != NULL) {
 			if (end==_W('/'))
 				swprintf(sSpec,256,_W("%ls%s"),asDir.c_str(),_entry->d_name);
 			else
 				swprintf(sSpec,256,_W("%ls/%s"),asDir.c_str(),_entry->d_name);
-			
+
 			// skip unreadable
 			if (stat(cString::To8Char(sSpec).c_str(),&statbuff) ==-1) continue;
 			// skip directories
 			if (S_ISDIR(statbuff.st_mode)) continue;
-			
+
 			fileentry.assign(cString::To16Char(_entry->d_name));
-			
+
 			if (!patiMatch(asMask.c_str(),fileentry.c_str())) continue;
 			alstStrings.push_back(fileentry);
 		}
@@ -328,27 +328,27 @@ namespace hpl {
 		char sSpec[256];
 		tString sDir8 = cString::To8Char(asDir);
 		char end = sDir8[sDir8.size()-1];
-		
+
 		if (end != '/') {
 			sDir8 += "/";
 		}
-		
+
 		//The needed structs
 		DIR *dirhandle;
 		dirent *_entry;
 		struct stat statbuff;
 		tWString fileentry;
-		
+
 		if ((dirhandle = opendir(cString::To8Char(asDir).c_str()))==NULL) return;
-		
+
 		while ((_entry = readdir(dirhandle)) != NULL) {
 			snprintf(sSpec,256,"%s%s",sDir8.c_str(),_entry->d_name);
-			
+
 			// skip unreadable
 			if (stat(sSpec,&statbuff) ==-1) continue;
 			// skip non-directories
 			if (!S_ISDIR(statbuff.st_mode)) continue;
-			
+
 			// add updir
 			if (!abAddUpFolder && _entry->d_name[0] == '.' && _entry->d_name[1] == '.' && _entry->d_name[2] == '\0') continue;
 			// add hidden
@@ -410,7 +410,7 @@ namespace hpl {
 		wchar_t text[2048];
 
 		if (fmt == NULL)
-			return;	
+			return;
 		vswprintf(text, 2047, fmt, ap);
 
 		tWString sMess = _W("");
@@ -460,7 +460,7 @@ namespace hpl {
 	}
 
 
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
@@ -505,7 +505,7 @@ namespace hpl {
 		struct tm* pClock;
 		pClock = localtime(&lTime);
 
-		return DateFromGMTime(pClock);		
+		return DateFromGMTime(pClock);
 	}
 
 	//-----------------------------------------------------------------------

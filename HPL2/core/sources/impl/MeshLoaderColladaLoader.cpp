@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -65,18 +65,18 @@ namespace hpl {
 		//Log("Loading %s\n",asFile.c_str());
 
 		tWString sCacheFile = cString::SetFileExtW(asFile,_W("dae_cache"));
-		
+
 		if(	abCache &&
-			cPlatform::FileExists(sCacheFile) && 
+			cPlatform::FileExists(sCacheFile) &&
 			cPlatform::FileExists(asFile))
 		{
 			cDate colladaDate = cPlatform::FileModifiedDate(asFile);
 			cDate cacheDate = cPlatform::FileModifiedDate(sCacheFile);
-			
+
 			//Check if cache is newer
 			if(cacheDate > colladaDate) bLoadCache = true;
 		}
-		
+
 		/////////////////////////////////////////////////
 		// LOAD CACHE
 		if(bLoadCache)
@@ -89,7 +89,7 @@ namespace hpl {
 				apColladaGeometryVec,
 				apColladaControllerVec,
 				apColladaAnimVec,
-				apColladaScene);	
+				apColladaScene);
 		}
 
 		Log("Cache out of date! Reloading collada file '%s'\n",cString::To8Char(asFile).c_str());
@@ -97,7 +97,7 @@ namespace hpl {
 		/////////////////////////////////////////////////
 		// LOAD THE DOCUMENT
 		//unsigned long lStartTime = mpSystem->GetLowLevel()->GetTime();
-		
+
 		FILE *pFile = cPlatform::OpenFile(asFile, _W("rb"));
 		if(pFile==NULL) return false;
 
@@ -145,7 +145,7 @@ namespace hpl {
 
 			// Only get unit from 3ds max files!
 			TiXmlElement *pCont = pAssetElem->FirstChildElement("contributor");
-			
+
 			if(pCont)
 			{
 				pCont = pCont->FirstChildElement("authoring_tool");
@@ -157,7 +157,7 @@ namespace hpl {
 
 			if(pCont)
 			{
-				tString sName = cString::ToString(pCont->FirstChild()->Value(), ""); 
+				tString sName = cString::ToString(pCont->FirstChild()->Value(), "");
 
 				if(sName == "FBX COLLADA exporter")
 				{
@@ -183,7 +183,7 @@ namespace hpl {
 						//////////////
 						// Read the scale
 						fUnitValue = (float)pFirstAttri->DoubleValue();
-					}					
+					}
 				}
 
 				mfUnitScale = fUnitValue;
@@ -211,7 +211,7 @@ namespace hpl {
 				///Log("Loading type: %s\n",sType.c_str());
 				LoadLights(pLibraryElem,*apColladaLightVec);
 				//Log(" --- \n");
-			}	
+			}
 
 			pLibraryElem = pLibraryElem->NextSiblingElement();
 		}
@@ -229,7 +229,7 @@ namespace hpl {
 			if(pSceneElem==NULL) pSceneElem = pRootElem->FirstChildElement("scene");
 
 			if(pSceneElem==NULL)
-			{ 
+			{
 				Warning("No scene element found!\n");
 			}
 			else
@@ -237,7 +237,7 @@ namespace hpl {
 				//Get start and end time (MAYA ONLY!)
 				TiXmlElement* pExtraElem = pSceneElem->FirstChildElement("extra");
 				if(pExtraElem)
-				{	
+				{
 					// Get techniques
 					TiXmlElement* pExtraTechElem = pExtraElem->FirstChildElement("technique");
 					for(;pExtraTechElem; pExtraTechElem = pExtraTechElem->NextSiblingElement("technique"))
@@ -375,7 +375,7 @@ namespace hpl {
 	static void SaveControllerVec(TiXmlElement *apRootElem, tColladaControllerVec *apColladaControllerVec);
 	static void SaveGeometryVec(TiXmlElement *apRootElem, tColladaGeometryVec *apColladaGeometryVec);
 	static void SaveScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene);
-	
+
 	bool cMeshLoaderCollada::SaveStructures(const tWString &asFile,
 											tColladaImageVec *apColladaImageVec,
 											tColladaTextureVec *apColladaTextureVec,
@@ -389,7 +389,7 @@ namespace hpl {
 		TiXmlDocument* pXmlDoc = hplNew(TiXmlDocument, () );
 
 		TiXmlElement *pRootElem = CreateXMLChild(pXmlDoc,"ColladaCache");
-		
+
 		if(apColladaImageVec)		SaveImageVec(pRootElem,apColladaImageVec);
 		if(apColladaTextureVec)		SaveTextureVec(pRootElem,apColladaTextureVec);
 		if(apColladaMaterialVec)	SaveMaterialVec(pRootElem,apColladaMaterialVec);
@@ -403,11 +403,11 @@ namespace hpl {
 		if(pFile==NULL || pXmlDoc->SaveFile(pFile)==false)
 		{
 			Error("Couldn't save XML file %s\n",asFile.c_str());
-			hplDelete(pXmlDoc);		
-			return false;	
+			hplDelete(pXmlDoc);
+			return false;
 		}
 		fclose(pFile);
-		hplDelete(pXmlDoc);		
+		hplDelete(pXmlDoc);
 		return true;
 	}
 
@@ -422,7 +422,7 @@ namespace hpl {
 		for(size_t i=0; i< apColladaImageVec->size(); ++i)
 		{
 			cColladaImage *pImage = &(*apColladaImageVec)[i];
-            
+
 			TiXmlElement *pImageElem = CreateXMLChild(pImageRootElem,"Image");
 
             pImageElem->SetAttribute("Id",pImage->msId.c_str());
@@ -491,7 +491,7 @@ namespace hpl {
 			pLightElem->SetAttribute("Id",pLight->msId.c_str());
 			pLightElem->SetAttribute("Name",pLight->msName.c_str());
 			pLightElem->SetAttribute("Type",pLight->msType.c_str());
-			
+
 			pLightElem->SetAttribute("Angle",cString::ToString(pLight->mfAngle).c_str());
 			pLightElem->SetAttribute("Color",pLight->mDiffuseColor.ToFileString().c_str());
 		}
@@ -513,7 +513,7 @@ namespace hpl {
 
 			pAnimationElem->SetAttribute("Id",pAnimation->msId.c_str());
 			pAnimationElem->SetAttribute("TargetNode",pAnimation->msTargetNode.c_str());
-			
+
             /////////////////////////////////////
 			// Channels
 			{
@@ -524,7 +524,7 @@ namespace hpl {
 				{
 					cColladaChannel *pChannel = &pAnimation->mvChannels[idx];
 					TiXmlElement *pChannelElem =  CreateXMLChild(pChannelVecElem,"Channel");
-					
+
 					pChannelElem->SetAttribute("Id",pChannel->msId.c_str());
 					pChannelElem->SetAttribute("Target",pChannel->msTarget.c_str());
 					pChannelElem->SetAttribute("Source",pChannel->msSource.c_str());
@@ -560,9 +560,9 @@ namespace hpl {
 
 					pSourceElem->SetAttribute("Id",pSource->msId.c_str());
 					tString sData ="";
-					for(size_t j=0; j< pSource->mvValues.size();++j) 
+					for(size_t j=0; j< pSource->mvValues.size();++j)
 						sData += cString::ToString(pSource->mvValues[j])+" ";
-					
+
 					pSourceElem->SetAttribute("Values",sData.c_str());
 				}
 			}
@@ -590,13 +590,13 @@ namespace hpl {
 
 			pControllerElem->SetAttribute("JointPairIdx",pController->mlJointPairIdx);
 			pControllerElem->SetAttribute("WeightPairIdx",pController->mlWeightPairIdx);
-			
+
 			///////////////////////
 			// Joints
 			{
 				TiXmlElement *pJointsElem = CreateXMLChild(pControllerElem,"Joints");
 				pJointsElem->SetAttribute("Size",(int)pController->mvJoints.size());
-				
+
 				tString sData=""; sData.reserve(pController->mvJoints.size()*10);
 				for(size_t idx =0; idx < pController->mvJoints.size(); ++idx)
 				{
@@ -646,7 +646,7 @@ namespace hpl {
 				for(size_t idx =0; idx < pController->mvPairs.size(); ++idx)
 				{
 					tColladaJointPairList *pList = &pController->mvPairs[idx];
-					
+
 					for(tColladaJointPairListIt it = pList->begin(); it != pList->end(); ++it)
 					{
 						cColladaJointPair &Pair = *it;
@@ -667,7 +667,7 @@ namespace hpl {
 					sData += cString::ToString(vPairNumVec[idx]) +" ";
 				}
 				CreateXMLTextChild(pPairNumElem, sData.c_str());
-				
+
 			}
 		}
 	}
@@ -690,24 +690,24 @@ namespace hpl {
 			//Main properties
             pGeometryElem->SetAttribute("Id",pGeometry->msId.c_str());
 			pGeometryElem->SetAttribute("Name",pGeometry->msName.c_str());
-			
+
 			pGeometryElem->SetAttribute("Material",pGeometry->msMaterial.c_str());
 
 			/////////////////////////////////
 			// Vertex properties
 			// Should not be needed.
-			/*pGeometryElem->SetAttribute("PosIdxNum",pGeometry->mlPosIdxNum); 
-			pGeometryElem->SetAttribute("NormIdxNum",pGeometry->mlNormIdxNum); 
+			/*pGeometryElem->SetAttribute("PosIdxNum",pGeometry->mlPosIdxNum);
+			pGeometryElem->SetAttribute("NormIdxNum",pGeometry->mlNormIdxNum);
 			pGeometryElem->SetAttribute("TexIdxNum",pGeometry->mlTexIdxNum);
 
-			pGeometryElem->SetAttribute("PosArrayIdx",pGeometry->mlPosArrayIdx); 
-			pGeometryElem->SetAttribute("NormArrayIdx",pGeometry->mlNormArrayIdx); 
+			pGeometryElem->SetAttribute("PosArrayIdx",pGeometry->mlPosArrayIdx);
+			pGeometryElem->SetAttribute("NormArrayIdx",pGeometry->mlNormArrayIdx);
 			pGeometryElem->SetAttribute("TexArrayIdx",pGeometry->mlTexArrayIdx); */
 
 			/////////////////////////////////
 			// Index Vec
 			TiXmlElement *pIndexVecElem = CreateXMLChild(pGeometryElem,"IndexVec");
-            
+
 			pIndexVecElem->SetAttribute("Size",(int)pGeometry->mvIndexVec.size());
 
 			TiXmlElement *pIndicesDataElem = CreateXMLChild(pIndexVecElem,"Indices");
@@ -737,7 +737,7 @@ namespace hpl {
 				TiXmlElement *pDataElem = CreateXMLChild(pVertexVecElem,"Positions");
 				TiXmlText *pVecText = CreateXMLTextChild(pDataElem,"Data");
 				pVecText->SetValue(sData.c_str());
-				
+
 				/////////////////////////////////
 				// Normals
 				sData = "";
@@ -770,7 +770,7 @@ namespace hpl {
 				for(size_t j=0; j < pGeometry->mvTangents.size(); ++j)
 				{
 					TIXML_SNPRINTF(sTemp,20,"%g ",pGeometry->mvTangents[j]);
-					sData += sTemp; 
+					sData += sTemp;
 				}
 				pDataElem = CreateXMLChild(pVertexVecElem,"Tangents");
 				CreateXMLTextChild(pDataElem,sData.c_str());
@@ -782,7 +782,7 @@ namespace hpl {
 			{
 				TiXmlElement *pExtraVertexVecElem = CreateXMLChild(pGeometryElem,"ExtraVertexVec");
 				pExtraVertexVecElem->SetAttribute("Size",(int)pGeometry->mvExtraVtxVec.size());
-				
+
 				tUIntVec vExtraNum; vExtraNum.resize(pGeometry->mvExtraVtxVec.size(),0);
 
 				////////////////////////////
@@ -793,7 +793,7 @@ namespace hpl {
 				for(size_t idx=0; idx < pGeometry->mvExtraVtxVec.size(); ++idx)
 				{
 					tColladaExtraVtxList *pList = &pGeometry->mvExtraVtxVec[idx];
-										
+
 					tColladaExtraVtxListIt it = pList->begin();
 					for(; it != pList->end(); ++it)
 					{
@@ -805,7 +805,7 @@ namespace hpl {
 						++lExtraCount;
 						++vExtraNum[idx];
 					}
-					
+
 				}
 				CreateXMLTextChild(pExtraElem,sData.c_str());
 				pExtraElem->SetAttribute("Size",(int)lExtraCount);
@@ -846,7 +846,7 @@ namespace hpl {
 
 			pNodeElem->SetAttribute("Transform", pNode->m_mtxTransform.ToFileString().c_str());
 			pNodeElem->SetAttribute("WorldTransform", pNode->m_mtxWorldTransform.ToFileString().c_str());
-			
+
 			pNodeElem->SetAttribute("Scale", pNode->mvScale.ToFileString().c_str());
 
 			pNodeElem->SetAttribute("Count", pNode->mlCount);
@@ -862,14 +862,14 @@ namespace hpl {
 
 				pTransformElem->SetAttribute("Sid",transform.msSid.c_str());
 				pTransformElem->SetAttribute("Type",transform.msType.c_str());
-				
+
 				tString sValues = "";
-				for(size_t i=0; i< transform.mvValues.size(); ++i) 
+				for(size_t i=0; i< transform.mvValues.size(); ++i)
 					sValues += cString::ToString(transform.mvValues[i]) + " ";
-				
+
 				pTransformElem->SetAttribute("Values",sValues.c_str());
 			}
-			
+
 			SaveIterativeNode(pNodeElem,pNode);
 		}
 	}
@@ -881,14 +881,14 @@ namespace hpl {
 		pSceneElem->SetAttribute("StartTime",cString::ToString(apColladaScene->mfStartTime).c_str());
 		pSceneElem->SetAttribute("EndTime",cString::ToString(apColladaScene->mfEndTime).c_str());
 		pSceneElem->SetAttribute("DeltaTime",cString::ToString(apColladaScene->mfDeltaTime).c_str());
-		
+
 		TiXmlElement *pSceneRootElem =  CreateXMLChild(pSceneElem,"Root");
-		
+
 		SaveIterativeNode(pSceneRootElem,&apColladaScene->mRoot);
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// LOAD COLLADA DATA
 	//////////////////////////////////////////////////////////////////////////
@@ -943,7 +943,7 @@ namespace hpl {
 		if(apColladaGeometryVec)	LoadGeometryVec(pRootElem,apColladaGeometryVec);
 		if(apColladaScene)			LoadScene(pRootElem,apColladaScene);
 
-		hplDelete(pXmlDoc);		
+		hplDelete(pXmlDoc);
 		return true;
 	}
 
@@ -952,12 +952,12 @@ namespace hpl {
 	static void LoadImageVec(TiXmlElement *apRootElem, tColladaImageVec *apColladaImageVec)
 	{
 		TiXmlElement *pImageRootElem = apRootElem->FirstChildElement("ImageRoot");
-		
+
 		int lSize = cString::ToInt(pImageRootElem->Attribute("Size"),0);
 
 		apColladaImageVec->clear();
 		apColladaImageVec->resize(lSize);
-	
+
 		int lCount =0;
 		TiXmlElement *pImageElem = pImageRootElem->FirstChildElement();
 		for(; pImageElem != NULL; pImageElem = pImageElem->NextSiblingElement(),++lCount)
@@ -994,7 +994,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	static void LoadMaterialVec(TiXmlElement *apRootElem, tColladaMaterialVec *apColladaMaterialVec)
 	{
 		TiXmlElement *pMaterialRootElem = apRootElem->FirstChildElement("MaterialRoot");
@@ -1024,7 +1024,7 @@ namespace hpl {
 		TiXmlElement *pControllerRootElem = apRootElem->FirstChildElement("ControllerRoot");
 
 		int lSize = cString::ToInt(pControllerRootElem->Attribute("Size"),0);
-		
+
 		apColladaControllerVec->clear();
 		apColladaControllerVec->resize(lSize);
 
@@ -1041,14 +1041,14 @@ namespace hpl {
 
 			pController->mlJointPairIdx = cString::ToInt(pControllerElem->Attribute("JointPairIdx"),0);
 			pController->mlWeightPairIdx = cString::ToInt(pControllerElem->Attribute("WeightPairIdx"),0);
-			
+
 			////////////////////////////
 			//Joints
 			{
 				TiXmlElement * pJointsElem = pControllerElem->FirstChildElement("Joints");
 				int lSize = cString::ToInt(pJointsElem->Attribute("Size"),0);
 				TiXmlText *pJointsText = pJointsElem->FirstChild()->ToText();
-                
+
 				tString sData = pJointsText->Value();
                 tString sSepp = " "; pController->mvJoints.reserve(lSize);
 				cString::GetStringVec(sData,pController->mvJoints,&sSepp);
@@ -1063,7 +1063,7 @@ namespace hpl {
 				//tString sData = pWeightsText->Value();
 				//tString sSepp = " "; pController->mvWeights.reserve(lSize);
 				//cString::GetFloatVec(sData,pController->mvWeights,&sSepp);
-				
+
 				pController->mvWeights.resize(lSize);
 				cString::FloatStringToArray(&pController->mvWeights[0],pWeightsText->Value(),lSize);
 			}
@@ -1075,12 +1075,12 @@ namespace hpl {
 				TiXmlText *pMatricesText = pMatricesElem->FirstChild()->ToText();
 
 				//tString sData = pMatricesText->Value();
-				//tString sSepp = " "; 
+				//tString sSepp = " ";
 				//cString::GetFloatVec(sData,vRawData,&sSepp);
 				tFloatVec vRawData;vRawData.resize(lSize * 16);
 				cString::FloatStringToArray(&vRawData[0],pMatricesText->Value(),lSize * 16);
-				
-				
+
+
 				float *pData = &vRawData[0];
 				pController->mvMatrices.reserve(lSize);
 				for(int i=0; i< lSize; ++i)
@@ -1181,7 +1181,7 @@ namespace hpl {
 
 			pAnimation->msId = pAnimationElem->Attribute("Id");
 			pAnimation->msTargetNode = pAnimationElem->Attribute("TargetNode");
-			
+
 			/////////////////////////////////////
 			//Channels
 			{
@@ -1194,7 +1194,7 @@ namespace hpl {
 				for(; pChannelElem != NULL; pChannelElem = pChannelElem->NextSiblingElement("Channel"),++idx)
 				{
 					cColladaChannel *pChannel = &pAnimation->mvChannels[idx];
-					
+
 					pChannel->msId = pChannelElem->Attribute("Id");
 					pChannel->msTarget = pChannelElem->Attribute("Target");
 					pChannel->msSource = pChannelElem->Attribute("Source");
@@ -1242,7 +1242,7 @@ namespace hpl {
 					cString::GetFloatVec(sData,pSource->mvValues,&sSepp);
 				}
 			}
-            
+
 		}
 	}
 
@@ -1252,7 +1252,7 @@ namespace hpl {
 	{
 		TiXmlElement *pGeometryRootElem = apRootElem->FirstChildElement("GeometryRoot");
 		int lSize = cString::ToInt(pGeometryRootElem->Attribute("Size"),0);
-		
+
 		apColladaGeometryVec->clear();
 		apColladaGeometryVec->resize(lSize);
 
@@ -1278,16 +1278,16 @@ namespace hpl {
 			{
 				TiXmlElement *pIndexVecElem = pGeometryElem->FirstChildElement("IndexVec");
 				int lSize = cString::ToInt(pIndexVecElem->Attribute("Size"),0);
-				
+
 				if(lSize>0)
 				{
 					TiXmlElement *pIndicesDataElem = pIndexVecElem->FirstChildElement("Indices");
 					TiXmlText *pVecText = pIndicesDataElem->FirstChild()->ToText();
-					
+
 					pGeometry->mvIndexVec.resize(lSize);
 
 					cString::UIntStringToArray(&pGeometry->mvIndexVec[0],pVecText->Value(),lSize);
-					
+
 					//tString sData = pVecText->Value();
 					//tString sSepp = " ";
 					//cString::GetUIntVec(sData,pGeometry->mvIndexVec,&sSepp);
@@ -1299,14 +1299,14 @@ namespace hpl {
 			{
 				TiXmlElement *pVertexVecElem = pGeometryElem->FirstChildElement("VertexVec");
 				int lSize = cString::ToInt(pVertexVecElem->Attribute("Size"),0);
-				
+
 				if(lSize>0)
 				{
 					pGeometry->mvVertexVec.resize(lSize);
 
-					tFloatVec vRawData; 
+					tFloatVec vRawData;
 					vRawData.resize(lSize * 3);
-					
+
 					/////////////////////////////////
 					// Positions
 					{
@@ -1319,7 +1319,7 @@ namespace hpl {
 						//cString::GetFloatVec(sData,vRawData,&sSepp);
 
 						cString::FloatStringToArray(&vRawData[0],pVecText->Value(),lSize * 3);
-						
+
 						float *pData = &vRawData[0];
 						for(int i=0; i<lSize; ++i)
 						{
@@ -1383,7 +1383,7 @@ namespace hpl {
 						//tString sSepp = " ";
 						//tFloatVec vRawData; vRawData.reserve(lSize * 3);
 						//cString::GetFloatVec(sData,vRawData,&sSepp);
-						
+
 						pGeometry->mvTangents.resize(lSize*4);
 						cString::FloatStringToArray(&pGeometry->mvTangents[0],pVecText->Value(),lSize * 4);
 					}
@@ -1407,11 +1407,11 @@ namespace hpl {
 					// Extra num
 					{
 						TiXmlElement *pExtraNumElem = pVertexVecElem->FirstChildElement("ExtraNum");
-						TiXmlText* pExtraNumText = pExtraNumElem->FirstChild()->ToText(); 
-                    
+						TiXmlText* pExtraNumText = pExtraNumElem->FirstChild()->ToText();
+
 						cString::UIntStringToArray(&mvExtraNum[0],pExtraNumText->Value(),lSize);
 					}
-					
+
 					//////////////////////////////////////////////
 					// Extra vertex
 					{
@@ -1427,7 +1427,7 @@ namespace hpl {
 					for(int idx=0; idx< lSize; ++idx)
 					{
 						tColladaExtraVtxList *pList = &pGeometry->mvExtraVtxVec[idx];
-						
+
 						for(unsigned int j=0; j < mvExtraNum[idx]; ++j)
 						{
 							pList->push_back(cColladaExtraVtx(pData[0],pData[1],pData[2],pData[3]));
@@ -1438,7 +1438,7 @@ namespace hpl {
 			}
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	static void LoadIterativeNode(TiXmlElement *apNodeElem,cColladaNode *apParentNode, cColladaScene *apColladaScene)
@@ -1450,7 +1450,7 @@ namespace hpl {
 		pNode->msSid = cString::ToString(apNodeElem->Attribute("Sid"),pNode->msId);
 		pNode->msName = cString::ToString(apNodeElem->Attribute("Name"), pNode->msId);
 		pNode->msType = apNodeElem->Attribute("Type");
-		
+
 		pNode->msInstanceMaterial = cString::ToString(apNodeElem->Attribute("InstanceMaterial"),"");
 
 		pNode->msSource  = apNodeElem->Attribute("Source");
@@ -1468,10 +1468,10 @@ namespace hpl {
 		{
 			pNode->mlstTransforms.push_back(cColladaTransform());
 			cColladaTransform &transform = pNode->mlstTransforms.back();
-			
+
 			transform.msSid =  pTransformElem->Attribute("Sid");
 			transform.msType =  pTransformElem->Attribute("Type");
-			
+
 			tString sData = pTransformElem->Attribute("Values");
 			tString sSepp =" ";
 			cString::GetFloatVec(sData,transform.mvValues,&sSepp);
@@ -1489,10 +1489,10 @@ namespace hpl {
 	static void LoadScene(TiXmlElement *apRootElem, cColladaScene *apColladaScene)
 	{
 		TiXmlElement *pSceneElem = apRootElem->FirstChildElement("Scene");
-		
+
 		//Delete all nodes.
 		apColladaScene->ResetNodes();
-        
+
 		apColladaScene->mfStartTime = cString::ToFloat(pSceneElem->Attribute("StartTime"),0);
 		apColladaScene->mfEndTime = cString::ToFloat(pSceneElem->Attribute("EndTime"),0);
 		apColladaScene->mfDeltaTime = cString::ToFloat(pSceneElem->Attribute("DeltaTime"),0);

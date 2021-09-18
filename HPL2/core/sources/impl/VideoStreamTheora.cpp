@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -47,7 +47,7 @@ namespace hpl {
 
 		//////////////////////////////////////
 		// Calculate YUV -> RBG
-		
+
 		//////////////////////////////
 		//Create buffers
 		mpYuvToR = hplNewArray( unsigned char,256*256);
@@ -64,7 +64,7 @@ namespace hpl {
 		{
 			fY = 1.164f * ((float)y -16);
 			fI = (float)i;
-			
+
 			//I = V
 			mpYuvToR[y + i*256] = (unsigned char)cMath::Clamp(fY + 1.596f*(fI - 128),0,255);
 
@@ -112,12 +112,12 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	iVideoStream* cVideoStreamTheora_Loader::LoadVideo(const tWString& asFile)
-	{ 
+	{
 		tString sName = cString::To8Char(cString::GetFileNameW(asFile));
 		cVideoStreamTheora *pVideo = hplNew( cVideoStreamTheora, (sName,this) );
-		
+
 		if(pVideo->LoadFromFile(asFile)==false)
 		{
 			hplDelete(pVideo);
@@ -135,7 +135,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cVideoStreamTheora::cVideoStreamTheora(const tString& asName, cVideoStreamTheora_Loader* apLoader) : iVideoStream(asName, _W(""))
 	{
 		mpLoader = apLoader;
@@ -185,7 +185,7 @@ namespace hpl {
 			if(mpFrameBuffer) hplDeleteArray(mpFrameBuffer);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cVideoStreamTheora::LoadFromFile(const tWString& asFilePath)
 	{
 		SetFullPath(asFilePath);
@@ -205,7 +205,7 @@ namespace hpl {
 		{
 			return false;
 		}
-		
+
 		msFilePath = asFilePath;
 
 		////////////////////////////////
@@ -216,10 +216,10 @@ namespace hpl {
 
 		//Get headers
 		if(GetHeaders()==false)	return false;
-		
+
 		//Initialize decoders and attributes
 		if(InitDecoders()==false) return false;
-        
+
 
 		return true;
 	}
@@ -232,7 +232,7 @@ namespace hpl {
 
 		mfTime += afTimeStep;
 		////////////////////////////////
-		// Theora Decode packets until the video is ahead of real time. 
+		// Theora Decode packets until the video is ahead of real time.
 		// (This could be skipped once non-keyframe seeks can be made?)
 		while(!mlVideobufReady && mfVideobufTime < mfTime)
 		{
@@ -246,7 +246,7 @@ namespace hpl {
 					mlVideobufGranulePos = mTheoraState.granulepos;
 					mfVideobufTime = theora_granule_time(&mTheoraState,mlVideobufGranulePos);
 
-					mbVideoFrameReady = true;	
+					mbVideoFrameReady = true;
 				}
 			}
 			//No packets left, get new page.
@@ -256,7 +256,7 @@ namespace hpl {
 				ogg_page page;
 				if(ogg_sync_pageout(&mOggSyncState,&page) > 0)
 				{
-					QueuePage(&page);	
+					QueuePage(&page);
 				}
 				//No pages left, read more buffer data.
 				else
@@ -267,18 +267,18 @@ namespace hpl {
 					{
 						while(ogg_sync_pageout(&mOggSyncState,&page)>0) QueuePage(&page);
 					}
-					//No more buffer data in file, stop video				
+					//No more buffer data in file, stop video
 					else
 					{
 						if(mbLooping==false) mbPlaying = false;
 						ResetStreams();
 					}
-					
+
 				}
 			}
 		}
 
-		
+
 		////////////////////////////////
 		// Theora Check for end of file.
 		if(!mlVideobufReady && feof(mpFile))
@@ -294,7 +294,7 @@ namespace hpl {
 	{
 		mbPlaying = true;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cVideoStreamTheora::Stop()
@@ -316,7 +316,7 @@ namespace hpl {
 	{
 		mbLooping = abX;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cVideoStreamTheora::CopyToTexture(iTexture *apTexture)
@@ -345,7 +345,7 @@ namespace hpl {
 		//Get YUV buffer
 		yuv_buffer yuvBuffer;
 		theora_decode_YUVout(&mTheoraState,&yuvBuffer);
-		
+
 		/////////////////////////////
 		// Set up variables
 
@@ -366,11 +366,11 @@ namespace hpl {
 		//Get start of buffers
 		unsigned char *pSrcBuffer = mpFrameBuffer;
 		unsigned char *pYBuffer = yuvBuffer.y + lCropOffsetY;
-		
+
 		//Set up counters
 		int lXCount = mvSize.x;
 		int lYCount = mvSize.y;
-		
+
 		//Precalculate some values
 		const int lYBufferAdd = yuvBuffer.y_stride - mvSize.x;
 
@@ -398,17 +398,17 @@ namespace hpl {
 		pSrcBuffer = mpFrameBuffer;
 		unsigned char *pUBuffer = yuvBuffer.u + lCropOffsetUV;
 		unsigned char *pVBuffer = yuvBuffer.v + lCropOffsetUV;
-		
+
 		//Setup counters
 		lXCount = mvSize.x/2;
 		lYCount = mvSize.y/2;
-		
+
 		//Precalculate some values
 		const int lXRowAdd = mvSize.x/2;
 		const int lSourceRowSize = mvSize.x*3;
 		const int lUVBufferAdd = yuvBuffer.uv_stride - mvSize.x/2;
 		unsigned char y;
-		
+
 		//Go through UV surfaces and convert to RGB in frame buffer
 		while(lYCount)
 		{
@@ -420,25 +420,25 @@ namespace hpl {
 			y = *pSrcBuffer;
 			pSrcBuffer[0] = pYuvToR[y + v_add];
 			pSrcBuffer[1] = pYuv_G_Y_UV[y +(g_uv_add)];
-			pSrcBuffer[2] = pYuvToB[y + u_add];	
+			pSrcBuffer[2] = pYuvToB[y + u_add];
 
 			pSrcBuffer+= 3;
 			y = *pSrcBuffer;
 			pSrcBuffer[0] = pYuvToR[y + v_add];
 			pSrcBuffer[1] = pYuv_G_Y_UV[y +(g_uv_add)];
-			pSrcBuffer[2] = pYuvToB[y + u_add];			
+			pSrcBuffer[2] = pYuvToB[y + u_add];
 
 			pSrcBuffer += lSourceRowSize - 3;
 			y = *pSrcBuffer;
 			pSrcBuffer[0] = pYuvToR[y + v_add];
 			pSrcBuffer[1] = pYuv_G_Y_UV[y +(g_uv_add)];
-			pSrcBuffer[2] = pYuvToB[y + u_add];			
+			pSrcBuffer[2] = pYuvToB[y + u_add];
 
 			pSrcBuffer += 3;
 			y = *pSrcBuffer;
 			pSrcBuffer[0] = pYuvToR[y + v_add];
 			pSrcBuffer[1] = pYuv_G_Y_UV[y +(g_uv_add)];
-			pSrcBuffer[2] = pYuvToB[y + u_add];			
+			pSrcBuffer[2] = pYuvToB[y + u_add];
 
 			pSrcBuffer-= lSourceRowSize;
 
@@ -460,7 +460,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	/**
 	  * Gets BufferSize bytes to a sync buffer and checks how many bytes that
 	  * where written to it.
@@ -468,7 +468,7 @@ namespace hpl {
 	int cVideoStreamTheora::BufferData(FILE *pFile ,ogg_sync_state *apOggSynchState)
 	{
 		ogg_page tempPage;
-		if (ogg_sync_pageout(apOggSynchState, &tempPage) ==1) 
+		if (ogg_sync_pageout(apOggSynchState, &tempPage) ==1)
 		{
 			Warning("Still pages in buffer do not read another one! Go tell the programmer he messed up!\n");
 			return 0;
@@ -492,7 +492,7 @@ namespace hpl {
 	 * pushing a page can be done blindly; a stream won't accept a page that does not belong to it.
 	 */
 	void cVideoStreamTheora::QueuePage(ogg_page *apPage)
-	{	
+	{
 		if(mbVideoLoaded)
 		{
 			if(ogg_stream_pagein(&mTheoraStreamState,apPage)!=0)
@@ -500,11 +500,11 @@ namespace hpl {
 				//I think the page can simply be skipped. Data is destroyed with buffer.... I think :S
 			}
 		}
-		
+
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	/**
 	  * Initializes data needed for decoding and sets up video properties
 	  * Must be called after GetHeaders()
@@ -545,14 +545,14 @@ namespace hpl {
 
 		ogg_page testPage;
 		while(ogg_sync_pageout(&mOggSyncState,&testPage));
-		
+
 
 		////////////////////////////////
 		//Reset variables
 		mfTime =0;
 		mfVideobufTime =0;
 		mbVideoFrameReady = false;
-		
+
 		////////////////////////////////
 		//Clear all data structures
 
@@ -609,7 +609,7 @@ namespace hpl {
 				////////////////////////////
 				//Get past all header packets.
 				if(lPackCount > 0)
-				{	
+				{
 					QueuePage(&page);
 
 					while(lPackCount<3)
@@ -651,7 +651,7 @@ namespace hpl {
 			ogg_page page;
 			while(ogg_sync_pageout(&mOggSyncState,&page)>0)
 			{
-				
+
 				/////////////////////////////////
 				// Check if page is beginning of stream, else queue it.
 				if(!ogg_page_bos(&page))
@@ -660,7 +660,7 @@ namespace hpl {
 					//Does this only mean that if we have already intialized a stream and the next page is for it,
 					//we cannot just leave it be or else that stream will be missing info, yeah that must be it.
 					QueuePage(&page);
-					
+
 					continue;
 				}
 
@@ -669,11 +669,11 @@ namespace hpl {
 				ogg_stream_state testStream;
 				ogg_stream_init(&testStream,ogg_page_serialno(&page));	//Init stream using logical serial to stream page belongs to.
 				ogg_stream_pagein(&testStream,&page);						//Put current page into stream.
-				
+
 				/////////////////////////////////
 				//Get first packet in stream and check if it is a header.
 				ogg_packet testPacket;
-				ogg_stream_packetout(&testStream,&testPacket);				
+				ogg_stream_packetout(&testStream,&testPacket);
 
 				if(!mbVideoLoaded && theora_decode_header(&mTheoraInfo,&mTheoraComment,&testPacket)>=0)
 				{
@@ -725,12 +725,12 @@ namespace hpl {
 			ogg_page page;
 			if(ogg_sync_pageout(&mOggSyncState,&page)>0)
 			{
-				QueuePage(&page); 
+				QueuePage(&page);
 			}
 			else
 			{
 				//No pages left, load more data.
-				int lRet=BufferData(mpFile,&mOggSyncState); 
+				int lRet=BufferData(mpFile,&mOggSyncState);
 				if(lRet==0)
 				{
 					Error("End of file while searching for codec headers in '%s'.\n",msFilePath.c_str());
@@ -738,11 +738,11 @@ namespace hpl {
 				}
 			}
 		}
-		
+
 
 		return true;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 }

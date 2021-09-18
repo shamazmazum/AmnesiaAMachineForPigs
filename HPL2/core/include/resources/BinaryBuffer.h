@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -31,7 +31,7 @@ namespace hpl {
 		cBinaryBuffer();
 		cBinaryBuffer(const tWString& asFile);
 		~cBinaryBuffer();
-		
+
 
 		////////////////////////////////
 		// GENERAL
@@ -44,7 +44,7 @@ namespace hpl {
 		bool Load();
 		/**
 		 * Loads data from file.
-		 * \return 
+		 * \return
 		 */
 		bool Load(const tWString& asFile);
 		/**
@@ -76,7 +76,7 @@ namespace hpl {
 		* \return true if memory was found, else false
 		*/
 		bool Reserve(size_t alSize);
-		
+
 		/**
 		 * This deletes all data and resets size and pos.
 		 */
@@ -143,7 +143,7 @@ namespace hpl {
 		* Decrypt this buffer using Tiny Encryption Algorithm
 		*/
 		void DecryptTEA(size_t alKey[4]);
-		
+
 		////////////////////////////////
 		// TESTS
 		////////////////////////////////
@@ -153,12 +153,12 @@ namespace hpl {
 		* This will add a 32 bit int with the CRC that is then set when AddCRC_End is called.
 		*/
 		void AddCRC_Begin();
-		
+
 		/**
 		* This must be called after AddCRC_Begin, and after some data has been added.
 		*/
 		unsigned int AddCRC_End(unsigned int alKey);
-				
+
 		/**
 		* Calculates the CRC from current position (if alDataPos<0) or alDataPos, to end (if alCount < 0) or according to alCount
 		*/
@@ -174,7 +174,7 @@ namespace hpl {
 		* This checks CRC from current position to end (if alCount<0) else according to alCount
 		*/
 		bool CheckCRC(unsigned int alCRC, unsigned int alKey, int alCount=-1);
-		
+
 		////////////////////////////////
 		// DATA INPUT
 		////////////////////////////////
@@ -182,7 +182,7 @@ namespace hpl {
 		  * As this function does not conversion, it is not adviced to use.
 		  */
 		void AddRawData(void*apData, size_t alSize);
-		
+
 		void AddChar(char alX);
 		void AddUnsignedChar(unsigned char alX);
 		void AddBool(bool abX);
@@ -207,7 +207,7 @@ namespace hpl {
 		void AddShort16Array(const short* apData, size_t alSize);
 		void AddInt32Array(const int* apData, size_t alSize);
 		void AddFloat32Array(const float* apData, size_t alSize);
-		
+
         ////////////////////////////////
 		// DATA UPDATE
 		////////////////////////////////
@@ -216,12 +216,12 @@ namespace hpl {
 		////////////////////////////////
 		// DATA OUTPUT
 		////////////////////////////////
-		
+
 		/**
 		  * As this function does not conversion, it is not adviced to use.
 		  */
 		void GetRawData(void*apData, size_t alSize);
-		
+
 		char GetChar();
 		unsigned char GetUnsignedChar();
 		bool GetBool();

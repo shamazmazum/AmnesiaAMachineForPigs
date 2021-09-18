@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -71,7 +71,7 @@ cLuxPostEffect_Infection::cLuxPostEffect_Infection(cGraphics *apGraphics, cResou
 	//////////////////////////////
 	// Textures
 	mvAmpMaps.resize(3);
-	
+
 	for(size_t i=0; i<mvAmpMaps.size(); ++i)
 		mvAmpMaps[i] = mpResources->GetTextureManager()->Create2D("posteffect_infection_ampmap"+cString::ToString((int)i), false);
 
@@ -124,7 +124,7 @@ void cLuxPostEffect_Infection::Update(float afTimeStep)
 	}
 
 	mfT += afTimeStep * mfWaveSpeed;
-	
+
 	mfAnimCount += afTimeStep * 0.15f;
 
 	float fMaxAnim = (float)mvAmpMaps.size();
@@ -147,7 +147,7 @@ iTexture* cLuxPostEffect_Infection::RenderEffect(iTexture *apInputTexture, iFram
 	SetFinalFrameBuffer(apFinalTempBuffer);
 
 	mpCurrentComposite->SetTexture(0, apInputTexture);
-	
+
 	int lAmp0 = (int)mfAnimCount;
 	int lAmp1 = (int)(mfAnimCount+1);
 	if(lAmp1 >= (int) mvAmpMaps.size()) lAmp1 = 0;
@@ -163,7 +163,7 @@ iTexture* cLuxPostEffect_Infection::RenderEffect(iTexture *apInputTexture, iFram
 	mpCurrentComposite->SetTexture(6, mpInfectionColorDodgeBlendMap);
 	mpCurrentComposite->SetTexture(7, mpInfectionGradientMap);
 //	mpCurrentComposite->SetTexture(8, mpVomitOverlayMap);
-	
+
 	mpCurrentComposite->SetProgram(mpProgram);
 	if(mpProgram)
 	{
@@ -183,7 +183,7 @@ iTexture* cLuxPostEffect_Infection::RenderEffect(iTexture *apInputTexture, iFram
 	DrawQuad(0,1,apInputTexture, true);
 
 	mpCurrentComposite->SetTextureRange(NULL, 1);
-	
+
 	return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
 }
 

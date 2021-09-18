@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -47,7 +47,7 @@ class cLuxEnemyMover
 {
 friend class cLuxEnemyMover_SaveData;
 friend class iLuxEnemy;
-public:	
+public:
 	cLuxEnemyMover(iLuxEnemy *apEnemy, iCharacterBody *apCharBody);
 	virtual ~cLuxEnemyMover();
 
@@ -68,7 +68,7 @@ public:
 	void TurnAwayFromPos(const cVector3f& avFeetPos);
 
 	void UseMoveStateAnimations();
-	
+
 	void ForceMoveState(eLuxEnemyMoveState aMoveState);
 
 	//////////////////////
@@ -100,7 +100,7 @@ public:
 	//////////////////////
 	//UPdate
 	void UpdateMoveAnimation(float afTimeStep);
-	void UpdateStuckCounter(float afTimeStep);	
+	void UpdateStuckCounter(float afTimeStep);
 	void UpdateTurning(float afTimeStep);
 	void UpdateStepEffects(float afTimeStep);
 	void UpdateWallAvoidance(float afTimeStep);
@@ -108,10 +108,10 @@ public:
 	//////////////////////
 	//Debug
 	void OnRenderSolid(cRendererCallbackFunctions* apFunctions);
-	
+
 	//////////////////////
 	//Save data stuff
-	
+
 private:
 	void ConvertLocalDirTo2D(cVector3f& avLocalDir);
 	cMatrixf GetMovementDirectionMatrix();

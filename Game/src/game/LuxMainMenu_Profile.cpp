@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -89,7 +89,7 @@ void cLuxMainMenu_Profile::OnSetActive(bool abX)
 	{
 		mpGuiSet->SetDefaultFocusNavWidget(mpListProfiles);
 		mpGuiSet->SetFocusedWidget(mpListProfiles);
-		
+
 		////////////////////////////////////////////////////////////
 		// If no profiles found, start the Create Profile window
 		if(mpListProfiles->GetItemNum()==0)
@@ -224,7 +224,7 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
 	mpTextEnterName->SetCallbackOnLostFocus(false);
 	mpTextEnterName->SetIllegalChars(sIllegalChars);
 	mpTextEnterName->AddCallback(eGuiMessage_TextBoxEnter, this, kGuiCallback(PressEnterNameCreate));
-	
+
 
 	mpTextEnterName->SetMaxTextLength(20);
 	vPos.y += mpTextEnterName->GetSize().y + fBorderSize;
@@ -232,11 +232,11 @@ void cLuxMainMenu_Profile::CreateEnterNameGui()
 	//////////////////////////
 	//Buttons
 	float fButtonSepp = mvEnterNameWindowSize.x - mfEnterNameButtonLength*2 - fBorderSize*2;
-    
+
 	std::vector<iWidget*> vButtons;
 	//Create
     //vPos.x += mpTextEnterName->GetSize().x - fButtonLength*2 - fButtonSepp; //right align buttons!
-	vPos.y =  mvEnterNameWindowSize.y - 30 - fBorderSize; 
+	vPos.y =  mvEnterNameWindowSize.y - 30 - fBorderSize;
 	pButton = mpGuiSet->CreateWidgetButton(vPos,cVector2f(mfEnterNameButtonLength, 30),kTranslate("MainMenu","Create"),mpWindowEnterName);
 	pButton->AddCallback(eGuiMessage_ButtonPressed,this, kGuiCallback(PressEnterNameCreate));
 	mpCreateButton = pButton;
@@ -291,7 +291,7 @@ void cLuxMainMenu_Profile::AddProfilesInListBox()
 		cLuxGameProfile* pProfile = hplNew(cLuxGameProfile, ());
 		pProfile->msName = *it;
 		pProfile->mCreationDate = cPlatform::FileCreationDate(gpBase->msBaseSavePath+pProfile->msName);
-		//Log("%s: %d:%d:%d %d/%d-%d\n",cString::To8Char(combo.msFolder).c_str(), 
+		//Log("%s: %d:%d:%d %d/%d-%d\n",cString::To8Char(combo.msFolder).c_str(),
 		//							combo.mCreationDate.hours,combo.mCreationDate.minutes,combo.mCreationDate.seconds,
 		//							combo.mCreationDate.month_day,combo.mCreationDate.month,combo.mCreationDate.year);
 
@@ -299,14 +299,14 @@ void cLuxMainMenu_Profile::AddProfilesInListBox()
 	}
 
 	//Sort by date and add
-	std::sort(mvProfiles.begin(), mvProfiles.end(),ProfileSort);		
+	std::sort(mvProfiles.begin(), mvProfiles.end(),ProfileSort);
 	for(size_t i=0; i<mvProfiles.size(); ++i)
 	{
 		cLuxGameProfile *pProfile = mvProfiles[i];
 
 		mpListProfiles->AddItem(pProfile->msName);
 	}
-	
+
 
 }
 
@@ -341,8 +341,8 @@ bool cLuxMainMenu_Profile::WindowCloses(iWidget* apWidget, const cGuiMessageData
 										kGuiCallback(ClickedExitPopup));
 		pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
 	}
-	
-	
+
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, WindowCloses);
@@ -402,7 +402,7 @@ void cLuxMainMenu_Profile::SelectProfile(int alNum)
 	//		Especially language resources!
 
 	gpBase->SetProfile(pProfile->msName);
-	
+
 	gpBase->InitUserConfig();
 
 	gpBase->mpMainMenu->RecreateGui();
@@ -437,10 +437,10 @@ bool cLuxMainMenu_Profile::PressCreateProfile(iWidget* apWidget, const cGuiMessa
 	mpGuiSet->PushFocusedWidget();
 
 	mpGuiSet->SetAttentionWidget(mpWindowEnterName);
-	
+
 	mpTextEnterName->SetText(msDefaultProfileName);
 	mpTextEnterName->SetSelectedText();
-	
+
 	mpGuiSet->SetFocusedWidget(mpTextEnterName);
 	mpGuiSet->SetDefaultFocusNavWidget(mpTextEnterName);
 
@@ -464,7 +464,7 @@ bool cLuxMainMenu_Profile::PressDeleteProfile(iWidget* apWidget, const cGuiMessa
 	pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","Sure you want to delete profile"),
 									kTranslate("MainMenu","Yes"),kTranslate("MainMenu","No"),this,kGuiCallback(PressDeleteProfilePopupClose));
 	pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxMainMenu_Profile, PressDeleteProfile);
@@ -494,7 +494,7 @@ bool cLuxMainMenu_Profile::PressDeleteProfilePopupClose(iWidget* apWidget, const
 		{
 			// Set a blank profile and config
 			gpBase->SetProfile(_W(""));
-	
+
 			gpBase->InitUserConfig();
 		}
 	}
@@ -543,23 +543,23 @@ bool cLuxMainMenu_Profile::PressEnterNameCreate(iWidget* apWidget, const cGuiMes
 	/////////////////////////
 	// Check if the name already exists
 	tWString sProfileName = mpTextEnterName->GetText();
-	
+
 	if(gpBase->CreateProfile(sProfileName)==false)
 	{
 		cGuiPopUpMessageBox* pPopUp = mpGuiSet->CreatePopUpMessageBox(_W(""),kTranslate("MainMenu","The profile name already exists"),_W("OK"),_W(""),NULL,NULL);
 		pPopUp->GetGuiSet()->SetDrawFocus(mpGuiSet->GetDrawFocus());
 		return true;
 	}
-	
+
 	/////////////////////////
 	// Close window and update list.
 	mpWindowEnterName->SetVisible(false);
 	mpWindowEnterName->SetEnabled(false);
-	 
+
 	mpGuiSet->PopAttentionWidget();
 	mpGuiSet->PopDefaultFocusNavWidget();
 	mpGuiSet->PopFocusedWidget();
-	
+
 	AddProfilesInListBox();
 
     mpListProfiles->SetSelectedItem(mpListProfiles->GetItemNum()-1);

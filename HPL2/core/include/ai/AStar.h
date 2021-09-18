@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -29,7 +29,7 @@ namespace hpl {
 	class cAINode;
 
 	//--------------------------------------
-	
+
 	typedef std::set<cAINode*> tAINodeSet;
 	typedef tAINodeSet::iterator tAINodeSetIt;
 
@@ -39,7 +39,7 @@ namespace hpl {
 	typedef tAINodeList::iterator tAINodeListIt;
 
 	//--------------------------------------
-	
+
 	#define eAStarNodeFlag_Open			 (0x01)
 	#define eAStarNodeFlag_CastRay		 (0x02)
 
@@ -50,20 +50,20 @@ namespace hpl {
 
 		float mfCost;
 		float mfDistance;
-		
+
 		unsigned int mlAStarCount;
 		unsigned char mFlags;
 
 		cAStarNode *mpParent;
 		cAINode *mpAINode;
 	};
-	
+
 	class cAStarNodeCompare
 	{
 	public:
 		bool operator()(cAStarNode* apNodeA,cAStarNode* apNodeB) const;
 	};
-	
+
 	class cAStarNodePresort
 	{
 	public:
@@ -76,7 +76,7 @@ namespace hpl {
 
 	typedef std::vector<cAStarNode> tAStarNodeVec;
 	typedef tAStarNodeVec::iterator tAStarNodeVecIt;
-	
+
 	typedef std::set<cAStarNode*,cAStarNodePresort> tAStarNodePresortSet;
 	typedef tAStarNodePresortSet::iterator tAStarNodePresortSetIt;
 
@@ -87,7 +87,7 @@ namespace hpl {
 	{
 	public:
 		virtual ~iAStarCallback(){}
-		
+
 		virtual bool CanAddNode(cAINode *apParentNode,cAINode *apChildNode)=0;
 	};
 
@@ -98,7 +98,7 @@ namespace hpl {
 	public:
 		cAStarHandler(cAINodeContainer *apContainer);
 		~cAStarHandler();
-		
+
 		bool GetPath(const cVector3f& avStart, const cVector3f& avGoal, tAINodeList *apNodeList);
 
 		/**
@@ -116,14 +116,14 @@ namespace hpl {
 
 		cAStarNode* GetBestNode();
 		cAStarNode* GetNode(cAINode *apAINode);
-		
+
 		float Heuristic(const cVector3f& avStart, const cVector3f& avGoal);
 		float Cost(float afDistance, cAINode *apAINode, cAStarNode *apParent);
 
 		bool IsGoalNode(cAINode *apAINode);
 
 		void ClearUnlistedNodes(bool abGoals, bool abOpen);
-		
+
 		cVector3f mvGoal;
 		cVector3f mvStart;
 
@@ -131,7 +131,7 @@ namespace hpl {
 		tAINodeSet m_setGoalNodes;
 
 		cAINodeContainer *mpContainer;
-		
+
 		tUIntVec mvOpenListCount;
 		tUIntVec mvGoalListCount;
 
@@ -139,7 +139,7 @@ namespace hpl {
 		unsigned int mlAStarCount;
 
 		iAStarCallback *mpCallback;
-		
+
 		tAStarNodeSet m_setOpenList;
 		tAStarNodeVec mvNodes;
 		tAStarNodePresortSet m_setPresortNodes;

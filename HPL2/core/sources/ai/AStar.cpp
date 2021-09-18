@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -84,7 +84,7 @@ namespace hpl {
 		mlAStarCount = 0;
 
 		mpContainer = apContainer;
-		
+
 		mvOpenListCount.resize(mpContainer->GetListNum(), 0);
 		mvGoalListCount.resize(mpContainer->GetListNum(), 0);
 
@@ -98,7 +98,7 @@ namespace hpl {
 		{
 			cAStarNode node = cAStarNode(mpContainer->GetNode(i));
 			node.mlAStarCount = -1;
-			
+
 			mvNodes.push_back(node);
 		}
 	}
@@ -158,7 +158,7 @@ namespace hpl {
 		while(goalNodeIt.HasNext())
 		{
 			cAINode *pAINode = goalNodeIt.Next();
-			
+
 			float fHeight = fabs(avGoal.y - pAINode->GetPosition().y);
 			float fDist = cMath::Vector3Dist(avGoal,pAINode->GetPosition());
 			if(fDist < fMaxDist && fHeight <= fMaxHeight)
@@ -170,7 +170,7 @@ namespace hpl {
 				mvGoalListCount[pAINode->GetListID()] += pair.second ? 1 : 0;
 			}
 		}
-		
+
 		if(m_setGoalNodes.empty()) return false;
 
 		/////////////////////
@@ -182,7 +182,7 @@ namespace hpl {
 
 			///////////////////
 			// Check if this node can reach a goal
-			if(mvGoalListCount[pAINode->GetListID()] == 0) 
+			if(mvGoalListCount[pAINode->GetListID()] == 0)
 				continue;
 
 			float fHeight = fabs(avStart.y - pAINode->GetPosition().y);
@@ -359,7 +359,7 @@ namespace hpl {
 			///////////////////////
 			// This node has been added before, check if there is a better fit
 			if((pNode->mFlags & eAStarNodeFlag_Open) == false) return; //Best match already found
-			
+
 			if(afDistance > pNode->mfDistance)
 			{
 				if((pNode->mFlags & eAStarNodeFlag_CastRay) && apParent != NULL)
@@ -396,7 +396,7 @@ namespace hpl {
 		pNode->mFlags = eAStarNodeFlag_Open;
 		if(apParent == NULL) pNode->mFlags |= eAStarNodeFlag_CastRay; //Requires ray cast to start if it doesnt have a parent
 		pNode->mlAStarCount = mlAStarCount;
-	
+
 		m_setOpenList.insert(pNode);
 		mvOpenListCount[apAINode->GetListID()]++;
 	}
@@ -502,7 +502,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cAStarHandler::ClearUnlistedNodes(bool abGoals, bool abOpen)
 	{
 		if(m_setGoalNodes.empty() || m_setOpenList.empty()) return;

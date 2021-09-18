@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -41,7 +41,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cAnimationState::cAnimationState(cAnimation* apAnimation, const tString &asName,
 									cAnimationManager *apAnimationManager)
 	{
@@ -67,13 +67,13 @@ namespace hpl {
 		mfSpecialEventTime =0;
 
 		mfFadeStep=0;
-		
+
 		mfFadeSpeed = 0;
 
 		mbCanBlend = true;
 		mvSkeletonBounds.clear();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cAnimationState::~cAnimationState()
@@ -104,7 +104,7 @@ namespace hpl {
 		if(mfFadeStep!=0)
 		{
 			mfWeight += mfFadeStep*afTimeStep;
-			
+
 			if(mfFadeStep<0 && mfWeight<=0)
 			{
 				mfWeight =0;
@@ -142,9 +142,9 @@ namespace hpl {
 		return mfFadeStep!=0;
 	}
 
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	bool cAnimationState::IsOver()
 	{
 		if(mbLoop) return false;
@@ -178,7 +178,7 @@ namespace hpl {
 			mfFadeSpeed = 1.0f / cMath::Abs(afTime);
 		}
 	}
-	
+
 	void cAnimationState::FadeOutSpeed(float afTime)
 	{
 		if(afTime == 0.0f)
@@ -191,14 +191,14 @@ namespace hpl {
 			mfFadeSpeed = -1.0f / cMath::Abs(afTime);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	void cAnimationState::SetLength(float afLength)
 	{
 		mfLength = afLength;
 	}
-	
+
 	float cAnimationState::GetLength()
 	{
 		return mfLength;
@@ -226,7 +226,7 @@ namespace hpl {
 	{
 		return mfSpeed;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cAnimationState::SetBaseSpeed(float afSpeed)
@@ -275,7 +275,7 @@ namespace hpl {
 	{
 		return mfTimePos / mfLength;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cAnimationState::IsActive()
@@ -285,7 +285,7 @@ namespace hpl {
 	void cAnimationState::SetActive(bool abActive)
 	{
 		if(mbActive == abActive) return;
-		
+
 		mbActive = abActive;
 
 		//Should this really be here?
@@ -294,7 +294,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	bool cAnimationState::IsLooping()
 	{
 		return mbLoop;
@@ -307,10 +307,10 @@ namespace hpl {
 	//-----------------------------------------------------------------------
 
 	bool cAnimationState::IsPaused()
-	{	
+	{
 		return mbPaused;
 	}
-	
+
 	void cAnimationState::SetPaused(bool abPaused)
 	{
 		mbPaused = abPaused;
@@ -322,10 +322,10 @@ namespace hpl {
 	{
 		return mfTimePos > mfSpecialEventTime;
 	}
-	
+
 	bool cAnimationState::IsBeforeSpecialEvent()
 	{
-		return mfTimePos < mfSpecialEventTime;	
+		return mfTimePos < mfSpecialEventTime;
 	}
 
 	//-----------------------------------------------------------------------
@@ -333,7 +333,7 @@ namespace hpl {
 	void cAnimationState::AddTimePosition(float afAdd)
 	{
 		if(mbPaused) return;
-		
+
 		mfPrevTimePos = mfTimePos;
 
 		mfTimePos += afAdd*mfSpeed*mfBaseSpeed;
@@ -343,7 +343,7 @@ namespace hpl {
 		else
 			mfTimePos = cMath::Clamp(mfTimePos, 0, mfLength);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cAnimation* cAnimationState::GetAnimation()
@@ -353,7 +353,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	
+
 	void cAnimationState::CreateSkeletonBoundsFromMesh(cMeshEntity * apMesh, tBoneStateVec * apvBoneStates)
 	{
 		///////////////////////////
@@ -368,7 +368,7 @@ namespace hpl {
 			for(int i=0; i< mpAnimation->GetTrackNum(); i++)
 			{
 				cAnimationTrack *pTrack = mpAnimation->GetTrack(i);
-			
+
 				if(pTrack->GetKeyFrameNum() == 0) continue;
 
 				cKeyFrame* pKeyframe = pTrack->GetKeyFrame(0);
@@ -382,7 +382,7 @@ namespace hpl {
 					pKeyframe = pNextKeyframe;
 				}
 			}
-		
+
 			fDeltaTime = cMath::Max(1.0f / 100.0f, fDeltaTime);
 
 			cMesh * pMesh = apMesh->GetMesh();
@@ -452,7 +452,7 @@ namespace hpl {
 					float fBoundingRadius = pMesh->GetBoneBoundingRadius((int)i);
 
 					cVector3f vPos = (*apvBoneStates)[i]->GetWorldPosition();
-					
+
 					cVector3f vMaxPos = vPos + cVector3f(fBoundingRadius);
 					cVector3f vMinPos = vPos - cVector3f(fBoundingRadius);
 
@@ -499,14 +499,14 @@ namespace hpl {
 	{
 		return mvEvents[alIdx];
 	}
-	
+
 	int cAnimationState::GetEventNum()
 	{
 		return (int)mvEvents.size();
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cAnimationState::AddTransition(int alAnimId, int alPreviousAnimId, float afMinTime, float afMaxTime)
 	{
 		mvTransitions.push_back(cAnimationTransition(alAnimId,alPreviousAnimId, afMinTime, afMaxTime));

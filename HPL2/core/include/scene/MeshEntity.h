@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -82,7 +82,7 @@ namespace hpl {
 		cMeshEntity(const tString asName,cMesh* apMesh, cMaterialManager* apMaterialManager,
 					cMeshManager* apMeshManager, cAnimationManager *apAnimationManager);
 		~cMeshEntity();
-	
+
 		void SetWorld(cWorld *apWorld){ mpWorld = apWorld;}
 		cWorld* GetWorld(){ return mpWorld;}
 
@@ -104,7 +104,7 @@ namespace hpl {
 		cAnimationState* GetAnimationStateFromName(const tString &asName);
 		int GetAnimationStateNum();
 		bool IsMeshCulled();
-		
+
 		void SetIsOccluder(bool abX);
 
 		//Animation controller
@@ -125,7 +125,7 @@ namespace hpl {
 
 		//Bone states
 		cNode3D* GetBoneStateRoot(){ return mpBoneStateRoot;}
-		
+
 		cBoneState* GetBoneState(int alIndex);
 		int GetBoneStateIndex(const tString &asName);
 		int GetBoneStateIndexFromPtr(cBoneState* apBoneState);
@@ -143,13 +143,13 @@ namespace hpl {
 		void SetSkeletonPhysicsWeight(float afX);
 
 		void FadeSkeletonPhysicsWeight(float afTime);
-		
+
 		void SetSkeletonCollidersActive(bool abX);
 		bool GetSkeletonCollidersActive();
 
 		void AlignBodiesToSkeleton(bool abCalculateSpeed);
 
-		
+
 		/**
 		 * Calculates the transform (and angles and postion if wanted) of a mesh based on the postion of the root bone.
 		 * This is useful when going from rag doll to mesh.
@@ -177,7 +177,7 @@ namespace hpl {
 		int GetNodeStateIndex(const tString &asName);
 		cNode3D* GetNodeStateFromName(const tString &asName);
 		int GetNodeStateNum();
-		
+
 		//Entity implementation
 		tString GetEntityType(){ return "MeshEntity";}
 		bool IsVisible(){ return mbIsVisible; }
@@ -187,12 +187,12 @@ namespace hpl {
 
 		void SetStatic(bool abX);
 		bool IsStatic(){ return mbStatic;}
-		
+
 		void SetUpdateBonesWhenCulled(bool abX) { mbUpdateBonesWhenCulled = abX; }
 		bool GetUpdateBonesWhenCulled() { return mbUpdateBonesWhenCulled; }
 
 		void SetRenderFlagBit(tRenderableFlag alFlagBit, bool abSet);
-		//bool GetRenderFlagBit(tRenderableFlag alFlagBit){ return (mlRenderFlags & alFlagBit)!=0;} 
+		//bool GetRenderFlagBit(tRenderableFlag alFlagBit){ return (mlRenderFlags & alFlagBit)!=0;}
 		//inline tRenderableFlag GetRenderFlags() const { return mlRenderFlags;}
 
 		void SetIlluminationAmount(float afX);
@@ -230,7 +230,7 @@ namespace hpl {
 
 		void BuildBoneStatesRec(cBone *apBone, cNode3D *apParent);
 		void UpdateSkeletonBounds(cAnimation* apAnimation, cAnimationState* apState);
-		
+
 		bool GetAABBFromSkeletonBounds(cVector3f &avMin, cVector3f &avMax);
 
 		cMaterialManager* mpMaterialManager;
@@ -244,7 +244,7 @@ namespace hpl {
 		float mfShaderTimer;
 		float mfCoverageAmount;
 		tRenderableFlag mlRenderFlags;
-		
+
 		bool mbBoneMatricesNeedUpdate;
 		int mlBoneMatricesTransformCount;
 		int mlBoneMatricesUpdateCount;
@@ -277,7 +277,7 @@ namespace hpl {
 
 		bool mbSkeletonPhysicsSleeping;
 		bool mbSkeletonPhysicsCanSleep;
-		
+
 		bool mbSkeletonColliders;
 
 		bool mbNormalizeAnimationWeights;
@@ -289,7 +289,7 @@ namespace hpl {
 		tNodeStateIndexMap m_mapNodeStateIndices;
 
 		cMesh* mpMesh;
-		
+
 		cMeshEntityCallback *mpCallback;
 
 		iPhysicsBody *mpBody;

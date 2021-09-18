@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -132,11 +132,11 @@ cRopeEntity* cEngineRope_SaveData::CreateRope(cLuxMap *apMap)
 	// Create rope entity
     cRopeEntity *pRope = apMap->GetWorld()->CreateRopeEntity(msName,pPhysicsRope, mlMaxSegments);
 	pRope->SetUniqueID(mlUniqueGfxID);
-	
+
 	pRope->SetRadius(mfRadius);
 	pRope->SetLengthTileAmount(mfLengthTileAmount);
 	pRope->SetLengthTileSize(mfLengthTileSize);
-	
+
 	cMaterial *pMaterial = gpBase->mpEngine->GetResources()->GetMaterialManager()->CreateMaterial(msMaterial);
 	if(pMaterial) pRope->SetMaterial(pMaterial);
 
@@ -163,7 +163,7 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
 	mvEndPos = pPhysicsRope->GetEndParticle()->GetPosition();
 
 	msMaterial = cString::To8Char(apRope->GetMaterial()->GetFullPath());
-	
+
 	mlMaxSegments = apRope->GetMaxSegments();
 
 	msSound = pPhysicsRope->GetMotorSound();
@@ -180,11 +180,11 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
 	//Variables stuff
 	mStartBody = LuxGetIdPairFromBody(pPhysicsRope->GetAttachedStartBody());
 	mEndBody = LuxGetIdPairFromBody(pPhysicsRope->GetAttachedEndBody());
-	
+
 	mvStartBodyLocalPos = pPhysicsRope->GetAttachment(0)->mvBodyLocalPos;
 	mvEndBodyLocalPos = pPhysicsRope->GetAttachment(1)->mvBodyLocalPos;
-	
-	
+
+
 	mlMaxIterations = pPhysicsRope->GetMaxIterations();
 	mfTotalLength = pPhysicsRope->GetTotalLength();
 	mfMinTotalLength = pPhysicsRope->GetMinTotalLength();
@@ -200,7 +200,7 @@ void cEngineRope_SaveData::FromRope(cRopeEntity *apRope)
 	mfMotorSpeedMul = pPhysicsRope->GetMotorSpeedMul();
 	mfMotorMinSpeed = pPhysicsRope->GetMotorMinSpeed();
 	mfMotorMaxSpeed = pPhysicsRope->GetMotorMaxSpeed();
-	
+
 	mbAutoMove = pPhysicsRope->GetAutoMoveActive();
 	mfAutoMoveSpeed  = pPhysicsRope->GetAutoMoveSpeed();
 	mfAutoMoveAcc = pPhysicsRope->GetAutoMoveAcc();
@@ -277,7 +277,7 @@ void cEngineRope_SaveData::ToRope(cRopeEntity *apRope, cLuxMap *apMap)
 		pPhysicsRope->SetAttachedEndBody(pEndBody);
 		pPhysicsRope->GetAttachment(1)->mvBodyLocalPos = mvEndBodyLocalPos;
 	}
-	
+
 }
 
 //------------------------------------------------------------------------
@@ -482,7 +482,7 @@ void cEngineMeshEntity_SaveData::ToMeshEntity(cMeshEntity *apMeshEntity)
 	apMeshEntity->SetIlluminationAmount(mfIlluminationAmount);
 	apMeshEntity->SetMatrix(m_mtxTransform);
 	apMeshEntity->SetUpdateBonesWhenCulled(mbUpdateWhenCulled);
-	
+
 	//If not equal, something is wrong so skip!
 	if(mvAnimations.Size() == apMeshEntity->GetAnimationStateNum())
 	{
@@ -831,7 +831,7 @@ void cEngineBeam_SaveData::FromBeam(cBeam *apBeam)
 
 void cEngineBeam_SaveData::ToBeam(cBeam *apBeam)
 {
-	apBeam->LoadXMLProperties(msFile);	
+	apBeam->LoadXMLProperties(msFile);
 
 	apBeam->SetPosition(mvStartPos);
 	apBeam->GetEnd()->SetPosition(mvEndPos);
@@ -923,8 +923,8 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
 
 	mbActive = apLight->IsActive();
 	mbVisible = apLight->GetVisibleVar();
-	
-	
+
+
 	if(bHasParent==false)
 	{
 		if(apLight->IsFading() && apLight->GetFlickerActive()==false)
@@ -945,7 +945,7 @@ void cEngineLight_SaveData::FromLight(iLight *apLight)
 		}
 
 		//TODO: Add billboard attaching!
-		
+
 		mbFlickering = apLight->GetFlickerActive();
 		msFlickerOffSound = apLight->GetFlickerOffSound();
 		msFlickerOnSound = apLight->GetFlickerOnSound();
@@ -1010,7 +1010,7 @@ void cEngineLight_SaveData::ToLight(iLight *apLight)
 		//TODO: Attach billboards.
 
 		apLight->SetFlickerActive(mbFlickering);
-		
+
 		if(mbFlickering)
 		{
 		apLight->SetFlicker(mFlickerOffColor,mfFlickerOffRadius,

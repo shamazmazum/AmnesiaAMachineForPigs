@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -45,31 +45,31 @@ namespace hpl {
 	class cMeshLoaderMSH;
 
 	//------------------------------------------------------------
-	
+
 	class cSubMeshData
 	{
 	public:
 		iVertexBuffer* mpVtxBuffer;
-        
+
 		cMatrixf m_mtxGlobal;
 		cMatrixf m_mtxLocal;
-		
+
 		tString msName;
 		tString msMaterial;
 
 		tVertexBonePairVec mvVtxBonePairs;
-		
+
 		bool mbVisible;
 	};
 
 	typedef std::list<cSubMeshData> tSubMeshDataList;
 	typedef tSubMeshDataList::iterator tSubMeshDataListIt;
-	
+
 	//------------------------------------------------------------
-	
+
 	class cTakeKeyData
 	{
-	public: 
+	public:
 		float mfTime;
 		float mfValue;
 	};
@@ -78,19 +78,19 @@ namespace hpl {
 	typedef tTakeKeyDataVec::iterator tTakeKeyDataVecIt;
 
 	//------------------------------------------------------------
-	
+
 	class cTempKeyFrameData
 	{
-	public: 
+	public:
 		float mfTime;
 		cVector3f vTrans;
 		cVector3f vScale;
 		cVector3f vRot;
 		cQuaternion qFinalRot;
 	};
-	
+
 	typedef std::vector<cTempKeyFrameData> tTempKeyFrameDataVec;
-	
+
 	//------------------------------------------------------------
 
 	class cExtraVertrices
@@ -115,9 +115,9 @@ namespace hpl {
 
 	typedef std::list<cExtraVtxValue> tExtraVtxValueList;
 	typedef tExtraVtxValueList::iterator tExtraVtxValueListIt;
-	
+
 	//------------------------------------------------------------
-	
+
 	typedef std::set<float> tAnimTimeSet;
 	typedef tAnimTimeSet::iterator tAnimTimeSetIt;
 
@@ -138,7 +138,7 @@ namespace hpl {
 		//bool IsSupported(const tWString asFileType);
 	private:
 		cAnimation* LoadAnimations(KFbxScene *apScene,KFbxImporter * apImporter, const tWString& asFile, cSkeleton * apSkeleton);
-		void LoadAnimationRec(KFbxScene *apScene,KFbxNode * apNode,cAnimation* apAnimation, const tString &asAnimStackName, 
+		void LoadAnimationRec(KFbxScene *apScene,KFbxNode * apNode,cAnimation* apAnimation, const tString &asAnimStackName,
 		int alDepth,cVector3f vParentT, cVector3f vParentS, cVector3f vParentR, cSkeleton * apSkeleton);
 
 		void MakeFinalBonesRec(cBone* apBone, cMatrixf a_mtxParentGlobal, cMatrixf a_mtxParentGlobalUnscaled);

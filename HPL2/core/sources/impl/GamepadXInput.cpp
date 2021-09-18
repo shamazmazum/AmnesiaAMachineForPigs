@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -29,7 +29,7 @@
 #endif
 
 namespace hpl {
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	//////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ namespace hpl {
 	bool cGamepadXInput::mbDeviceConnected[4] = { false, false, false, false };
 
 	//-----------------------------------------------------------------------
-	
+
 	cGamepadXInput::cGamepadXInput(int alIndex) : iGamepad("XInput Portable Gamepad", alIndex)
 	{
 		msGamepadName = "XInput Gamepad";
@@ -64,7 +64,7 @@ namespace hpl {
 
 		SetWasConnected(alIndex, true);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cGamepadXInput::~cGamepadXInput()
@@ -142,11 +142,11 @@ namespace hpl {
 
 			///////////////////
 			// Buttons
-			size_t vButton[10] = 
-			{ 
-				XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y, 
-				XINPUT_GAMEPAD_LEFT_SHOULDER, XINPUT_GAMEPAD_RIGHT_SHOULDER, XINPUT_GAMEPAD_BACK, 
-				XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_LEFT_THUMB, XINPUT_GAMEPAD_RIGHT_THUMB 
+			size_t vButton[10] =
+			{
+				XINPUT_GAMEPAD_A, XINPUT_GAMEPAD_B, XINPUT_GAMEPAD_X, XINPUT_GAMEPAD_Y,
+				XINPUT_GAMEPAD_LEFT_SHOULDER, XINPUT_GAMEPAD_RIGHT_SHOULDER, XINPUT_GAMEPAD_BACK,
+				XINPUT_GAMEPAD_START, XINPUT_GAMEPAD_LEFT_THUMB, XINPUT_GAMEPAD_RIGHT_THUMB
 			};
 
 			for(int i = 0; i < 10; ++i)
@@ -182,7 +182,7 @@ namespace hpl {
 			UpdateAxis(1,-XInputToAxisValue(mState.Gamepad.sThumbLY));
 			UpdateAxis(3,-XInputToAxisValue(mState.Gamepad.sThumbRY));
 			UpdateAxis(4, XInputToAxisValue(mState.Gamepad.sThumbRX));
-			
+
 			UpdateTrigger(XInputToTriggerValue(mState.Gamepad.bLeftTrigger), XInputToTriggerValue(mState.Gamepad.bRightTrigger));
 		}
 		else
@@ -324,7 +324,7 @@ namespace hpl {
 		mlstHatStateChanges.pop_front();
 		return change;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cVector2l cGamepadXInput::GetBallAbsPos(eGamepadBall aBall)
@@ -399,20 +399,20 @@ namespace hpl {
 
 		return 0;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	/////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 	/////////////////////////////////////////////////////////////////////////
-	
+
 	//----------------------------------------------------------------------
 
 	void cGamepadXInput::UpdateAxis(int alAxis, float afVal)
 	{
 		if(cMath::Abs(afVal) < mfDeadZoneRadius)
 			afVal = 0.0f;
-				
+
 		if(afVal!=mvAxisArray[alAxis])
 		{
 			cGamepadInputData inputUpdate = cGamepadInputData(mlIndex, eGamepadInputType_Axis, static_cast<eGamepadAxis>(alAxis), afVal);
@@ -429,7 +429,7 @@ namespace hpl {
 	void cGamepadXInput::UpdateTrigger(float afLVal, float afRVal)
 	{
 		// Todo: Remove hack that uses axis 2 for both left and right trigger
-		
+
 		if(afLVal < mfDeadZoneRadius)
 			afLVal = 0.0f;
 		if(afRVal < mfDeadZoneRadius)
@@ -443,7 +443,7 @@ namespace hpl {
 
 			mlstAxisChanges.push_back(inputUpdate);
 			mlstInputUpdates.push_back(inputUpdate);
-			
+
 			mvAxisArray[2] =-mfRightTrigger;
 		}
 
@@ -461,7 +461,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	eGamepadButton cGamepadXInput::XInputToButton(size_t alButton)
 	{
 		/////////////

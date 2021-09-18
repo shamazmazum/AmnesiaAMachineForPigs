@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -34,7 +34,7 @@ namespace hpl {
 	class iEntity3D;
 
 	//------------------------------------------------
-	
+
 	class iCharacterBodyCallback
 	{
 	public:
@@ -50,7 +50,7 @@ namespace hpl {
 		eCharDir_Right=1,
 		eCharDir_LastEnum=2
 	};
-	
+
 	//------------------------------------------------
 
 	class cCharacterBodyCollideGravity : public iPhysicsWorldCollisionCallback
@@ -59,7 +59,7 @@ namespace hpl {
 		cCharacterBodyCollideGravity(iCharacterBody *apCharBody);
 
 		void OnCollision(iPhysicsBody *apBody, cCollideData *apCollideData);
-		
+
 		iCharacterBody *mpCharBody;
 	};
 
@@ -74,7 +74,7 @@ namespace hpl {
 
 		iCharacterBody *mpCharBody;
 	};
-	
+
 	//------------------------------------------------
 
 	class cCharacterBodyRay : public iPhysicsRayCallback
@@ -92,7 +92,7 @@ namespace hpl {
 	};
 
 	//------------------------------------------------
-	
+
 
 	class iCharacterBody
 	{
@@ -139,16 +139,16 @@ namespace hpl {
 
 		float GetMass();
 		void SetMass(float afMass);
-		
+
 		cVector3f GetSize();
-		
+
 		iCollideShape *GetCurrentShape();
 		iCollideShape *GetShape(int alIdx);
 		iPhysicsBody* GetCurrentBody();
 
 		void SetCollideCharacter(bool abX);
 		bool GetCollideCharacter(){ return mbCollideCharacter;}
-		
+
 		void SetCollideStaticVolatile(bool abX) { mbCollideStaticVolatile = abX;}
 		bool GetCollideStaticVolatile() { return mbCollideStaticVolatile;}
 
@@ -169,8 +169,8 @@ namespace hpl {
 
 		void SetMoveOppositeDirAccMul(eCharDir aDir, float afX){mfMoveOppositeDirAccMul[aDir] = afX;}
 		float GetMoveOppositeDirAccMul(eCharDir aDir){ return mfMoveOppositeDirAccMul[aDir];}
-		
-		
+
+
 		void SetDeaccelerateMoveSpeedInAir(bool abX){ mbDeaccelerateMoveSpeedInAir = abX;}
 		bool GetDeaccelerateMoveSpeedInAir(){ return mbDeaccelerateMoveSpeedInAir;}
 
@@ -291,7 +291,7 @@ namespace hpl {
 		iPhysicsBody* GetGravityAttachedBody(){ return mpGravityAttachedBody;}
 
 		iPhysicsMaterial * GetGravityCollideMaterial(){ return mpGravityCollideMaterial;}
-		
+
 		///////////////////////////////////////
 		// Connection Properties
 
@@ -311,7 +311,7 @@ namespace hpl {
 		void SetMaxConnectionTorque(float afX){ mfMaxConnectionTorque = afX; }
 		float GetMaxConnectionForce(){ return mfMaxConnectionForce; }
 		float GetMaxConnectionTorque(){ return mfMaxConnectionTorque; }
-		
+
 		///////////////////////////////////////
 		// User Properties
 
@@ -324,13 +324,13 @@ namespace hpl {
 
 		void SetEntity(iEntity3D *apEntity);
 		iEntity3D* GetEntity();
-		
+
 		void SetEntityOffset(const cMatrixf &a_mtxOffset);
 		const cMatrixf & GetEntityOffset();
-		
+
 		void SetEntityPostOffset(const cMatrixf &a_mtxOffset);
 		const cMatrixf & GetEntityPostOffset();
-		
+
 		void SetEntitySmoothPosNum(int alNum){ mlEntitySmoothPosNum = alNum;}
 		int GetEntitySmoothPosNum(){ return mlEntitySmoothPosNum;}
 
@@ -342,13 +342,13 @@ namespace hpl {
 
 		void SetUserData(void* apUserData){ mpUserData = apUserData;}
 		void* GetUserData(){ return mpUserData;}
-		
+
 		void SetCallback(iCharacterBodyCallback *apCallback){ mpCallback = apCallback;}
-		
+
 		///////////////////////////////////////
 		//Debug:
 		const cVector3f& GetLastMovePosAdd(){ return mvLastMovePosAdd;}
-		
+
 	protected:
 		void UpdateMoveMatrix();
 
@@ -356,13 +356,13 @@ namespace hpl {
 		void PostUpdateConnection(float afTimeStep);
 		void UpdateBodyConnection(float afTimeStep);
 		void UpdateCharacterConnection(float afTimeStep);
-		
+
 		cVector3f UpdatePostionFromCharSpeed(float afTimeStep);
 
 		void AlignPosAddAccordingToGroundNormal(cVector3f &avPosAdd);
 
 		void CheckMoveCollision(const cVector3f &avPosAdd, float afTimeStep);
-		
+
 		void CheckStepClimbing(const cVector3f &avPosAdd, float afTimeStep);
 
 		void UpdateStepClimbing(float afTimeStep);
@@ -410,7 +410,7 @@ namespace hpl {
 
 		cVector3f mvPosition;
 		cVector3f mvLastPosition;
-		
+
 		float mfMaxPosMoveSpeed[2];
 		float mfMaxNegMoveSpeed[2];
 
@@ -449,7 +449,7 @@ namespace hpl {
 		cVector3f mvForce;
 		cVector3f mvVelocity;
 		cVector3f mvLastGroundNormal;
-		
+
 		cVector3f mvSize;
 
 		cMatrixf m_mtxMove;
@@ -482,7 +482,7 @@ namespace hpl {
 		float mfMoveDelayCount;
 
 		void *mpUserData;
-	
+
 		float mfMaxConnectionTorque;
 		float mfMaxConnectionForce;
 		iPhysicsBody *mpConnectedBody;
@@ -498,12 +498,12 @@ namespace hpl {
 		bool mbConnectionAlignRotation;
 		bool mbConnectionCollision;
 		bool mbConnectedBodyIsActive;
-		
+
 		bool mbConnectionAffectChar;
 		bool mbConnectionDependOnCharRotation;
 		bool mbConnectionAlignCharacterRotation;
 		cVector3f mvConnectionCharLocalForward;
-				
+
 		cPidControllerVec3 mBodyConnectionPointPid;
 		cPidControllerVec3 mBodyCenterPid;
 		cPidControllerf mBodyOneAxisAngularPid;
@@ -519,7 +519,7 @@ namespace hpl {
 		int mlGravityAttachmentContacts;
 		cVector3f mvGravityAttachmentBodyVelocity;
 		cVector3f mvGravityAttachmentVelocity;
-		
+
 		float mfMaxStepHeight;
 		float mfMaxStepHeightInAir;
 		float mfStepClimbSpeed;

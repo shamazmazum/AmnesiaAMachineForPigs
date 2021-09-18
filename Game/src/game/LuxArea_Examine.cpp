@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -108,7 +108,7 @@ cLuxArea_Examine::~cLuxArea_Examine()
 
 void cLuxArea_Examine::SetupAfterLoad(cWorld *apWorld)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -130,7 +130,7 @@ bool cLuxArea_Examine::CanInteract(iPhysicsBody *apBody)
 bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 {
 	float fInfection = gpBase->mpPlayer->GetInfection();
-	
+
 	////////////////////////////////
 	// Show text
 	if(msDescCat != "")
@@ -167,7 +167,7 @@ bool cLuxArea_Examine::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 
 eLuxFocusCrosshair cLuxArea_Examine::GetFocusCrosshair(iPhysicsBody *apBody, const cVector3f &avPos)
 {
-	return eLuxFocusCrosshair_Grab;	
+	return eLuxFocusCrosshair_Grab;
 }
 
 //-----------------------------------------------------------------------

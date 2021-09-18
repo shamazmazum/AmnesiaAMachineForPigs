@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -74,7 +74,7 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
 {
 	cLuxMap *pMap = gpBase->mpMapHandler->GetCurrentMap();
 	if(pMap==NULL) return;
-	
+
 	///////////////////////////
 	//Check if the sound is something to worry bout
 	tString sTypeName = apSoundEntity->GetData()->GetName();
@@ -99,7 +99,7 @@ void cMapHandlerSoundCallback::OnStart(cSoundEntity *apSoundEntity)
 	cVector3f vPos = apSoundEntity->GetWorldPosition();
 
 	pMap->BroadcastEnemySoundMessage(vPos, fVolume, fMinDist, fMaxDist, sTypeName);
-}	
+}
 
 //-----------------------------------------------------------------------
 
@@ -124,7 +124,7 @@ void cLuxDebugRenderCallback::OnPostSolidDraw(cRendererCallbackFunctions* apFunc
 		apFunctions->SetBlendMode(eMaterialBlendMode_Alpha);
 		apFunctions->SetTextureRange(NULL,0);
 		apFunctions->SetProgram(NULL);
-		
+
 		apFunctions->SetDepthTest(true);
 		apFunctions->SetDepthWrite(false);
 
@@ -166,14 +166,14 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
 	cGraphics *pGraphics = gpBase->mpEngine->GetGraphics();
 	cPostEffectComposite *pPostEffectComp = pGraphics->CreatePostEffectComposite();
 	mpViewport->SetPostEffectComposite(pPostEffectComp);
-	
+
 	//Bloom
 	cPostEffectParams_Bloom bloomParams;
 	bloomParams.mfBlurSize = 1.0f;
 	bloomParams.mvRgbToIntensity = bloomParams.mvRgbToIntensity * 1.0f;
 	mpPostEffect_Bloom = pGraphics->CreatePostEffect(&bloomParams);
 	pPostEffectComp->AddPostEffect(mpPostEffect_Bloom, 100);
-	
+
 	//Image trail
 	cPostEffectParams_ImageTrail imageTrailParams;
 	mpPostEffect_ImageTrail = pGraphics->CreatePostEffect(&imageTrailParams);
@@ -204,12 +204,12 @@ cLuxMapHandler::cLuxMapHandler() : iLuxUpdateable("LuxMapHandler")
 	mpPostEffect_ColorGrading = pGraphics->CreatePostEffect(&colorGradingParams);
 	pPostEffectComp->AddPostEffect(mpPostEffect_ColorGrading, 3);
 	mpPostEffect_ColorGrading->SetActive(true);
-	
+
 	//////////////////////////
 	//Saving
 	mpSavedGame = hplNew( cLuxSavedGameMapCollection, () );
 
-	
+
 	//////////////////////////
 	//Callbacks
 	mpSoundCallback = hplNew( cMapHandlerSoundCallback, () );
@@ -248,13 +248,13 @@ cLuxMapHandler::~cLuxMapHandler()
 void cLuxMapHandler::OnStart()
 {
 	//////////////////////
-	//Set up viewport 	
+	//Set up viewport 
 	mpViewport->SetCamera(gpBase->mpPlayer->GetCamera());
 
 	mpViewport->AddGuiSet(gpBase->mpGameDebugSet);
 	mpViewport->AddGuiSet(gpBase->mpGameHudSet);
 
-    
+
 	mpViewport->AddRendererCallback(&mRenderCallback);
 	UpdateViewportRenderProperties();
 }
@@ -314,14 +314,14 @@ void cLuxMapHandler::OnQuit()
     gpBase->mpEngine->GetUpdater()->SetContainer("MainMenu");
 
     gpBase->mpLoadScreenHandler->DrawMenuScreen();
-    
+
     //Destroy map
     cLuxMapHandler *mpMapHandler = gpBase->mpMapHandler;
     if(mpMapHandler->GetCurrentMap())
     {
         //Save
         gpBase->mpSaveHandler->AutoSave();
-        
+
         mpMapHandler->DestroyMap(mpMapHandler->GetCurrentMap(),false);
 
         //Reset game
@@ -349,7 +349,7 @@ void cLuxMapHandler::SaveUserConfig()
 void cLuxMapHandler::CreateDataCache()
 {
 	if(mpDataCache) DestroyDataCache();
-	
+
 	mpDataCache = hplNew(cLuxModelCache, () );
 	mpDataCache->Create();
 }
@@ -366,7 +366,7 @@ void cLuxMapHandler::DestroyDataCache()
 void cLuxMapHandler::SetUpdateActive(bool abX)
 {
 	mbUpdateActive = abX;
-	
+
 	if(mpCurrentMap) mpCurrentMap->GetWorld()->SetActive(mbUpdateActive);
 }
 
@@ -424,7 +424,7 @@ cLuxMap* cLuxMapHandler::LoadMap(const tString& asFileName, bool abLoadEntities)
     gpBase->mpEffectHandler->GetColorGrading()->InitializeLUT(mapname + "_colorgrading.png");
 
     cLuxMap *pMap = hplNew( cLuxMap, ( mapname ) );
-	
+
 	pMap->LoadFromFile(msMapFolder+asFileName, abLoadEntities);
     mlstMaps.push_back(pMap);
 
@@ -452,7 +452,7 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
     if(mpCurrentMap)
 	{
 		mpCurrentMap->OnLeave(abRunScript);
-		
+
 		//Leave callback for modules
 		gpBase->RunModuleMessage(eLuxUpdateableMessage_DestroyWorldEntities, mpCurrentMap);
 		gpBase->RunModuleMessage(eLuxUpdateableMessage_OnMapLeave, mpCurrentMap);
@@ -473,7 +473,7 @@ void cLuxMapHandler::SetCurrentMap(cLuxMap* apMap, bool abRunScript, bool abFirs
 
 		//Create an automatic checkpoint
 		mpCurrentMap->SetCheckPoint("_auto", asPlayerPos, "", false);
-		
+
 		//Map enter callback
 		mpCurrentMap->OnEnter(abRunScript, abFirstTime);
 
@@ -636,7 +636,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 		//////////////////////
 		// Fadeout sounds and disable stop (meaning they will fade even when sound entities are destroyed)
 		gpBase->mpEngine->GetSound()->GetSoundHandler()->FadeOutAll(eSoundEntryType_World, 0.5f, true);
-		
+
 		//////////////////////
 		// Load new map
 		cLuxMap *pLastMap = mpCurrentMap;
@@ -673,8 +673,8 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 
 		//////////////////////
 		// Set new and destroy old
-		bool bFirstTime = mpSavedGame->MapExists(sNewMapName)==false;	
-		
+		bool bFirstTime = mpSavedGame->MapExists(sNewMapName)==false;
+
 		SetCurrentMap(pMap, false, bFirstTime, mMapChangeData.msStartPos);
 		DestroyMap(pLastMap, false);
 
@@ -693,7 +693,7 @@ void cLuxMapHandler::CheckMapChange(float afTimeStep)
 		//////////////////////////////////
 		//Check if any more load time needed
 		fTimeTaken = (float)(cPlatform::GetApplicationTime() - lLoadStartTime)/1000.0f;
-		
+
 		ProgLog(eLuxProgressLogLevel_High, "Entering map "+ mpCurrentMap->GetName());
 	}
 	///////////////////////

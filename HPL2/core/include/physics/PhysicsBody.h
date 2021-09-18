@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -55,7 +55,7 @@ namespace hpl {
 
 	struct cPhysicsBody_Buoyancy
 	{
-		cPhysicsBody_Buoyancy() : mbActive(false), mfDensity(1), 
+		cPhysicsBody_Buoyancy() : mbActive(false), mfDensity(1),
 								mfLinearViscosity(1), mfAngularViscosity(1){}
 
 		bool mbActive;
@@ -154,7 +154,7 @@ namespace hpl {
 		 */
 		void SetUseSurfaceEffects(bool abX){ mbUseSurfaceEffects = abX;}
 		bool GetUseSurfaceEffects(){ return mbUseSurfaceEffects;}
-		
+
 
 		void SetScrapeSoundEntity(cSoundEntity *apEntity);
 		cSoundEntity* GetScrapeSoundEntity(){ return mpScrapeSoundEntity;}
@@ -203,7 +203,7 @@ namespace hpl {
 
 		void SetCollideFlags(tFlag alX) { mlCollideFlags = alX;}
 		inline tFlag GetCollideFlags() const { return mlCollideFlags;}
-		
+
 		void SetIsRagDoll(bool abX){ mbIsRagDoll = abX;}
 		bool IsRagDoll(){ return mbIsRagDoll;}
 
@@ -240,7 +240,7 @@ namespace hpl {
 		bool GetGravityAttachmentRotation(){ return mbGravityAttachmentRotation;}
 		bool GetGravityAttachmentVelocity(){ return mbGravityAttachmentVelocity;}
 		eVelocityAxes GetGravityAttachmentVelocityAxes(){ return mGravityAttachmentVelocityAxes;}
-		
+
 		void AddConnectedCharacter(iCharacterBody *apCharBody);
 		void RemoveConnectedCharacter(iCharacterBody *apCharBody);
 
@@ -249,7 +249,7 @@ namespace hpl {
 
 		void AddAttachedVerletContainer(iVerletParticleContainer *apContainer);
 		void RemoveAttachedVerletContainer(iVerletParticleContainer *apContainer);
-		
+
 		iHapticShape *GetHapticShape(){ return mpHapticShape;}
 		void SetHapticShape(iHapticShape *apShape){ mpHapticShape = apShape;}
 
@@ -265,15 +265,15 @@ namespace hpl {
         iPhysicsWorld *mpWorld;
 		iCollideShape *mpShape;
 		iPhysicsMaterial *mpMaterial;
-		
+
 		iCharacterBody *mpCharacterBody;
 
 		std::vector<iPhysicsJoint*> mvJoints;
 
 		bool mbDestroying;
-        
+
 		std::list<iCharacterBody*> mlstConnectedCharBodies;
-		        		
+		        
 		iPhysicsBody *mpScrapeBody;
 		cSoundEntity *mpScrapeSoundEntity;
 		int mlScrapeSoundEntityID;

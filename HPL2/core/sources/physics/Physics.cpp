@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -201,7 +201,7 @@ namespace hpl {
 			pData->SetMaxRollFreq(cString::ToFloat(pChildElem->Attribute("MaxRollFreq"),2));
 			pData->SetMaxRollVolume(cString::ToFloat(pChildElem->Attribute("MaxRollVolume"),2));
 			pData->SetRollSoundName(cString::ToString(pChildElem->Attribute("RollSoundName"),""));
-			
+
 			//Axes
 			tString sAxisVec = cString::ToString(pChildElem->Attribute("RollAxis"),"");
 			tStringVec vAxes;
@@ -249,7 +249,7 @@ namespace hpl {
 			if(cHaptic::GetIsUsed() && apHaptic)
 			{
 				eHapticSurfaceType surfaceType = GetHapticSurface(pChildElem->Attribute("HapticType"));
-                
+
 				float fDeadHeight= cString::ToFloat(pChildElem->Attribute("HapticDeadHeight"), 0.004f);
 				float fStickyStiffness= cString::ToFloat(pChildElem->Attribute("HapticStickyStiffness"), 0.6f);
 				float fDeviation= cString::ToFloat(pChildElem->Attribute("HapticDeviation"), 0.1f);
@@ -258,7 +258,7 @@ namespace hpl {
 				float fStiffness= cString::ToFloat(pChildElem->Attribute("HapticStiffness"), 0.9f);
 				float fDynamicFriction= cString::ToFloat(pChildElem->Attribute("HapticDynamicFriction"), 0.2f);
 				float fStartingFriction= cString::ToFloat(pChildElem->Attribute("HapticStartingFriction"), 0.3f);
-				float fTangentStiffness= cString::ToFloat(pChildElem->Attribute("HapticTangentStiffness"), 0.7f); 
+				float fTangentStiffness= cString::ToFloat(pChildElem->Attribute("HapticTangentStiffness"), 0.7f);
 				float fStoppingFriction= cString::ToFloat(pChildElem->Attribute("HapticStoppingFriction"), 0.1f);
 
 				iHapticSurface *pSurface = NULL;
@@ -308,13 +308,13 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	eHapticSurfaceType cPhysics::GetHapticSurface(const char *apName)
 	{
 		if(apName == NULL) return eHapticSurfaceType_Simple;
-		
+
 		tString sMode = cString::ToLowerCase(apName);
 
 		if(sMode == "simple")		return eHapticSurfaceType_Simple;
@@ -325,7 +325,7 @@ namespace hpl {
 
         return eHapticSurfaceType_Simple;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	ePhysicsMaterialCombMode cPhysics::GetCombMode(const char *apName)

@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -42,14 +42,14 @@ typedef tOptionDataVec::iterator		 tOptionDataVecIt;
 
 class cLuxMainMenu_Options : public iLuxMainMenuWindow
 {
-public:	
+public:
 	cLuxMainMenu_Options(cGuiSet *apGuiSet, cGuiSkin *apGuiSkin);
 	~cLuxMainMenu_Options();
-	
+
 	void CreateGui();
 
 	void ExitPressed();
-	
+
 private:
 	void OnSetActive(bool abX);
 
@@ -87,12 +87,12 @@ private:
 	kGuiCallbackDeclarationEnd(ChangeLanguage);
 
 	void PopulateLanguageList();
-	
+
 	void PopulateSoundDevices();
 
 	////////////////////////
 	// Slider value helpers
-	void SetUpSlider(cWidgetSlider* apSlider, float afMinValue, float afMaxValue, float afStepValue, 
+	void SetUpSlider(cWidgetSlider* apSlider, float afMinValue, float afMaxValue, float afStepValue,
 						tGuiCallbackFunc apCallback=NULL, cWidgetLabel** apValueDisplay=NULL);
 	void SetSliderValue(cWidgetSlider* apSlider, float afValue, bool abGenCallback, float afMinValue, float afMaxValue);
 	float GetSliderValue(cWidgetSlider* apSlider, float afMinValue, float afMaxValue);
@@ -117,7 +117,7 @@ private:
 	////////////////////////
 	// Properties
 	cVector2f mvWindowSize;
-	
+
 	///////////////////////
 	// Data and variables
 	iWidget *mpShoulderHint[2];
@@ -142,7 +142,7 @@ private:
 	//cWidgetCheckBox *mpChBShowDeathHints;
 	cWidgetCheckBox *mpChBShowCrosshair;
 	cWidgetComboBox *mpCBFocusIconStyle;
-	
+
 	// Graphics;
 	cWidgetDummy	*mpDBasicGfxOptions;
 	cWidgetComboBox *mpCBResolution;
@@ -166,7 +166,7 @@ private:
 	cWidgetComboBox *mpCBAnisotropy;
 	cWidgetCheckBox *mpChBParallax;
 	cWidgetComboBox *mpCBParallaxQuality;
-	
+
 	cWidgetCheckBox *mpChEdgeSmooth;
 
 	cWidgetCheckBox	*mpChBBloom;
@@ -214,7 +214,7 @@ private:
 	float mfMouseSensitivityMin;
 	float mfMouseSensitivityMax;
 	float mfMouseSensitivityStep;
-	
+
 #ifdef USE_GAMEPAD
 	float mfGamepadLookSensitivityMin;
 	float mfGamepadLookSensitivityMax;
@@ -256,9 +256,9 @@ private:
 
 	bool Option_OnMouseOver(iWidget* apWidget, const cGuiMessageData& aData);
 	kGuiCallbackDeclarationEnd(Option_OnMouseOver);
-	
+
 	bool Option_OnChangeValue(iWidget* apWidget, const cGuiMessageData& aData);
-	kGuiCallbackDeclarationEnd(Option_OnChangeValue);	
+	kGuiCallbackDeclarationEnd(Option_OnChangeValue);
 
 	bool GammaSlider_OnMove(iWidget* apWidget, const cGuiMessageData& aData);
 	kGuiCallbackDeclarationEnd(GammaSlider_OnMove);

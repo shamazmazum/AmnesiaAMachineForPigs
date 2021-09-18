@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -91,7 +91,7 @@ namespace hpl {
 
 		void SetForcePlayAsGUISound(bool abX){ mbForcePlayAsGUISound = abX;}
 		bool GetForcePlayAsGUISound(){ return mbForcePlayAsGUISound;}
-		
+
 		/**
 		 * Gets the sound entry. return can be NULL whether validity is checked or not, best is to ALWAYS check validity, unless the entry has been validated in same code block.
 		 */
@@ -131,7 +131,7 @@ namespace hpl {
 
 		float mfMinDistance;
 		float mfMaxDistance;
-		
+
 		bool mbStopped;
 		bool mbRemoveWhenOver;
 
@@ -146,7 +146,7 @@ namespace hpl {
 		bool mbFadingOut;
 
 		bool mbLog;
-	
+
 		float mfVolume;
 
 		bool mbPrioRemove;

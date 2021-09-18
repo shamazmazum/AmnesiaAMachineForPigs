@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -37,10 +37,10 @@ enum eLampState
 
 class cLuxHandObject_LightSource : public iLuxHandObject
 {
-public:	
+public:
 	cLuxHandObject_LightSource(const tString& asName, cLuxPlayerHands *apHands);
 	~cLuxHandObject_LightSource();
-	
+
 	void LoadImplementedVars(cXmlElement *apVarsElem);
 
 	void ImplementedCreateEntity(cLuxMap *apMap);
@@ -49,7 +49,7 @@ public:
 	void ImplementedReset();
 
 	void Update(float afTimeStep);
-	
+
 	bool DoAction(eLuxPlayerAction aAction, bool abPressed);
 	bool AnimationIsOver();
 
@@ -58,15 +58,15 @@ public:
 
 	void SetFlickeringSpeed(float afX){ mfFlickeringSpeed = afX;}
 	float GetFlickeringSpeed(){ return mfFlickeringSpeed;}
-    
+
 private:
 	void UpdateSwayPhysics(float afTimeStep);
 	float UpdateFlickering(float afTimeStep);
-    
+
     bool mbFlickering;
 	float mfFlickeringSpeed;
 	int mlFlickeringState;
-	
+
 	float mfFlickerAmount;
 	float mfFlickerTime;
 	float mfFlickerPauseTime;
@@ -77,7 +77,7 @@ private:
 	float mfStrobeDroneTime;
 	cSoundEntry *mpDroneSound;
 	int mlDroneSoundId;
-	
+
 	bool mbHasSwayPhysics;
 	float mfMaxSwayVel;
 	cVector2f mvSwayAngleLimits;
@@ -91,7 +91,7 @@ private:
 
     float mfSwayAngle;
 	float mfSwayVel;
-	
+
 	std::vector<cColor> mvLightFadeOutColor;
 	std::vector<cColor> mvDefaultLightColors;
 	std::vector<bool> mvDefaultLightFlicker;

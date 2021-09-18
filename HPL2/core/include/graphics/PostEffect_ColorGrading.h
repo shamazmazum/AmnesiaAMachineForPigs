@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -25,7 +25,7 @@
 namespace hpl {
 
 	//------------------------------------------
-	
+
     typedef std::map<tString, iTexture*> tTextureMap;
 
     typedef std::map<tString, iTexture*>::iterator tTextureMapIt;
@@ -33,15 +33,15 @@ namespace hpl {
 	class cPostEffectParams_ColorGrading : public iPostEffectParams
 	{
 	public:
-		cPostEffectParams_ColorGrading() : iPostEffectParams("ColorGrading"),  
+		cPostEffectParams_ColorGrading() : iPostEffectParams("ColorGrading"),
 			msTextureFile1("colorgrading_base.png"),
 			msTextureFile2(""),
             mfCrossFadeAlpha( 0.0f ),
             mbIsReinitialisation( false )
 		{}
-		
+
 		kPostEffectParamsClassInit(cPostEffectParams_ColorGrading)
-		
+
 		tString msTextureFile1;
 		tString msTextureFile2;
 		float mfCrossFadeAlpha;
@@ -49,7 +49,7 @@ namespace hpl {
 	};
 
 	//------------------------------------------
-	
+
 	class cPostEffectType_ColorGrading : public iPostEffectType
 	{
 	friend class cPostEffect_ColorGrading;
@@ -58,11 +58,11 @@ namespace hpl {
 		virtual ~cPostEffectType_ColorGrading();
 
 		iPostEffect *CreatePostEffect(iPostEffectParams *apParams);
-	
+
 	private:
 		iGpuProgram *mpProgram[2]; //0=no fade, 1=fade
 	};
-	
+
 	//------------------------------------------
 
 	class cPostEffect_ColorGrading : public iPostEffect
@@ -76,11 +76,11 @@ namespace hpl {
 	private:
 		void OnSetParams();
 		iPostEffectParams *GetTypeSpecificParams() { return &mParams; }
-		
+
 		iTexture* RenderEffect(iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer);
 
         iTexture * LoadLUT( tString asLUTName );
-		
+
 		cPostEffectType_ColorGrading* mpSpecificType;
 
 		cPostEffectParams_ColorGrading mParams;

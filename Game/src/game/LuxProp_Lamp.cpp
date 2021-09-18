@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -130,7 +130,7 @@ cLuxLampLightConnection::~cLuxLampLightConnection()
 void cLuxLampLightConnection::Update(float afTimeStep)
 {
 	cColor finalColor = mpLight->GetDefaultDiffuseColor();
-	
+
 	tLuxLampLightConnection_LampListIt it = mlstLamps.begin();
 	for(; it != mlstLamps.end(); ++it)
 	{
@@ -220,7 +220,7 @@ bool cLuxProp_Lamp::CanInteract(iPhysicsBody *apBody)
 {
 	if(mbCanBeLitByPlayer && ( mbLit==false || mbCanBeTurnedOff ) ) return true;
 	if(msInteractCallback != "") return true;
-	
+
 	return false;
 }
 
@@ -256,12 +256,12 @@ bool cLuxProp_Lamp::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 			////////////////////
 			// Negate tinderboxes
 			gpBase->mpPlayer->AddTinderboxes(-1);
-		
+
 			gpBase->mpHelpFuncs->PlayGuiSoundData("ui_use_tinderbox", eSoundEntryType_Gui);
 		}
 
 		RunCallbackFunc("OnIgnite");
-		
+
 		SetLit(true, true);
 	}
 
@@ -279,7 +279,7 @@ void cLuxProp_Lamp::OnResetProperties()
 
 void cLuxProp_Lamp::OnSetupAfterLoad(cWorld *apWorld)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -288,7 +288,7 @@ void cLuxProp_Lamp::SynchronizeFlickering()
 {
     if ( mvLights.size() > 0 )
     {
-        for(size_t i=0; i<mvBillboards.size(); ++i) 
+        for(size_t i=0; i<mvBillboards.size(); ++i)
 	    {
             mvBillboards[i]->SetVisible( mvLights[0]->GetFlickerOn() );
         }
@@ -328,7 +328,7 @@ void cLuxProp_Lamp::UpdatePropSpecific(float afTimeStep)
 
 		bool flickerOn = mvLights[0]->GetFlickerOn();
 
-		for(size_t i=0; i<mvParticleSystems.size(); ++i) 
+		for(size_t i=0; i<mvParticleSystems.size(); ++i)
 		{
 			cParticleSystem *pPS = mvParticleSystems[i];
 			if(pPS && mpWorld->ParticleSystemExists(pPS)) pPS->SetFlickerMultiplier( flickerOn ? 1.0f : 0.25f );
@@ -366,12 +366,12 @@ void cLuxProp_Lamp::FadeTo( float afR, float afG, float afB, float afA, float af
 		iLight *pLight = mvLights[i];
 
 		cColor newColor(
-			afR >=0 ? afR : pLight->GetDiffuseColor().r,	
+			afR >=0 ? afR : pLight->GetDiffuseColor().r,
 			afG >=0 ? afG : pLight->GetDiffuseColor().g,
 			afB >=0 ? afB : pLight->GetDiffuseColor().b,
 			afA >=0 ? afA : pLight->GetDiffuseColor().a
 			);
-	
+
 		float fNewRadius = afRadius >=0 ? afRadius : pLight->GetRadius();
 
 		pLight->SetVisible(true);
@@ -407,7 +407,7 @@ eLuxFocusCrosshair cLuxProp_Lamp::GetFocusCrosshair(iPhysicsBody *apBody, const 
 
 tWString cLuxProp_Lamp::GetFocusText()
 {
-	if( mbNeedsTinderbox && CanInteract(GetMainBody()) && mbLit==false ) 
+	if( mbNeedsTinderbox && CanInteract(GetMainBody()) && mbLit==false )
 	{
 		return _W("x ") + cString::ToStringW(gpBase->mpPlayer->GetTinderboxes());
 	}
@@ -427,7 +427,7 @@ void cLuxProp_Lamp::SetFlickerActive(bool abFlickerActive)
 
 		if ( !abFlickerActive )
 		{
-			for(size_t i=0; i<mvBillboards.size(); ++i) 
+			for(size_t i=0; i<mvBillboards.size(); ++i)
 			{
 				mvBillboards[i]->SetVisible( true );
 			}
@@ -457,7 +457,7 @@ void cLuxProp_Lamp::SetFlickerActive(bool abFlickerActive)
 	        }
         }
 
-		for(size_t i=0; i<mvBillboards.size(); ++i) 
+		for(size_t i=0; i<mvBillboards.size(); ++i)
 	    {
             mvBillboards[i]->SetVisible( mvLights[0]->GetFlickerOn() );
         }
@@ -483,7 +483,7 @@ void cLuxProp_Lamp::SetLit(bool abX, bool abUseEffects)
 	if(mbLit == abX) return;
 
     mbLit =  abX;
-	
+
 	SetEffectsActive(mbLit, abUseEffects);
 }
 
@@ -519,8 +519,8 @@ void cLuxProp_Lamp::SetupLampLightConnection()
 				break;
 			}
 		}
-		
-			
+
+
 		if(pConnectionLight)
 		{
 			mpMap->AddLampLightConnection(this, pConnectionLight, mfConnectionLightAmount, mbConnectionLightUseOnColor, mbConnectionLightUseSpec);
@@ -545,8 +545,8 @@ void cLuxProp_Lamp::SetupLampLightConnection()
 				break;
 			}
 		}
-		
-			
+
+
 		if(pConnectionLight2)
 		{
 			mpMap->AddLampLightConnection(this, pConnectionLight2, mfConnectionLight2Amount, mbConnectionLight2UseOnColor, mbConnectionLight2UseSpec);
@@ -639,7 +639,7 @@ void cLuxProp_Lamp::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 	//Init
 	super_class::LoadFromSaveData(apSaveData);
 	cLuxProp_Lamp_SaveData *pData = static_cast<cLuxProp_Lamp_SaveData*>(apSaveData);
-	
+
 	//////////////////
 	//Set variables
 	kCopyFromVar(pData,	mbLit);

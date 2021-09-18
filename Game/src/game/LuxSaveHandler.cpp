@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -219,9 +219,9 @@ void cLuxSaveHandler::SaveGameToFile(const tWString& asFile, bool abSaveSnapshot
 	{
 		tWString sFileExt = cString::GetFileExtW(asFile);
 		tWString sFileName = cString::SubW(asFile,0, asFile.size()-(sFileExt.size()+1)) +  _W(".jpg");
-		
+
 		cEngine *pEngine = gpBase->mpEngine;
-		
+
 		cBitmap *pBmp = pEngine->GetGraphics()->GetLowLevel()->CopyFrameBufferToBitmap();
 		pEngine->GetResources()->GetBitmapLoaderHandler()->SaveBitmap(pBmp,sFileName,0);
 		hplDelete(pBmp);
@@ -242,7 +242,7 @@ void cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
 	//cSerializeClass::SetLog(true);
 	cSerializeClass::LoadFromFile(pSaveGame,asFile);
 	//cSerializeClass::SetLog(false);
-	
+
 	LoadSaveGameData(pSaveGame);
 
 	hplDelete(pSaveGame);
@@ -255,7 +255,7 @@ void cLuxSaveHandler::LoadGameFromFile(const tWString& asFile)
 bool cLuxSaveHandler::AutoSave()
 {
 	DeleteOldestSaveFiles(gpBase->msProfileSavePath, mlMaxAutoSaves);
-	
+
 	SaveGameToFile(gpBase->msProfileSavePath+GetSaveName(_W("AutoSave") ));
 
 	return true;
@@ -269,7 +269,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 	// Wait until any pending save is done.
 	if(mSaveHandlerThreadClass.IsRunning())
 		mSaveHandlerThreadClass.ProcessPendingSaves();
-	
+
 	//Get newest file (if any!)
 	tWString sFile = GetNewestSaveFile(gpBase->msProfileSavePath);
 	if(sFile == _W(""))
@@ -277,7 +277,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 		Error("Could not find a save file in '%s'!\n", cString::To8Char(gpBase->msProfileSavePath).c_str());
 		return false;
 	}
-	
+
 	//Reset the progress logger.
 	if(abResetProgressLogger)
 	{
@@ -286,7 +286,7 @@ bool cLuxSaveHandler::AutoLoad(bool abResetProgressLogger)
 
 
 	LoadGameFromFile(gpBase->msProfileSavePath+sFile);
-		
+
 	return true;
 }
 
@@ -304,7 +304,7 @@ bool cLuxSaveHandler::SaveFileExists()
 cLuxSaveGame_SaveData *cLuxSaveHandler::CreateSaveGameData()
 {
 	cLuxSaveGame_SaveData *pSave = hplNew(cLuxSaveGame_SaveData, ());
-	
+
 	pSave->msMapFolder = gpBase->mpMapHandler->GetMapFolder();
 
 	pSave->mInventory.FromInventory(gpBase->mpInventory);
@@ -318,7 +318,7 @@ cLuxSaveGame_SaveData *cLuxSaveHandler::CreateSaveGameData()
 //	pSave->mInsanityHandler.FromInsanityHandler(gpBase->mpInsanityHandler);
 	pSave->mLoadScreenHandler.FromLoadScreenHandler(gpBase->mpLoadScreenHandler);
 	pSave->mSoundManager.FromSoundManager(gpBase->mpEngine->GetResources()->GetSoundManager());
-	
+
 	return pSave;
 }
 
@@ -377,16 +377,16 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 
 	gpBase->mpInventory->LoadScript();
 	gpBase->mpGlobalDataHandler->LoadScript();
-	
+
 	///////////////////
 	// Load new map
-	if(	pCurrentMap==NULL || 
-		msOldMapFolder != gpBase->mpMapHandler->GetMapFolder() || 
+	if(	pCurrentMap==NULL ||
+		msOldMapFolder != gpBase->mpMapHandler->GetMapFolder() ||
 		pCurrentMap->GetFileName() != apSave->mMap.msFileName)
 	{
 		cLuxMap *pNewMap = gpBase->mpMapHandler->LoadMap(apSave->mMap.msFileName, false);
 		if(pNewMap==NULL) FatalError("Could not load quicksave map '%s'\n", apSave->mMap.msFileName.c_str());
-	
+
 		// Destroy old and set new
 		if(pCurrentMap) gpBase->mpMapHandler->DestroyMap(pCurrentMap, false);
 		gpBase->mpMapHandler->SetCurrentMap(pNewMap, false, false,"");
@@ -404,21 +404,21 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 		pCurrentMap->GetWorld()->DestroyAllParticleSystems();
 
 		pCurrentMap->DestroyAllEntities();
-		
+
 		//Destroy all to be destroyed particle systems
 		cParticleSystemIterator partIt = pCurrentMap->GetWorld()->GetParticleSystemIterator();
 		while(partIt.HasNext())
 		{
 			cParticleSystem *pPS = partIt.Next();
-            if(pPS->IsDying()) pPS->KillInstantly();		
+            if(pPS->IsDying()) pPS->KillInstantly();
 		}
 
 		//TODO: Destroy all special in player (???)
-		
+
 		// Create map data
 		gpBase->RunModuleMessage(eLuxUpdateableMessage_CreateWorldEntities, pCurrentMap);
 	}
-	
+
 	///////////////////
 	// Load save data
 	apSave->mMap.ToMap(pCurrentMap);
@@ -431,7 +431,7 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 	apSave->mGlobalDataHandler.ToGlobalDataHandler(pCurrentMap, gpBase->mpGlobalDataHandler);
 //	apSave->mInsanityHandler.ToInsanityHandler(pCurrentMap, gpBase->mpInsanityHandler);
 	apSave->mLoadScreenHandler.ToLoadScreenHandler(pCurrentMap, gpBase->mpLoadScreenHandler);
-							 
+
 	///////////////////
 	// Load saved maps
 	gpBase->mpMapHandler->SetSavedMapCollection(apSave->mpSavedMaps);
@@ -443,8 +443,8 @@ void cLuxSaveHandler::LoadSaveGameData(cLuxSaveGame_SaveData *apSave)
 	////////////
 	// Preload sound after cleanup
 	apSave->mSoundManager.ToSoundManager(gpBase->mpEngine->GetResources()->GetSoundManager());
-	
-	
+
+
 	///////////////////
 	// Destroy cache
 	cache.Destroy();
@@ -462,7 +462,7 @@ tWString cLuxSaveHandler::GetProperSaveName(const tWString &asFile)
 	cString::GetStringVecW(asFile, vSaveNameStrings, &sSeparator);
 
 	if(vSaveNameStrings.size() != 9) return _W("INVALID SAVE FILE SYNTAX");
-	
+
 	// Convert to upper in case of non-case sensitive name
 	vSaveNameStrings[0][0] = cString::ToUpperCaseW(vSaveNameStrings[0])[0];
 	vSaveNameStrings[1][0] = cString::ToUpperCaseW(vSaveNameStrings[1])[0];

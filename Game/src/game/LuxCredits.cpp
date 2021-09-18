@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -166,7 +166,7 @@ void cLuxCredits::Update(float afTimeStep)
 	if(mlState ==0 || mlState ==1)
 	{
 		mfYPos -= afTimeStep * mfScrollSpeed;
-		
+
 		////////////////////////////////
 		//Check if the credits are over.
 		float fSize[2] = {17,19};
@@ -228,12 +228,12 @@ void cLuxCredits::Update(float afTimeStep)
 		if(mfFadeAlpha < 0)
 		{
 			mfFadeAlpha = 0;
-			mlState++;			
+			mlState++;
 		}
 		return;
 	}
 
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -253,7 +253,7 @@ void cLuxCredits::Setup(const tString& asMusic, bool abLoopMusic, const tString&
 
 
 	tWString sText = kTranslate(asTextCat, asTextEntry);
-	mpFontNormal->GetWordWrapRows(750, 19,17,sText,&mvTextRows);	
+	mpFontNormal->GetWordWrapRows(750, 19,17,sText,&mvTextRows);
 }
 
 //-----------------------------------------------------------------------
@@ -261,11 +261,11 @@ void cLuxCredits::Setup(const tString& asMusic, bool abLoopMusic, const tString&
 void cLuxCredits::ExitPressed()
 {
 	//Only skip forward during text roll or The End
-	if(mlState!=0 && mlState!=3) return; 
-	
+	if(mlState!=0 && mlState!=3) return;
+
 	//Always show for at least 3 sec
 	if(mfTime <3) return;
-	
+
 	mlState++;
 	mfTime =0;
 
@@ -292,7 +292,7 @@ void cLuxCredits::OnDraw(float afFrameTime)
 	{
 		mpGuiSet->DrawGfx(mpBlackGfx, mvGuiSetStartPos+cVector3f(0,0,20), mvGuiSetSize, cColor(1, mfFadeAlpha));
 	}
-	
+
 	//////////////////////////////////////////////
 	// STATE 0 - CREDITS
 	if(mlState == 0 || mlState==1)
@@ -302,7 +302,7 @@ void cLuxCredits::OnDraw(float afFrameTime)
 		for(size_t i=0; i< mvTextRows.size(); ++i)
 		{
 			int lSize =0;
-			
+
 			////////////////////////
 			// String is empty row
 			if(mvTextRows[i].size()<=1)
@@ -342,7 +342,7 @@ void cLuxCredits::OnDraw(float afFrameTime)
 	//////////////////////////////////////////////
 	// STATE 1 - SECRET CODE
 	else if(mlState >=2)
-	{	
+	{
 		mpGuiSet->DrawFont(kTranslate("General", "TheEnd"), mpFontHeader, cVector3f(400,290,10),mvTheEndFontSize,cColor(1,1),eFontAlign_Center);
 
 		//Secret code

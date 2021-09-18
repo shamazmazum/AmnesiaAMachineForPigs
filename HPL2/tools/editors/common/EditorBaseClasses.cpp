@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -106,7 +106,7 @@ void iWidgetContainer::AddWidget(iWidget* apWidget)
 	if(apWidget)
 	{
 		tWidgetListIt it = find(mlstWidgets.begin(), mlstWidgets.end(), apWidget);
-		
+
 		if(it==mlstWidgets.end())
 		{
 			//Log("Adding widget with text: %s - Address:0x%x\n", cString::To8Char(apWidget->GetText()).c_str(), apWidget);
@@ -122,7 +122,7 @@ void iWidgetContainer::RemoveWidget(iWidget* apWidget)
 	if(apWidget)
 	{
 		tWidgetListIt it = find(mlstWidgets.begin(), mlstWidgets.end(), apWidget);
-		
+
 		if(it!=mlstWidgets.end())
 		{
 			//Log("Removing widget with text: %s - Address:0x%x\n", cString::To8Char(apWidget->GetText()).c_str(), apWidget);
@@ -200,7 +200,7 @@ cMeshEntity* cEditorEntityLoader::LoadEntFile(int alID, const tString& asName, c
 	if(pDoc==NULL)
 		return NULL;
 
-	pEntity = LoadEntityFromElement(alID, 
+	pEntity = LoadEntityFromElement(alID,
 									asName,
 									pDoc,
 									apWorld,
@@ -212,7 +212,7 @@ cMeshEntity* cEditorEntityLoader::LoadEntFile(int alID, const tString& asName, c
 									abLoadSounds,
 									abLoadLights);
 
-	
+
 	pRes->DestroyXmlDocument(pDoc);
 
 	return pEntity;
@@ -220,7 +220,7 @@ cMeshEntity* cEditorEntityLoader::LoadEntFile(int alID, const tString& asName, c
 //-----------------------------------------------------------------------
 
 cMeshEntity* cEditorEntityLoader::LoadEntityFromElement(int alID, const tString& asName, cXmlElement* apElement,
-														cWorld* apWorld, const tString& asFilename, const tWString& asFullPath, 
+														cWorld* apWorld, const tString& asFilename, const tWString& asFullPath,
 														bool abLoadAnims, bool abLoadParticles, bool abLoadBillboards, bool abLoadSounds, bool abLoadLights)
 {
 	mbLoadAnimations = abLoadAnims;
@@ -236,8 +236,8 @@ cMeshEntity* cEditorEntityLoader::LoadEntityFromElement(int alID, const tString&
 											   cMatrixf::Identity,
 											   cVector3f(1),
 											   apWorld,
-											   asFilename, 
-											   asFullPath, 
+											   asFilename,
+											   asFullPath,
 											   NULL);
 
 
@@ -321,7 +321,7 @@ iEditorBase::~iEditorBase()
 	hplDelete(mpSelection);
 
 	hplDelete(mpEditorWorld);
-	
+
 	/////////////////////////////////////
 	//Destroy all Widgets
 	DestroyWidgets(mpSet);
@@ -380,9 +380,9 @@ void iEditorBase::Reset()
 
 void iEditorBase::Command_New()
 {
-	ShowMessageBox(_W("Warning"), 
-				   _W("All unsaved data will be lost, continue?"), 
-				   _W("Yes"), _W("No"), 
+	ShowMessageBox(_W("Warning"),
+				   _W("All unsaved data will be lost, continue?"),
+				   _W("Yes"), _W("No"),
 				   this, kGuiCallback(MessageBox_New_Callback));
 }
 
@@ -392,8 +392,8 @@ void iEditorBase::Command_Load()
 {
 	if(mpEditorWorld->IsModified())
 	{
-		ShowMessageBox(_W("Warning"), 
-					   _W("All unsaved data will be lost, continue?"), 
+		ShowMessageBox(_W("Warning"),
+					   _W("All unsaved data will be lost, continue?"),
 					   _W("Yes"), _W("No"),
 					   this, kGuiCallback(MessageBox_Load_Callback));
 
@@ -408,7 +408,7 @@ void iEditorBase::Command_Load()
 
 void iEditorBase::Command_Save()
 {
-	if(msSaveFilename==_W("") || 
+	if(msSaveFilename==_W("") ||
 	   cPlatform::FileExists(msSaveFilename)==false)
 	{
 		Command_SaveAs();
@@ -432,7 +432,7 @@ void iEditorBase::Command_Exit()
 	{
 		ShowMessageBox(_W("Warning"),
 					   _W("There are unsaved changes. Do you want to save them?"),
-					   _W("Yes"), _W("No"), 
+					   _W("Yes"), _W("No"),
 					   this, kGuiCallback(MessageBox_Exit_UnsavedChanges_Callback));
 	}
 	else
@@ -461,13 +461,13 @@ void iEditorBase::AddRecentFile(const tWString& asFilename)
 		if(sFilenameLowerCase==sRecentFilenameLowerCase)
 			lstEntriesToErase.push_back(it);
 	}
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////
 	// Remove all appearances found
 	std::list<tWStringListIt>::iterator itEntriesToErase;
 	for(itEntriesToErase=lstEntriesToErase.begin(); itEntriesToErase!=lstEntriesToErase.end(); ++itEntriesToErase)
 		mlstRecentFiles.erase(*itEntriesToErase);
-	
+
 	// Add to back
 	mlstRecentFiles.push_back(asFilename);
 
@@ -516,7 +516,7 @@ void iEditorBase::Load()
 	// Editor session data
 	cXmlElement* pSession = NULL;
 	LoadEditorSession(pDoc, &pSession);
-	
+
 	//////////////////////////////////
 	// Load Scene data
 	mpEditorWorld->Load(pDoc);
@@ -537,7 +537,7 @@ void iEditorBase::Save()
 	SetLayoutNeedsUpdate(true);
 
 	iXmlDocument* pDoc = GetEngine()->GetResources()->GetLowLevel()->CreateXmlDocument();
-	
+
 	AddRecentFile(msSaveFilename);
 	msLastLoadPath = cString::GetFilePathW(msSaveFilename);
 	msLastSavePath = msLastLoadPath;
@@ -570,7 +570,7 @@ void iEditorBase::LoadEditorSession(iXmlDocument* apDoc, cXmlElement **apElement
 		return;
 
 	/////////////////////////////////////
-	// Load performance options 
+	// Load performance options
 	cXmlElement* pPerfOptions = pSession->GetFirstElement("Performance");
 	if(pPerfOptions)
 	{
@@ -686,10 +686,10 @@ void iEditorBase::SetCurrentEditMode(iEditorEditMode* apEditMode)
 	{
 		return;
 	}
-	
+
 	if(mpCurrentEditMode)
 		mpCurrentEditMode->SetCurrent(false);
-	
+
 	mpCurrentEditMode = apEditMode;
 
 	if(mpCurrentEditMode)
@@ -702,7 +702,7 @@ void iEditorBase::AddAction(iEditorAction* apAction)
 {
 	if(apAction)
 	{
-		if(apAction->Create()) 
+		if(apAction->Create())
 			mpActionHandler->Do(apAction);
 		else
 			hplDelete(apAction);
@@ -783,7 +783,7 @@ bool iEditorBase::OnChangeFlags(int alFlags)
 	{
 		for(int i=0;i<(int)mvViewports.size();++i)
 		{
-			bool bActive = GetFlags(eEditorFlag_ViewportsDisabled)==false && 
+			bool bActive = GetFlags(eEditorFlag_ViewportsDisabled)==false &&
 				(bEnlarged==false || (bEnlarged==true && mvViewports[i]->IsEnlarged()));
 			mvViewports[i]->SetActive(bActive);
 		}
@@ -807,7 +807,7 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 	LoadConfig();
 
 	bool bEngineWasCreated = apEngine!=NULL; //If engine was supplied as argument or not.
-    	
+    
 	////////////////////////////////////////////////////
 	// Engine is already created
 	//  No need to create it, just set the member var
@@ -826,7 +826,7 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 		vars.mGraphics.mbFullscreen = cString::ToBool(GetSetting("FullScreen").c_str(), false);
 		vars.mGraphics.msWindowCaption = msCaption;
 
-		iRenderer::SetShadowMapQuality(eShadowMapQuality_Medium);		
+		iRenderer::SetShadowMapQuality(eShadowMapQuality_Medium);
 
 		mpEngine = CreateHPLEngine(eHplAPI_OpenGL, eHplSetup_All, &vars);
 		mpEngine->GetInput()->GetLowLevel()->LockInput(false);
@@ -843,12 +843,12 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 
 	/////////////////////////
 	//Set up engine
-	
+
 	mpEngine->SetLimitFPS(false);
 	mpEngine->SetWaitIfAppOutOfFocus(true);
 
 	mpViewport = mpEngine->GetScene()->CreateViewport(NULL,NULL);
-	
+
 	//Add all used resource dirs
 	mpEngine->GetResources()->AddResourceDir(_W("editor/"),true);
 	mpEngine->GetResources()->AddResourceDir(GetFolderFullPath(eEditorDir_Thumbnails),false);
@@ -882,7 +882,7 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 	mpEntityLoader = hplNew(cEditorEntityLoader,(this));
 	mpEngine->GetResources()->AddEntityLoader(mpEntityLoader, true);
 	mpViewport->AddGuiSet(mpSet);
-    
+
 	/////////////////////////
 	//Create/Set up helper classes
 	SetUpTempWorld();
@@ -892,7 +892,7 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 	cMeshCreator *pMeshCreator = GetEngine()->GetGraphics()->GetMeshCreator();
 	cMeshManager *pMeshManager = GetEngine()->GetResources()->GetMeshManager();
 	tVertexElementFlag lFlags = eVertexElementFlag_Position | eVertexElementFlag_Normal | eVertexElementFlag_Texture0 | eVertexElementFlag_Color0;
-	
+
 	////////////////////////////////////
 	// Compile Custom Var definitions
 	mpClassDefManager = hplNew(cEditorUserClassDefinitionManager,(this));
@@ -902,7 +902,7 @@ cEngine* iEditorBase::Init(cEngine* apEngine, bool abDestroyEngineOnExit)
 	////////////////////////////////////
 	// Create world
 	mpEditorWorld = CreateSpecificWorld();
-	
+
 	OnInit();
 	for(int i=0;i<(int)mvEditModes.size();++i)
 		mvEditModes[i]->PostEditModesCreation();
@@ -976,7 +976,7 @@ void iEditorBase::CreateViewports()
 		cEditorWindowViewport* pViewport = hplNew(cEditorWindowViewport,(this, mpFrameBuffer));
 		pViewport->Init();
 		AddWindow(pViewport);
-		
+
 		pViewport->SetNormalPosition(vViewportPos[i]);
 		pViewport->SetEnlargedPosition(vViewportPos[0]);
 		pViewport->SetNormalSize(vSmallVPSize-4);
@@ -1225,7 +1225,7 @@ void iEditorBase::Update(float afTimeStep)
 	iKeyboard* pKB = pInput->GetKeyboard();
 	int lKeyModifier = pKB->GetModifier();
 
-	
+
 	///////////////////////////////
 	// Update Mouse
 	cVector2l vMouseAbsPos = pInput->GetMouse()->GetAbsPosition();
@@ -1258,7 +1258,7 @@ void iEditorBase::Update(float afTimeStep)
 		pGui->SendMouseClickUp(eGuiMouseButton_Right, lKeyModifier);
 	if(pInput->DoubleTriggerd("RightClick", 0.2f))
 		pGui->SendMouseDoubleClick(eGuiMouseButton_Right, lKeyModifier);
-	
+
 	// Wheel
 	if(pInput->BecameTriggerd("WheelUp"))
 		pGui->SendMouseClickDown(eGuiMouseButton_WheelUp);
@@ -1291,7 +1291,7 @@ void iEditorBase::Update(float afTimeStep)
 
 	////////////////////////////////////////////////////////////////////
 	// Update current edit mode
-	if(mpCurrentEditMode) 
+	if(mpCurrentEditMode)
 		mpCurrentEditMode->OnEditorUpdate(afTimeStep);
 
 	////////////////////////////////////////////////////////////////////
@@ -1312,7 +1312,7 @@ void iEditorBase::Update(float afTimeStep)
 		}
 		mlstWindowsToDestroy.clear();
 	}
-    
+
 	if(mbWorldModified)
 	{
 		mbWorldModified=false;
@@ -1348,7 +1348,7 @@ void iEditorBase::ShowLoadingWindow(const tWString& asCaption, const tWString& a
 
 //----------------------------------------------------------------------------
 
-cEditorWindowTextureBrowser* iEditorBase::ShowTextureBrowser(eEditorTextureResourceType aType, 
+cEditorWindowTextureBrowser* iEditorBase::ShowTextureBrowser(eEditorTextureResourceType aType,
 															 const tWString& asStartDir,
 															 tWString& asDestFilename,
 															 void* apCallbackObject, tGuiCallbackFunc apCallback,
@@ -1484,7 +1484,7 @@ void iEditorBase::InitLayout()
 	const cVector3f& vViewportAreaPos = GetLayoutVec3f(eLayoutVec3_ViewportAreaPos);
 	const cVector2f& vViewportAreaSize = GetLayoutVec2f(eLayoutVec2_ViewportAreaSize);
 
-	InitRenderTarget(vViewportAreaSize);	
+	InitRenderTarget(vViewportAreaSize);
 	CreateViewports();
 	if(mvViewports.empty()==false)
 		SetFocusedViewport(mvViewports[0]);
@@ -1519,7 +1519,7 @@ void iEditorBase::InitRenderTarget(const cVector2f& avSize)
 	int lTexW, lTexH;
 	lTexW = (int) avSize.x;
 	lTexH = (int) avSize.y;
-	
+
 	iTexture* pRenderTexture = pGfx->CreateTexture("RenderTexture",eTextureType_Rect, eTextureUsage_RenderTarget);
 	pRenderTexture->SetWrapR(eTextureWrap_ClampToEdge);
 	pRenderTexture->SetWrapS(eTextureWrap_ClampToEdge);
@@ -1600,7 +1600,7 @@ void iEditorBase::LoadConfig()
 	}
 
 	tWString sDir;
-	
+
 	for(int i=eEditorDir_Home; i<eEditorDir_LastEnum; ++i)
 	{
 		sDir = GetFolderFullPath((eEditorDir)i);
@@ -1629,7 +1629,7 @@ void iEditorBase::SaveConfig()
 	mpMainConfig->SetString("Directories","EditorHomeDir",cString::To8Char(mvFolders[eEditorDir_Home]));
 	mpMainConfig->SetString("Directories","EditorTempDir",cString::To8Char(mvFolders[eEditorDir_Temp]));
 	mpMainConfig->SetString("Directories","ThumbnailsDir",cString::To8Char(mvFolders[eEditorDir_Thumbnails]));
-	
+
 	mpMainConfig->SetString("Directories","MapsDir", cString::To8Char(mvFolders[eEditorDir_Maps]));
 	mpMainConfig->SetString("Directories","StaticObjectsDir",cString::To8Char(mvFolders[eEditorDir_StaticObjects]));
 	mpMainConfig->SetString("Directories","EntitiesDir",cString::To8Char(mvFolders[eEditorDir_Entities]));
@@ -1700,7 +1700,7 @@ tString iEditorBase::GetFilePathRelativeToWorkingDir(const tString& asFile)
 tWString iEditorBase::GetFolderFullPath(eEditorDir aDir)
 {
 	tWString sPath;
-	
+
 	switch(aDir)
 	{
 	case eEditorDir_Home:
@@ -1776,7 +1776,7 @@ bool iEditorBase::MessageBox_RecentFile_Callback(iWidget* apWidget, const cGuiMe
 {
 	if(aData.mlVal==0)
 		Load();
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(iEditorBase, MessageBox_RecentFile_Callback);
@@ -1908,15 +1908,15 @@ void iEditorBase::ShowMessageBox(const tWString& asCaption,
 
 //----------------------------------------------------------------------------
 
-void iEditorBase::ShowLoadFilePicker(tWStringVec& avLoadFilenames, const tWString& asStartPath, 
-									 void* apCallbackObject, tGuiCallbackFunc apCallback, 
+void iEditorBase::ShowLoadFilePicker(tWStringVec& avLoadFilenames, const tWString& asStartPath,
+									 void* apCallbackObject, tGuiCallbackFunc apCallback,
 									 const tWString& asCategoryName, const tWStringList& alstCategoryStrings)
 {
 	SetFlags(eEditorFlag_PopUpActive, true);
 
-	cGuiPopUpFilePicker* pPicker = mpSet->CreatePopUpLoadFilePicker(avLoadFilenames, 
-																	false, 
-																	asStartPath, 
+	cGuiPopUpFilePicker* pPicker = mpSet->CreatePopUpLoadFilePicker(avLoadFilenames,
+																	false,
+																	asStartPath,
 																	false, apCallbackObject, apCallback);
 
 	if(asCategoryName==_W("") || alstCategoryStrings.empty())

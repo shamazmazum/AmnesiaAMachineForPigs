@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -62,7 +62,7 @@ void cLuxEnemyLoader_ManPig::LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRo
 	gpBase->PreloadSound(pManPig->msNoticeSound);
 	gpBase->PreloadSound(pManPig->msEnabledSound);
 	gpBase->PreloadSound(pManPig->msChaseSound);
-		
+
 
 	pManPig->mfGroggyDamageCount = GetVarFloat("GroggyDamageCount", 0);
 	pManPig->mfAlertToHuntDistance = GetVarFloat("AlertToHuntDistance", 0);
@@ -71,7 +71,7 @@ void cLuxEnemyLoader_ManPig::LoadVariables(iLuxEnemy *apEnemy, cXmlElement *apRo
 	pManPig->mfHuntPauseMaxTime = GetVarFloat("HuntPauseMaxTime", 0);
 	pManPig->mfIncreaseAlertSpeedDistance = GetVarFloat("IncreaseAlertSpeedDistance", 0);
 	pManPig->mfIncreasedAlertSpeedMul = GetVarFloat("IncreasedAlertSpeedMul", 0);
-	
+
 	pManPig->mfAlertRunTowardsToHuntLimit = GetVarFloat("AlertRunTowardsToHuntLimit", 0);
 	pManPig->mfAlertRunTowardsCheckDistance = GetVarFloat("AlertRunTowardsCheckDistance", 0);
 
@@ -132,7 +132,7 @@ cLuxEnemy_ManPig::cLuxEnemy_ManPig(const tString &asName, int alID, cLuxMap *apM
 	mfCheckFlashLightShining =0;
 
 	mfFleeCheckIfInvisbleCount=0;
-	
+
 	mbAlignEntityWithGroundRay = true;
 
 	mbIsTelsa=false;
@@ -207,7 +207,7 @@ void cLuxEnemy_ManPig::OnSetupAfterLoad(cWorld *apWorld)
 	mpMover->SetWallAvoidanceActive(true);
 
 	if(mbIsTelsa) mpMeshEntity->SetVisible(false);
-	
+
 	////////////////////////////////////////
 	// Walk start transition
 	AddTransitionAnimation("WalkBiped", "WalkStartBiped", "IdleBiped");
@@ -267,7 +267,7 @@ void cLuxEnemy_ManPig::OnSetupAfterLoad(cWorld *apWorld)
 	AddTransitionAnimation("IdleBipedExtra1", "IdleQuadrupedToBiped", "IdleQuadruped");
 	AddTransitionAnimation("IdleBipedExtra2", "IdleQuadrupedToBiped", "IdleQuadruped");
 	AddTransitionAnimation("NoticeBiped", "IdleQuadrupedToBiped", "IdleQuadruped");
-	
+
 	AddTransitionAnimation("WalkQuadruped", "IdleBipedToQuadruped", "WalkBiped");
 	AddTransitionAnimation("JogQuadruped", "IdleBipedToQuadruped", "JogBiped");
 	AddTransitionAnimation("RunQuadruped", "IdleBipedToQuadruped", "RunBiped");
@@ -291,7 +291,7 @@ void cLuxEnemy_ManPig::OnAfterWorldLoad()
 		mvDefaultLightColors.push_back(mvLights[i]->GetDiffuseColor());
 	}
 
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -299,7 +299,7 @@ void cLuxEnemy_ManPig::OnAfterWorldLoad()
 void cLuxEnemy_ManPig::UpdateEnemySpecific(float afTimeStep)
 {
 	if(mbIsTelsa) UpdateTesla(afTimeStep);
-	
+
 	UpdateCheckInLantern(afTimeStep);
 }
 
@@ -308,7 +308,7 @@ void cLuxEnemy_ManPig::UpdateEnemySpecific(float afTimeStep)
 bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEvent, cLuxStateMessage *apMessage)
 {
 	kLuxBeginStateMachine
-	
+
 	////////////////////////////////
 	// Default
 	////////////////////////////////
@@ -316,14 +316,14 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_Reset)
-		
+
 		gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-		
+
 		gpBase->mpPlayer->RemoveTerrorEnemy(this);
 
 		mbLastShortAttackWasMiss = false;
 		mbForceChargeAttack = false;
-		
+
 
 		ChangeState(eLuxEnemyState_Wait);
 
@@ -331,7 +331,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		ChangeState(eLuxEnemyState_Alert);
-	
+
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_TakeHit)
@@ -341,7 +341,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			ChangeState(eLuxEnemyState_Hurt);
 			mfDamageCount =0;
 		}*/
-	
+
 	//------------------------------
 
 	//If enemy is out of range (having been in, then turn him off)
@@ -351,7 +351,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_PlayerDead)
-		ChangeState(eLuxEnemyState_Idle);	
+		ChangeState(eLuxEnemyState_Idle);
 
 	//------------------------------
 
@@ -362,8 +362,8 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	//------------------------------
 
 	kLuxOnMessage(eLuxEnemyMessage_ChangePose)
-		
-		
+
+
 
 	//------------------------------
 
@@ -380,7 +380,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 		kLuxOnMessage(eLuxEnemyMessage_PlayerInRange)
 			gpBase->mpDebugHandler->AddMessage(_W("Enemy ") + cString::To16Char(msName)+_W(" enabled!"), false );
-			
+
 			if(gpBase->mpGlobalDataHandler->GetEnemyActivateSoundAllowed())
 			{
 				if(mbPlayActivateSound)
@@ -389,7 +389,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					PlaySound(msEnabledSound);
 				}
 			}
-			
+
 
 			ChangeState(eLuxEnemyState_Patrol);
 
@@ -397,7 +397,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			//Nothing
 
 	//------------------------------
-	
+
 	////////////////////////////////
 	// Go Home
 	////////////////////////////////
@@ -408,7 +408,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		kLuxOnEnter
 			mpPathfinder->MoveTo(mvStartPosition);
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			ChangeState(eLuxEnemyState_Idle);
 
@@ -419,7 +419,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = apMessage->mvCustomValue;
 				mfTempVal = apMessage->mfCustomValue;
 			}
-	
+
 	//------------------------------
 
 	////////////////////////////////
@@ -456,22 +456,22 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			mpMover->SetOverideMoveState(false);
 
 		//------------------------------
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			if(mPreviousState == eLuxEnemyState_Search ||
 				mPreviousState == eLuxEnemyState_Stalk ||
 				mPreviousState == eLuxEnemyState_Track)
 			{
 				FadeOutCurrentAnim(0.2f);
-				ChangeState(mPreviousState);	
+				ChangeState(mPreviousState);
 			}
 			else
 			{
 				if(GetPatrolNodeNum()>0 || mIdleBehavior!=eLuxIdleBehavior_None)
 				{
 					FadeOutCurrentAnim(0.2f);
-					ChangeState(eLuxEnemyState_Patrol);	
+					ChangeState(eLuxEnemyState_Patrol);
 				}
 				else
 				{
@@ -487,7 +487,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
 			SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(4, 13), true);
-	
+
 		kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
 			if(apMessage->mfCustomValue > mfHearVolume)
 			{
@@ -507,9 +507,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		kLuxOnEnter
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-			
+
 			gpBase->mpPlayer->RemoveTerrorEnemy(this);
-			
+
 			ChangeSoundState(eLuxEnemySoundState_Idle);
 			SetMoveSpeed(mPatrolMoveSpeed);
 			if(mPatrolMoveSpeed==eLuxEnemyMoveSpeed_Run) mfForwardSpeed *= mfRunSpeedMul;
@@ -523,7 +523,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 				ChangeState(eLuxEnemyState_BreakDoor);
 			}
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 
 			/////////////////////////////////////
@@ -551,7 +551,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					else
 					{
 						PlayAnim(pNode->msAnimation, pNode->mbLoopAnimation, 0.2f);
-					
+
 						//////////////////////////////////
 						// Animation is looping, check the end with timer
 						if(pNode->mbLoopAnimation)
@@ -596,19 +596,19 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = apMessage->mvCustomValue;
 				mfTempVal = apMessage->mfCustomValue;
 			}
-	
+
 	//------------------------------
-	
+
 	////////////////////////////////
 	// Investigate
 	////////////////////////////////
 
-	//------------------------------	
+	//------------------------------
 	kLuxState(eLuxEnemyState_Investigate)
-		kLuxOnEnter	
+		kLuxOnEnter
 			ChangeSoundState(eLuxEnemySoundState_Alert);
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-			
+
 			mpPathfinder->Stop();
 			PlayAnim("Notice"+GetCurrentPoseSuffix(), false, 0.3f);
 
@@ -646,16 +646,16 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		//------------------------------
 
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
-			
+
 			PlaySound(msGiveUpNoticeSound);
 
 			if(mPreviousState == eLuxEnemyState_Search)
-				ChangeState(eLuxEnemyState_Search);	
+				ChangeState(eLuxEnemyState_Search);
 			else
-				ChangeState(eLuxEnemyState_Patrol);	
+				ChangeState(eLuxEnemyState_Patrol);
 
 		//------------------------------
-			
+
 		kLuxOnUpdate
 			if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
 			{
@@ -666,15 +666,15 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 		//------------------------------
 
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_SoundHeard)
 			//If a new sound is loader than the previous go for that instead!
 			if(mpPathfinder->IsMoving() && apMessage->mfCustomValue > mfTempVal)
 			{
 				cAINode *pNode = mpPathfinder->GetNodeAtPos(mvTempPos, 0, 10, true, true, true,NULL,1);
-				if(pNode) 
+				if(pNode)
 					mpPathfinder->MoveTo(pNode->GetPosition());
-				
+
 				mfTempVal = apMessage->mfCustomValue;
 			}
 
@@ -690,7 +690,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		//////////////
 		//Enter
 		kLuxOnEnter
-			
+
 			ForceTeslaSighting();
 
 			/////////////////////////
@@ -718,9 +718,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					float fThreatFristStopCheck = mbFleeFromPlayer ? 1.0f : 3.5f;
 
 					mpPathfinder->Stop();
-					
-					PlayAnim("ThreatLoop"+GetCurrentPoseSuffix(), true, 0.3f);		
-					
+
+					PlayAnim("ThreatLoop"+GetCurrentPoseSuffix(), true, 0.3f);
+
 					SendMessage(eLuxEnemyMessage_TimeOut_2, fThreatLength, true); //Attack!!
 					SendMessage(eLuxEnemyMessage_TimeOut_3, fThreatFristStopCheck, true);//Check if stop the threat
 					mbSkipVisibilityRangeHandicaps = true;
@@ -744,7 +744,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 		//////////////
 		//Leave
-		kLuxOnLeave	
+		kLuxOnLeave
 
 			mbSkipVisibilityRangeHandicaps = false;
 
@@ -758,12 +758,12 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			if(mNextState != eLuxEnemyState_BreakDoor)
 			{
 				SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
-				
+
 				gpBase->mpPlayer->RemoveTerrorEnemy(this);
 			}
 
 		//------------------------------
-		
+
 		//////////////
 		//Enter
 		kLuxOnUpdate
@@ -773,7 +773,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			//Turn towards player
 			if(mbThreatenOnAlert && PlayerIsDetected())
 			{
-				float fAngleDist = cMath::GetAngleDistanceRad(	mpCharBody->GetYaw()+kPif, 
+				float fAngleDist = cMath::GetAngleDistanceRad(	mpCharBody->GetYaw()+kPif,
 																gpBase->mpPlayer->GetCharacterBody()->GetYaw());
 				if(fabs(fAngleDist)>cMath::ToRad(30))
 					mpMover->TurnToPos(GetPlayerFeetPos());
@@ -805,7 +805,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 				//mfForwardSpeed *= 1.2f;
 			}
-						
+
 			//////////////////////////////
 			//Stuck at door, break it
 			if(gpBase->mpPlayer->GetTerror() >= 1 && mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
@@ -861,7 +861,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 							fDistToPlayer < mfAlertToInstantHuntDistance)
 						{
 							gpBase->mpPlayer->SetTerror(1.0f);
-							
+
 							ChangeState(eLuxEnemyState_Hunt);
 						}
 					}
@@ -872,7 +872,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					//Or if distance to player is less than a value
 					float fTerror = gpBase->mpPlayer->GetTerror();
 					if (mbIsTelsa==true) fTerror *= 3;
-					if(	(fTerror >= 1 && (fDistToPlayer > mfAlertToHuntDistance || mfAlertRunTowardsCount>mfAlertRunTowardsToHuntLimit) ) || 
+					if(	(fTerror >= 1 && (fDistToPlayer > mfAlertToHuntDistance || mfAlertRunTowardsCount>mfAlertRunTowardsToHuntLimit) ) ||
 						fDistToPlayer < mfAlertToInstantHuntDistance)
 					{
 						gpBase->mpPlayer->SetTerror(1.0f);
@@ -904,15 +904,15 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					//This is when the enemy should just stnad still but I think nothing is really needed
 				}
 			}
-		
-		//------------------------------		
+
+		//------------------------------
 
 		//////////////
 		//Update move to
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 			if(PlayerIsDetected())
 				mpPathfinder->MoveTo(mvLastKnownPlayerPos);
-			
+
 			SendMessage(eLuxEnemyMessage_TimeOut, 0.3f, true);
 
 		//------------------------------
@@ -959,8 +959,8 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	// Search
 	////////////////////////////////
 
-	//------------------------------	
-	
+	//------------------------------
+
 	kLuxState(eLuxEnemyState_Search)
 		kLuxOnEnter
 			ForceTeslaSighting();
@@ -968,12 +968,12 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			ChangeSoundState(eLuxEnemySoundState_Alert);
 
 			SendMessage(eLuxEnemyMessage_TimeOut, mfPlayerSearchTime, true);
-			
+
 			SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(0,1), true);
-		
+
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 			gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Search,this);
-			
+
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 			mfForwardSpeed *= 1.0f;
 
@@ -981,7 +981,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 
 		//------------------------------
-		
+
 		kLuxOnUpdate
 			if(mbStuckAtDoor)// && mpMap->DoorIsClosed(mlStuckDoorID))
 			{
@@ -989,14 +989,14 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 				ChangeState(eLuxEnemyState_BreakDoor);
 			}
-		
+
 		//------------------------------
 
 		//At node
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			mpPathfinder->Stop();
 			SendMessage(eLuxEnemyMessage_TimeOut_2,cMath::RandRectf(1,3), true);
-		
+
 		//Wait a few secs
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
 			//cAINode * pNode = GetSearchForPlayerNode();
@@ -1005,7 +1005,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mpPathfinder->MoveTo(pNode->GetPosition());
 			else
 				ChangeState(eLuxEnemyState_Patrol);
-		
+
 		//End of searching
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 			ChangeState(eLuxEnemyState_Patrol);
@@ -1019,7 +1019,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = apMessage->mvCustomValue;
 				mfTempVal = apMessage->mfCustomValue;
 			}
-	
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1043,9 +1043,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mfForwardSpeed *= mfRunSpeedMul;
 				gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
 				gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
-				
+
 				gpBase->mpPlayer->RemoveTerrorEnemy(this);
-				
+
 				SendMessage(eLuxEnemyMessage_TimeOut, 2.0f, true); //Check if player is too close!
 				SendMessage(eLuxEnemyMessage_TimeOut_2, 0.2f, true); //Check if not seen by player
 
@@ -1055,7 +1055,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			{
 				ChangeState(eLuxEnemyState_Hunt);
 			}
-		
+
 		///////////////////////
 		// Leave
 		kLuxOnLeave
@@ -1067,16 +1067,16 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		//////////////////
 		// Check if player is too close!
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			if(DistToPlayer2D()<2.5f)
 			{
 				ChangeState(eLuxEnemyState_Hunt);
 			}
-			
+
 			SendMessage(eLuxEnemyMessage_TimeOut, 1.0f, true);
 
 		//------------------------------
-		
+
 		//////////////////
 		// Check if no longer visible.
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
@@ -1092,10 +1092,10 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			{
 				SendMessage(eLuxEnemyMessage_TimeOut_2, 0.2f, true);
 			}
-		
-			
+
+
 		//------------------------------
-		
+
 		////////////////////////
 		// End of current path
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
@@ -1118,7 +1118,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-		
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1127,8 +1127,8 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	////////////////////////////////
 
 	//------------------------------
-	
-	kLuxState(eLuxEnemyState_Stalk)	
+
+	kLuxState(eLuxEnemyState_Stalk)
 		///////////////////////
 		// Enter
 		kLuxOnEnter
@@ -1166,7 +1166,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 			///////////////////////////
 			// See if a new node needs to be found.
-			if(	fPlayerDistance < 4.5f || 
+			if(	fPlayerDistance < 4.5f ||
 				bSeenByPlayer ||
 				IsVisibleToPlayerAtFeetPos(mpPathfinder->GetNextGoalPos()) ||
 				IsVisibleToPlayerAtFeetPos(mpPathfinder->GetFinalGoalPos())
@@ -1187,26 +1187,26 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			// Repeat check after 2.5 seconds.
 			SendMessage(eLuxEnemyMessage_TimeOut, 2.5f, true);
 
-		
+
 		//------------------------------
-		
+
 		////////////////////////
 		// End of current path
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			mfWaitTime = cMath::RandRectf(2, 4);
 			ChangeState(eLuxEnemyState_Wait);
 		//------------------------------
-		
+
 		////////////////////////
 		// Player detected
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
-			
+
 			//Quickly check if we need new position
-			SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true); 
-	
+			SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);
+
 
 		//------------------------------
-	
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1215,13 +1215,13 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	////////////////////////////////
 
 	//------------------------------
-	kLuxState(eLuxEnemyState_Track)	
+	kLuxState(eLuxEnemyState_Track)
 		///////////////////////
 		// Enter
 		kLuxOnEnter
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 			SendMessage(eLuxEnemyMessage_TimeOut, 2.5f, true);
-			
+
 			if(TrackFindNode()==false)
 			{
 				mfWaitTime = cMath::RandRectf(1, 2);
@@ -1238,7 +1238,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		//////////////////////////
 		//Check if enemy might be seen
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			if(	mbIsTelsa == false &&
 				IsInPlayerFovAtFeetPos(mpCharBody->GetFeetPosition())==false &&
 				//IsVisibleToPlayerAtFeetPos(mpCharBody->GetFeetPosition())==false &&
@@ -1258,9 +1258,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			}
 			SendMessage(eLuxEnemyMessage_TimeOut, 2.5f, true);
 
-		
+
 		//------------------------------
-		
+
 		////////////////////////
 		// End of current path
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
@@ -1284,9 +1284,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 						ChangeState(eLuxEnemyState_Wait);
 					}
 				}
-				
+
 			}
-		
+
 		//------------------------------
 
 		////////////////////////
@@ -1310,7 +1310,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 	//------------------------------
 
-	kLuxState(eLuxEnemyState_Hunt)	
+	kLuxState(eLuxEnemyState_Hunt)
 		///////////////////////
 		// Enter
 		kLuxOnEnter
@@ -1322,7 +1322,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			if(mlAttackHitCounter >= lMaxHits || mbLastShortAttackWasMiss)
 			{
 				mlAttackHitCounter =0;
-								
+
 				ChangeState(eLuxEnemyState_HuntPause);
 				mbLastShortAttackWasMiss = false;
 			}
@@ -1333,17 +1333,17 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mfForwardSpeed *= mfRunSpeedMul;
 				SendMessage(eLuxEnemyMessage_TimeOut, 0.1f, true);
 				mfFOVMul = 4.0f;
-				
+
 				gpBase->mpMusicHandler->AddEnemy(eLuxEnemyMusic_Attack,this);
-				
+
 				gpBase->mpPlayer->AddTerrorEnemy(this);
-				
+
 				mpPathfinder->MoveTo(mvLastKnownPlayerPos);
 
 				SendMessage(eLuxEnemyMessage_TimeOut_2, 0.5f, true);
 				SendMessage(eLuxEnemyMessage_TimeOut_3, cMath::RandRectf(0.25f, 1.0f), true);
 			}
-			
+
 
 		///////////////////////
 		// Leave
@@ -1352,7 +1352,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			mfFOVMul = 1.0f;
 
 		//------------------------------
-		
+
 		///////////////////////
 		// Update
 		kLuxOnUpdate
@@ -1377,9 +1377,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				mvTempPos = pDoorEnt->GetAttachEntity()->GetWorldPosition();
 				ChangeState(eLuxEnemyState_BreakDoor);
 			}
-		
+
 		//------------------------------
-		
+
 		/////////////////////////////
 		// Check if close enough for launch attack
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
@@ -1395,7 +1395,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		/////////////////////////////
 		// Sound
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_3)
-			
+
 			PlayHuntSound();
 			SendMessage(eLuxEnemyMessage_TimeOut_3, cMath::RandRectf(0.5f, 2.0f), true);
 
@@ -1405,7 +1405,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// End of current path
 		kLuxOnMessage(eLuxEnemyMessage_EndOfPath)
 			float fDistToPlayer = DistToPlayer();
-			
+
 			//Check if was end of path because of stuck.,
 			if(apMessage->mlCustomValue==1 && fDistToPlayer >= mfNormalAttackDistance)
 			{
@@ -1414,7 +1414,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					//Give some extra time to find player!
 					SendMessage(eLuxEnemyMessage_TimeOut_4, 1.5f, true);
 				}
-				else 
+				else
 				{
 					ChangeState(eLuxEnemyState_HuntWander);
 				}
@@ -1430,29 +1430,29 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 					SendMessage(eLuxEnemyMessage_TimeOut_4, 1.5f, true);
 				}
 			}
-			
+
 		//------------------------------
 
 		//////////////////
 		// Update path and call for help!
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			mpMap->BroadcastEnemyMessage(eLuxEnemyMessage_HelpMe, true, mpCharBody->GetPosition(), mfActivationDistance*0.5f,
 											0,false, mpCharBody->GetFeetPosition());
-		
+
 			mpPathfinder->MoveTo(mvLastKnownPlayerPos);
-			
+
 			SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);
 
 		//------------------------------
-		
+
 		//////////////////
 		//When lost player give some extra time to catch up
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut_4)
 			if(PlayerIsDetected() == false)
 			{
 				gpBase->mpPlayer->RemoveTerrorEnemy(this);
-				
+
 				gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 
 				if(mbThreatenOnAlert || mbIsTelsa)
@@ -1469,9 +1469,9 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-	
+
 	//------------------------------
-	
+
 	///////////////////////////////
 	// Hunt Wander (Remain in hunt mode but go to nearby reachable node)
 	////////////////////////////////
@@ -1504,7 +1504,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// Leave
 		kLuxOnLeave
 			mfFOVMul = 1.0f;
-		
+
 		//------------------------------
 
 		/////////////////////////////
@@ -1532,16 +1532,16 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 	//------------------------------
 
-	kLuxState(eLuxEnemyState_HuntPause)	
+	kLuxState(eLuxEnemyState_HuntPause)
 		///////////////////////
 		// Enter
-		kLuxOnEnter	
+		kLuxOnEnter
 
 			ForceTeslaSighting();
 
 			SendMessage(eLuxEnemyMessage_TimeOut_2, cMath::RandRectf(mfHuntPauseMinTime, mfHuntPauseMaxTime)*mfHuntPauseTimeMul, true);
 			mpPathfinder->Stop();
-			
+
 			SetMoveSpeed(eLuxEnemyMoveSpeed_Walk);
 			mfForwardSpeed *= 0.6f;
 
@@ -1556,11 +1556,11 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			mfFOVMul = 1.0f;
 
 		//------------------------------
-		
+
 		///////////////////////
 		// Update
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
-			
+
 			if(DistToPlayer2D() > 2.0f)
 				mpPathfinder->MoveTo(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
 			else
@@ -1568,12 +1568,12 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 			if(CanSeePlayer())
 			{
-				SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);	
+				SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);
 			}
-		
+
 		///////////////////////
 		// Time out
-		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)	
+		kLuxOnMessage(eLuxEnemyMessage_TimeOut_2)
 			ChangeState(eLuxEnemyState_Alert);
 
 		/////////////////////////////
@@ -1587,7 +1587,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-		
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1596,7 +1596,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 	//------------------------------
 
-	kLuxState(eLuxEnemyState_BreakDoor)	
+	kLuxState(eLuxEnemyState_BreakDoor)
 		kLuxOnEnter
 			mpPathfinder->Stop();
 			PlayAnim("Attack"+GetCurrentPoseSuffix()+cString::ToString(cMath::RandRectl(1,3)),false, 0.3f);
@@ -1623,7 +1623,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			{
 				if(mPreviousState == eLuxEnemyState_Hurt)
 					ChangeState(eLuxEnemyState_Hunt);
-				else 
+				else
 					ChangeState(mPreviousState);
 			}
 			else
@@ -1631,17 +1631,17 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 				PlayAnim("Attack"+GetCurrentPoseSuffix()+cString::ToString(cMath::RandRectl(1,3)),false, 0.3f);
 			}
 
-			
-		
+
+
 		kLuxOnMessage(eLuxEnemyMessage_AnimationSpecialEvent)
 			Attack(mNormalAttackSize, mBreakDoorAttackDamage,20.0f);
-			
+
 
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-        		
+        
 	//------------------------------
 
 	////////////////////////////////
@@ -1671,16 +1671,16 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		//------------------------------
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
-			
+
 			if(mPreviousState == eLuxEnemyState_Hurt)
 				ChangeState(eLuxEnemyState_Hunt);
-			else 
+			else
 				ChangeState(mPreviousState);
-		
+
 		//------------------------------
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationSpecialEvent)
-			
+
 			if(Attack(mNormalAttackSize, mNormalAttackDamage, mfDamageMul)==false)
 			{
 				mbLastShortAttackWasMiss = true;
@@ -1688,12 +1688,12 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			}
 
 		//------------------------------
-		
+
 		////////////////////////
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-	
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1734,7 +1734,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			mpMover->MoveToPos(gpBase->mpPlayer->GetCharacterBody()->GetFeetPosition());
 
 		//------------------------------
-			
+
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 			if(mlTempVal==0)
 			{
@@ -1747,10 +1747,10 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 			{
 				Attack(mNormalAttackSize, mNormalAttackDamage, mfDamageMul);
 			}
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
 			ChangeState(mPreviousState);
-			
+
 
 		//------------------------------
 
@@ -1758,7 +1758,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		// Overload global
 		kLuxOnMessage(eLuxEnemyMessage_PlayerDetected)
 		kLuxOnMessage(eLuxEnemyMessage_HelpMe)
-	
+
 	//------------------------------
 
 	////////////////////////////////
@@ -1769,7 +1769,7 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 
 	kLuxState(eLuxEnemyState_Hurt)
 		kLuxOnEnter
-			mpPathfinder->Stop();	
+			mpPathfinder->Stop();
 			PlayAnim("Flinch"+GetCurrentPoseSuffix(),false, 0.5f);
 			SendMessage(eLuxEnemyMessage_TimeOut, 0.2f, true);
 			mfFOVMul = 4.0f;
@@ -1782,13 +1782,13 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
 			if(PlayerIsDetected())
 			{
-				ChangeState(eLuxEnemyState_Hunt);	
+				ChangeState(eLuxEnemyState_Hunt);
 			}
 			else
 			{
-				ChangeState(eLuxEnemyState_Alert);	
+				ChangeState(eLuxEnemyState_Alert);
 			}
-		
+
 		kLuxOnMessage(eLuxEnemyMessage_TimeOut)
 			if(cMath::RandRectl(0,1)==0 && DistToPlayer() < mfNormalAttackDistance*1.3f)
 			{
@@ -1811,17 +1811,17 @@ bool cLuxEnemy_ManPig::StateEventImplement(int alState, eLuxEnemyStateEvent aEve
 	kLuxState(eLuxEnemyState_Dead)
 		kLuxOnEnter
 			mpPathfinder->Stop();
-			//PlayAnim("Dead",false, 0.4f);	
-			PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);	
-			
+			//PlayAnim("Dead",false, 0.4f);
+			PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
+
 			gpBase->mpPlayer->RemoveTerrorEnemy(this);
-			
+
 			gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 			mpCharBody->SetActive(false);
 
 
 		kLuxOnMessage(eLuxEnemyMessage_AnimationOver)
-			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);	
+			//PlayAnim("Dead",false, 0.3f,false,1.0f,false,true,false);
 
 		////////////////////////
 		// Overload global
@@ -1881,12 +1881,12 @@ float cLuxEnemy_ManPig::GetDamageMul(float afAmount, int alStrength)
 	if(	mCurrentState == eLuxEnemyState_Idle ||
 		mCurrentState == eLuxEnemyState_Wait ||
 		mCurrentState == eLuxEnemyState_Patrol ||
-		mCurrentState == eLuxEnemyState_Investigate) 
+		mCurrentState == eLuxEnemyState_Investigate)
 	{
 		return 1.0f;
 	}
 	if( mCurrentState == eLuxEnemyState_Hurt) return 0.5f;
-	
+
 	return 0.2f;
 }
 
@@ -1910,7 +1910,7 @@ void cLuxEnemy_ManPig::OnSetActiveEnemySpecific(bool abX)
 		mbTeslaTerror = false;
 		mfTeslaSpecialNoticeCount =0;
 
-		gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);		
+		gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Attack,this);
 		gpBase->mpMusicHandler->RemoveEnemy(eLuxEnemyMusic_Search,this);
 	}
 }
@@ -1921,7 +1921,7 @@ bool cLuxEnemy_ManPig::CheckEnemyAutoRemoval(float afDistance)
 {
 	if(mbIsSeenByPlayer==false && DistToPlayer() > afDistance && mbAutoRemoveAtPathEnd)
 	{
-		SetActive(false);	
+		SetActive(false);
 
 		RunCallbackFunc("OnAutoDisabled");
 
@@ -1951,15 +1951,15 @@ void cLuxEnemy_ManPig::PatrolUpdateGoal()
 			break;
 
 		}
-		
-		
+
+
 		return;
 	}
-	
+
 	cLuxEnemyPatrolNode* pPatrolNode = GetCurrentPatrolNode();
-	
+
 	mpPathfinder->MoveTo(pPatrolNode->mpNode->GetPosition());
-	
+
 	/*if(OutsideStartRadius() && DistToPlayer() > mfActivationDistance * 0.5f)
 	{
 		ChangeState(eLuxEnemyState_GoHome);
@@ -2030,12 +2030,12 @@ bool cLuxEnemy_ManPig::StalkFindNode()
 		////////////////////////////////////
 		//Check if player cannot see enemy at this position or if it is far enough away.
 		float fDistance = DistToPlayer2D(pNode->GetPosition());
-		
+
 		if(fDistance < 15.5f && IsVisibleToPlayerAtFeetPos(pNode->GetPosition()))
 		{
 			continue;
 		}
-		
+
 		//////////////////////////////
 		//Move to pos
 		mpPathfinder->MoveTo(pNode->GetPosition());
@@ -2047,7 +2047,7 @@ bool cLuxEnemy_ManPig::StalkFindNode()
 			mpPathfinder->Stop();
 			continue;
 		}
-		
+
 		return true; //Take this node!
 	}
 
@@ -2062,7 +2062,7 @@ bool cLuxEnemy_ManPig::TrackFindNode()
 
 	float fMaxDistance = cMath::Max(fDistToPlayer*0.65f, 3.5f);
 	float fMinDistance = cMath::Max(fDistToPlayer *0.25f, 1.5f);
-	
+
 	int lNumOfTries=10;
 	for(int i=0; i<lNumOfTries; ++i)
 	{
@@ -2088,7 +2088,7 @@ bool cLuxEnemy_ManPig::TrackFindNode()
 	}
 
 	return false;
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -2121,7 +2121,7 @@ bool cLuxEnemy_ManPig::TrackTeleportBehindPlayer()
 		{
 			continue;
 		}
-		
+
 		mpCharBody->SetFeetPosition(pNode->GetPosition());
 
 		return true; //Take this node!
@@ -2156,7 +2156,7 @@ bool cLuxEnemy_ManPig::InsidePlayerView()
 		//Log(" true: close!\n");
 		return pFrust->CollideBoundingVolume(mpCharBody->GetCurrentBody()->GetBoundingVolume())!=eCollision_Outside;
 	}
-	
+
 	/////////////////////////
 	//Check inside frustum
 	if(pFrust->CollideBoundingVolume(mpCharBody->GetCurrentBody()->GetBoundingVolume())!=eCollision_Inside)
@@ -2174,7 +2174,7 @@ bool cLuxEnemy_ManPig::InsidePlayerView()
 	cVector3f vSideAdd = mpCharBody->GetRight()*mpCharBody->GetSize().x*0.4f;
 	vPositions[1] = mpCharBody->GetPosition() + vSideAdd;
 	vPositions[2] = mpCharBody->GetPosition() - vSideAdd;
-	
+
 	for(int i=0; i<3; ++i)
 	{
 		if(gpBase->mpMapHelper->CheckLineOfSight(vStart, vPositions[i], true))
@@ -2197,7 +2197,7 @@ void cLuxEnemy_ManPig::UpdateCheckInLantern(float afTimeStep)
 	}
 
 	mfCheckFlashLightShining-=afTimeStep;
-	if(mfCheckFlashLightShining>0) 
+	if(mfCheckFlashLightShining>0)
 	{
 		return;
 	}
@@ -2219,7 +2219,7 @@ void cLuxEnemy_ManPig::UpdateCheckInLantern(float afTimeStep)
 		mfInLanternLightCount-= 0.2f;
 		if(mfInLanternLightCount<0) mfInLanternLightCount=0;
 	}
-	
+
 	//gpBase->mpDebugHandler->AddMessage(_W("LightCount:")+cString::ToStringW(mfInLanternLightCount,2),false);
 }
 
@@ -2241,7 +2241,7 @@ void cLuxEnemy_ManPig::ForceTeslaSighting()
 		mfMindFuckBlinkCount =0;
 		mbTeslaForceSighting = true;
 	}
-	
+
 	//mlMindFuckBlinkState=1;
 }
 
@@ -2268,7 +2268,7 @@ void cLuxEnemy_ManPig::ResetMindFuckEffects()
 	if(mpMindFuckSound)
 	{
 		cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-		
+
 		if(pSoundHandler->IsValid(mpMindFuckSound, mlMindFuckSoundId))
 		{
 			mpMindFuckSound->FadeOut(2);
@@ -2298,7 +2298,7 @@ void cLuxEnemy_ManPig::SetTeslaSoundDisabled(bool abX)
 	if(abX == false && mpMindFuckSound)
 	{
 		cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
-		
+
 		if(pSoundHandler->IsValid(mpMindFuckSound, mlMindFuckSoundId))
 		{
 			mpMindFuckSound->FadeOut(2);
@@ -2322,7 +2322,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 		{
 			ResetMindFuckEffects();
 		}
-		
+
 		return;
 	}
 
@@ -2338,7 +2338,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 		}
 
 		if(mfBlackOutDurationCount>0) mfBlackOutDurationCount -= afTimeStep;
-		
+
 		mfTeslaFlickerTimer-= afTimeStep;
 		if(mfTeslaFlickerTimer<=0)
 		{
@@ -2394,14 +2394,14 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 		{
 			float fMul = 0.15f;
 			float fDistance = DistToPlayer2D();
-			
+
 			if(fDistance>30) fMul *= 0.5f;
 			else if(fDistance>15) fMul *= 0.75f;
 
 			mfTeslaSpecialNoticeCount += (fSpeed/fMinSpeed)*afTimeStep*fMul;
 			bWasNoticed = true;
 		}*/
-		
+
 		//////////////////////////////////
 		// Vision
 		/*if(mbIsSeenByPlayer)// InsidePlayerView())
@@ -2444,8 +2444,8 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 
 		///////////////////////////////
 		// Make it easier to escape.
-		if(mbTeslaEasyEscapeDisabled==false && 
-		   mfTeslaSpecialNoticeCount<0.35f && 
+		if(mbTeslaEasyEscapeDisabled==false &&
+		   mfTeslaSpecialNoticeCount<0.35f &&
 		   mbCanSeePlayer == false &&
 		   gpBase->mpPlayer->GetHealth()<75)
 		{
@@ -2509,7 +2509,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 				{
 					if(mfTeslaSpecialNoticeCount<0.7f && mfMindFuckBlinkCount>0.2f) fCountMul += (1-mfTeslaSpecialNoticeCount)*5;
 				}
-				
+
 				mfMindFuckBlinkCount-=afTimeStep*fCountMul;
 				if(mfMindFuckBlinkCount<0)
 				{
@@ -2541,7 +2541,7 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 					if(mfMindFuckBlinkAmount>1)
 					{
 						mfMindFuckBlinkAmount=1;
-						
+
 						mpMeshEntity->SetVisible(false);
 						int lMaxRand =  3;
 						if(mfTeslaSpecialNoticeCount<0.7f || mCurrentState==eLuxEnemyState_Patrol)
@@ -2553,12 +2553,12 @@ void cLuxEnemy_ManPig::UpdateTesla(float afTimeStep)
 						mbTeslaForceSighting = false;
 					}
 				}
-						
+
 				//float fDarkness = 0.4f + (mfTeslaSpecialNoticeCount/fMaxNoticeCount)*0.5f;
 				if (mbTeslaFadeDisabled == false)
 					gpBase->mpEffectHandler->GetFade()->SetDirectAlpha(mfMindFuckBlinkAmount);
 			}
-			
+
 
 			////////////////////////
 			// Sound

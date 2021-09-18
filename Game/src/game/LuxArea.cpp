@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -46,7 +46,7 @@ void iLuxAreaLoader::Load(const tString &asName, int alID, bool abActive, const 
 	pBody->SetCollideCharacter(false);
 	pBody->SetMatrix(a_mtxTransform);
 	pBody->SetUserData(pArea);
-	
+
 	pArea->mpBody = pBody;
 
 	//////////////////////////////
@@ -114,7 +114,7 @@ void iLuxArea::OnRenderSolid(cRendererCallbackFunctions* apFunctions)
     if(mpBody==NULL) return;
 
 	cBoundingVolume* pBV = mpBody->GetBoundingVolume();
-	
+
 	apFunctions->GetLowLevelGfx()->DrawBoxMinMax(pBV->GetMin(), pBV->GetMax(),cColor(1,1,1,1));
 #endif
 }
@@ -150,7 +150,7 @@ iEntity3D* iLuxArea::GetAttachEntity()
 //-----------------------------------------------------------------------
 
 void iLuxArea::AttachToBody(const tString& asPropName, int alBodyId)
-{ 
+{
 	iLuxEntity *apEntity = mpMap->GetEntityByName(asPropName);
 
 	if(apEntity->GetEntityType() == eLuxEntityType_Prop)
@@ -163,7 +163,7 @@ void iLuxArea::AttachToBody(const tString& asPropName, int alBodyId)
 
 			if(pPropBody)
 			{
-				msPropName = asPropName; 
+				msPropName = asPropName;
 				mlBodyId = alBodyId;
 				mpParentBody = pPropBody;
 				mvRelativeOffset = mpBody->GetWorldPosition() - mpParentBody->GetWorldPosition();
@@ -192,7 +192,7 @@ void iLuxArea::DetachBody()
 //////////////////////////////////////////////////////////////////////////
 
 void iLuxArea::OnSetActive(bool abX)
-{	
+{
 	///////////////
 	//Bodies
 	if(mpBody)
@@ -279,7 +279,7 @@ void iLuxArea::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 	pBody->SetActive(mbActive);
 
 	mpBody = pBody;
-	
+
 	///////////////////
 	//Do setup
 	SetupAfterLoad(mpMap->GetWorld());

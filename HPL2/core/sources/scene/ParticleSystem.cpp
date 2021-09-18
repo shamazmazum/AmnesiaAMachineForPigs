@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -50,7 +50,7 @@ namespace hpl {
 		mpResources = apResources;
 		mpGraphics = apGraphics;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cParticleSystemData::~cParticleSystemData()
@@ -76,7 +76,7 @@ namespace hpl {
 		}
 
 		cParticleSystem *pPS = hplNew( cParticleSystem, (asName,this,mpResources,mpGraphics) );
-		
+
 		for(size_t i=0; i<mvEmitterData.size(); ++i)
 		{
 			///////////////////////////
@@ -107,12 +107,12 @@ namespace hpl {
 		hplDelete(pXmlDoc);
 		return bRet;
 		/*
-		
+
 		FILE *pFile = _wfopen(asFile.c_str(),_W("rb"));
 		if(pFile==NULL) return false;
 
 		TiXmlDocument* pXmlDoc = hplNew( TiXmlDocument,() );
-		
+
 		if(pXmlDoc->LoadFile(pFile)==false)
 		{
 			Warning("Couldn't open XML file %s\n",cString::To8Char(asFile).c_str());
@@ -121,7 +121,7 @@ namespace hpl {
 			return false;
 		}
 		fclose(pFile);
-		
+
 		TiXmlElement *pRootElem = pXmlDoc->RootElement();
 
 		bool bRet = LoadFromElement(pRootElem);
@@ -157,7 +157,7 @@ namespace hpl {
 																	mpResources,mpGraphics) );
 
             pPE->LoadFromElement(pEmitterElem);
-			
+
 			mvEmitterData.push_back(pPE);
 		}*/
 
@@ -173,7 +173,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	cParticleSystem::cParticleSystem(const tString asName, 
+	cParticleSystem::cParticleSystem(const tString asName,
 										cParticleSystemData *apData,
 										cResources *apResources, cGraphics *apGraphics)
 		: iEntity3D(asName)
@@ -215,7 +215,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	void cParticleSystem::SetVisible(bool abVisible)
@@ -223,14 +223,14 @@ namespace hpl {
 		if(mbIsVisible == abVisible) return;
 
 		mbIsVisible = abVisible;
-		
+
 		for(size_t i=0; i< mvEmitters.size(); ++i)
 		{
 			mvEmitters[i]->SetVisible(mbIsVisible);
 		}
-		
+
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cParticleSystem::IsDead()
@@ -277,7 +277,7 @@ namespace hpl {
 			pPE->Kill();
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cParticleSystem::KillInstantly()
@@ -292,7 +292,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	void cParticleSystem::UpdateLogic(float afTimeStep)
 	{
 		if(IsActive()==false) return;
@@ -306,7 +306,7 @@ namespace hpl {
 			if(mbFirstUpdate)
 			{
 				iParticleEmitterData *pData =  mpData->GetEmitterData((int)i);
-				
+
 				if(pData->GetWarmUpTime() >0)
 				{
 					float fTime = pData->GetWarmUpTime();
@@ -319,7 +319,7 @@ namespace hpl {
 					}
 				}
 			}
-			
+
 			//////////////////////////
 			//Update
 			pPE->UpdateLogic(afTimeStep);
@@ -337,14 +337,14 @@ namespace hpl {
 
 		AddChild(apEmitter);
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	iParticleEmitter* cParticleSystem::GetEmitter(int alIdx)
 	{
 		return mvEmitters[alIdx];
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	int cParticleSystem::GetEmitterNum()
@@ -359,6 +359,6 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	//-----------------------------------------------------------------------
 }

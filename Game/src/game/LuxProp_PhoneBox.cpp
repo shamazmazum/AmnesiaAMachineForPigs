@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -130,7 +130,7 @@ bool cLuxProp_PhoneBox::OnInteract(iPhysicsBody *apBody, const cVector3f &avPos)
 	pVoiceFlashback->StopPlaying();
     pVoiceFlashback->SetMoveSpeedMultiplier( mfMoveSpeedMultiplier );
     pVoiceFlashback->SetMouseSensitivityModifier( mfMouseSensitivityModifier );
-    
+
     pVoiceFlashback->SetStopSound( "telephone_down" );
 
 	pVoiceFlashback->Start( msVoiceFile,
@@ -161,7 +161,7 @@ void cLuxProp_PhoneBox::OnResetProperties()
 
 void cLuxProp_PhoneBox::OnSetupAfterLoad(cWorld *apWorld)
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -287,7 +287,7 @@ void cLuxProp_PhoneBox::LoadFromSaveData(iLuxEntity_SaveData* apSaveData)
 	//Init
 	super_class::LoadFromSaveData(apSaveData);
 	cLuxProp_PhoneBox_SaveData *pData = static_cast<cLuxProp_PhoneBox_SaveData*>(apSaveData);
-	
+
 	kCopyFromVar(pData,msVoiceFile);
 	kCopyFromVar(pData,msTextEntry1);
 	kCopyFromVar(pData,mfDelay1);
@@ -326,7 +326,7 @@ void cLuxProp_PhoneBox::StartRinging()
 
     PlayAnimation("hammer", 0.0f, true, "");
     mbIsRinging = true;
-    
+
  //   mpRingingSound = gpBase->mpMapHandler->GetCurrentMap()->GetWorld()->CreateSoundEntity("zephoneizringing", "telephone_ring_loop",false);
 	//
  //   if( mpRingingSound )
@@ -347,7 +347,7 @@ void cLuxProp_PhoneBox::StopRinging()
     }*/
 
     StopAnimation();
-	
+
 	cLuxPlayerVoiceFlashback * pVoiceFlashback = gpBase->mpPlayer->GetHelperVoiceFlashback();
     pVoiceFlashback->StopPlaying();
 

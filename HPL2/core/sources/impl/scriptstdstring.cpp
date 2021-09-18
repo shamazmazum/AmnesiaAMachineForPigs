@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -37,8 +37,8 @@ BEGIN_AS_NAMESPACE
 
 // The string pool will be kept as user data in the engine. We'll
 // need a specific type to identify the string pool user data.
-// We just define a number here that we assume nobody else is using for 
-// object type user data. The add-ons have reserved the numbers 1000 
+// We just define a number here that we assume nobody else is using for
+// object type user data. The add-ons have reserved the numbers 1000
 // through 1999 for this purpose, so we should be fine.
 const asPWORD STRING_POOL = 1001;
 
@@ -146,8 +146,8 @@ static void DestructString(string *thisPointer)
 
 static string &AddAssignStringToString(const string &str, string &dest)
 {
-	// We don't register the method directly because some compilers 
-	// and standard libraries inline the definition, resulting in the 
+	// We don't register the method directly because some compilers
+	// and standard libraries inline the definition, resulting in the
 	// linker being unable to find the declaration.
 	// Example: CLang/LLVM with XCode 4.3 on OSX 10.7
 	dest += str;
@@ -158,8 +158,8 @@ static string &AddAssignStringToString(const string &str, string &dest)
 // bool string::empty() // if AS_USE_STLNAMES == 1
 static bool StringIsEmpty(const string &str)
 {
-	// We don't register the method directly because some compilers 
-	// and standard libraries inline the definition, resulting in the 
+	// We don't register the method directly because some compilers
+	// and standard libraries inline the definition, resulting in the
 	// linker being unable to find the declaration
 	// Example: CLang/LLVM with XCode 4.3 on OSX 10.7
 	return str.empty();
@@ -344,7 +344,7 @@ static asUINT StringLength(const string &str)
 
 
 // AngelScript signature:
-// void string::resize(uint l) 
+// void string::resize(uint l)
 static void StringResize(asUINT l, string &str)
 {
 	// We don't register the method directly because the argument types change between 32bit and 64bit platforms
@@ -390,7 +390,7 @@ static string formatInt(asINT64 value, const string &options, asUINT width)
 	sprintf(&buf[0], fmt.c_str(), width, value);
 #endif
 	buf.resize(strlen(&buf[0]));
-	
+
 	return buf;
 }
 
@@ -425,7 +425,7 @@ static string formatFloat(double value, const string &options, asUINT width, asU
 	sprintf(&buf[0], fmt.c_str(), width, precision, value);
 #endif
 	buf.resize(strlen(&buf[0]));
-	
+
 	return buf;
 }
 
@@ -729,7 +729,7 @@ static void StringCharAtGeneric(asIScriptGeneric * gen) {
   }
 }
 
-static void AssignInt2StringGeneric(asIScriptGeneric *gen) 
+static void AssignInt2StringGeneric(asIScriptGeneric *gen)
 {
 	int *a = static_cast<int*>(gen->GetAddressOfArg(0));
 	string *self = static_cast<string*>(gen->GetObject());
@@ -739,7 +739,7 @@ static void AssignInt2StringGeneric(asIScriptGeneric *gen)
 	gen->SetReturnAddress(self);
 }
 
-static void AssignUInt2StringGeneric(asIScriptGeneric *gen) 
+static void AssignUInt2StringGeneric(asIScriptGeneric *gen)
 {
 	unsigned int *a = static_cast<unsigned int*>(gen->GetAddressOfArg(0));
 	string *self = static_cast<string*>(gen->GetObject());
@@ -749,7 +749,7 @@ static void AssignUInt2StringGeneric(asIScriptGeneric *gen)
 	gen->SetReturnAddress(self);
 }
 
-static void AssignDouble2StringGeneric(asIScriptGeneric *gen) 
+static void AssignDouble2StringGeneric(asIScriptGeneric *gen)
 {
 	double *a = static_cast<double*>(gen->GetAddressOfArg(0));
 	string *self = static_cast<string*>(gen->GetObject());
@@ -759,7 +759,7 @@ static void AssignDouble2StringGeneric(asIScriptGeneric *gen)
 	gen->SetReturnAddress(self);
 }
 
-static void AssignBool2StringGeneric(asIScriptGeneric *gen) 
+static void AssignBool2StringGeneric(asIScriptGeneric *gen)
 {
 	bool *a = static_cast<bool*>(gen->GetAddressOfArg(0));
 	string *self = static_cast<string*>(gen->GetObject());
@@ -888,7 +888,7 @@ static void StringSubString_Generic(asIScriptGeneric *gen)
     new(gen->GetAddressOfReturnLocation()) string(StringSubString(start, count, *str));
 }
 
-void RegisterStdString_Generic(asIScriptEngine *engine) 
+void RegisterStdString_Generic(asIScriptEngine *engine)
 {
 	int r;
 

@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -38,10 +38,10 @@ class iEditorWindow;
 class iEditorInput : public iWidgetContainer
 {
 public:
-	iEditorInput(iEditorWindow* apWindow, 
-				 const cVector3f& avPos, 
-				 const tWString& asLabel, 
-				 const tString& asName, 
+	iEditorInput(iEditorWindow* apWindow,
+				 const cVector3f& avPos,
+				 const tWString& asLabel,
+				 const tString& asName,
 				 iWidget* apParent=NULL,
 				 eEditorInputLayoutStyle aStyle=eEditorInputLayoutStyle_ColumnLabelOnTop);
 	virtual ~iEditorInput();
@@ -86,7 +86,7 @@ protected:
 	cWidgetDummy* mpHandle;
 
 	void* mpUserData;
-	
+
 	static cVector2f mvFontSize;
 	eEditorInputLayoutStyle mLayoutStyle;
 	float mfTabWidth;
@@ -97,9 +97,9 @@ protected:
 class iEditorInputLabeled : public iEditorInput
 {
 public:
-	iEditorInputLabeled(iEditorWindow* apWindow, 
-						const cVector3f& avPos, 
-						const tWString& asLabel, 
+	iEditorInputLabeled(iEditorWindow* apWindow,
+						const cVector3f& avPos,
+						const tWString& asLabel,
 						const tString& asName,
 						iWidget* apParent=NULL,
 						eEditorInputLayoutStyle aStyle=eEditorInputLayoutStyle_RowLabelOnTop);
@@ -116,10 +116,10 @@ protected:
 class cEditorInputBool : public iEditorInput
 {
 public:
-	cEditorInputBool(iEditorWindow* apWindow, 
-					 const cVector3f& avPos, 
-					 const tWString& asLabel, 
-					 const tString& asName, 
+	cEditorInputBool(iEditorWindow* apWindow,
+					 const cVector3f& avPos,
+					 const tWString& asLabel,
+					 const tString& asName,
 					 iWidget* apParent=NULL);
 	virtual ~cEditorInputBool();
 
@@ -130,7 +130,7 @@ public:
 	void UpdateValue();
 	void CopyValueToInput();
 
-	void SetValue(bool abX, bool abGenerateCallback = true, bool abCopyToInput = true); 
+	void SetValue(bool abX, bool abGenerateCallback = true, bool abCopyToInput = true);
 	bool GetValue();
 
 	void UpdateSize();
@@ -144,12 +144,12 @@ protected:
 class cEditorInputText :public iEditorInputLabeled
 {
 public:
-	cEditorInputText(iEditorWindow* apWindow, 
-					 const cVector3f& avPos, 
-					 const tWString& asLabel, 
-					 const tString& asName, 
-					 float afTextBoxWidth, 
-					 int alAmount, 
+	cEditorInputText(iEditorWindow* apWindow,
+					 const cVector3f& avPos,
+					 const tWString& asLabel,
+					 const tString& asName,
+					 float afTextBoxWidth,
+					 int alAmount,
 					 bool abNumeric,
 					 float afNumericAdd=0,
 					 iWidget* apParent=NULL,
@@ -195,7 +195,7 @@ public:
 					   float afNumericAdd=0) : cEditorInputText(apWindow, avPos, asLabel, asName, afTextBoxWidth,1, true,afNumericAdd,apParent)
 	{
 	}
-	
+
 	void SetValue(float afX, bool abGenerateCallback = true, bool abCopyToInput = true);
 	float GetValue();
 
@@ -218,7 +218,7 @@ public:
 	{
 	}
 
-	void SetValue(const cVector2f& avX, bool abGenerateCallback = true, bool abCopyToInput = true); 
+	void SetValue(const cVector2f& avX, bool abGenerateCallback = true, bool abCopyToInput = true);
 	cVector2f GetValue();
 };
 
@@ -238,7 +238,7 @@ public:
 	{
 	}
 
-	void SetValue(const cVector3f& avX, bool abGenerateCallback = true, bool abCopyToInput = true); 
+	void SetValue(const cVector3f& avX, bool abGenerateCallback = true, bool abCopyToInput = true);
 	cVector3f GetValue();
 };
 
@@ -248,10 +248,10 @@ class cEditorInputFile : public cEditorInputText
 {
 public:
 	cEditorInputFile(iEditorWindow* apWindow,
-					 const cVector3f& avPos, 
-					 const tWString& asLabel, 
-					 const tString& asName, 
-					 float afTextBoxWidth, 
+					 const cVector3f& avPos,
+					 const tWString& asLabel,
+					 const tString& asName,
+					 float afTextBoxWidth,
 					 iWidget* apParent=NULL);
 	virtual ~cEditorInputFile();
 
@@ -308,7 +308,7 @@ class cEditorInputEnum : public iEditorInputLabeled
 public:
 	cEditorInputEnum(iEditorWindow* apWindow,
 					 const cVector3f& avPos,
-					 const tWString& asLabel, 
+					 const tWString& asLabel,
 					 const tString& asName,
 					 float afComboBoxWidth,
 					 iWidget* apParent=NULL);
@@ -343,10 +343,10 @@ protected:
 class cEditorInputColorFrame : public iEditorInputLabeled
 {
 public:
-	cEditorInputColorFrame(iEditorWindow* apWindow, 
-						   const cVector3f& avPos, 
-						   const tWString& asLabel, 
-						   const tString& asName, 
+	cEditorInputColorFrame(iEditorWindow* apWindow,
+						   const cVector3f& avPos,
+						   const tWString& asLabel,
+						   const tString& asName,
 						   iWidget* apParent=NULL);
 
 	iWidget* GetInputWidget(int alIdx=0) { return mpFColor; }

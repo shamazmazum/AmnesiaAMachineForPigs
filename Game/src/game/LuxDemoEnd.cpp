@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -92,7 +92,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 
 	mfBuyButtonY = gpBase->mpDemoCfg->GetFloat("DemoEnd", "BuyButtonY",0);
 	mfExitButtonY = gpBase->mpDemoCfg->GetFloat("DemoEnd", "ExitButtonY",0);
-	
+
 	msDestinationURL = gpBase->mpDemoCfg->GetString("DemoEnd", "DestinationURL", "");
 
 	mpBlackGfx = mpGui->CreateGfxFilledRect(cColor(0,1), eGuiMaterial_Alpha);
@@ -102,7 +102,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 	mbIsSteamVersion = gpBase->mpDemoCfg->GetBool("DemoEnd","IsSteamVersion",false);
 
 	mbShowOnAllExit = gpBase->mpDemoCfg->GetBool("DemoEnd","ShowOnAllExit",false);
-	
+
 	//Create buttons label buttons
 	cVector2f vButtonSize = cVector2f(150, mvButtonFontSize.y);
 
@@ -119,7 +119,7 @@ cLuxDemoEnd::cLuxDemoEnd() : iLuxUpdateable("LuxDemoEnd")
 	{
 		mpLBuyNow = NULL;
 	}
-	
+
 	vButtonPos.y = mfExitButtonY;
 	mpLExit = mpGuiSet->CreateWidgetLabel(vButtonPos, vButtonSize, kTranslate("Demo", "Exit"), NULL);
 
@@ -188,7 +188,7 @@ void cLuxDemoEnd::OnEnterContainer(const tString& asOldContainer)
 	//Fade out music
 	cMusicHandler* pMusHandler = gpBase->mpEngine->GetSound()->GetMusicHandler();
 	pMusHandler->Stop(0.3f);
-	
+
 	// Load background
 	iTexture* pTex = gpBase->mpEngine->GetResources()->GetTextureManager()->Create2D(msBackgroundFile, false, eTextureType_Rect);
 	if(pTex) mpGfxBackground = mpGui->CreateGfxTexture(pTex, true, eGuiMaterial_Alpha);
@@ -222,7 +222,7 @@ void cLuxDemoEnd::OnLeaveContainer(const tString& asNewContainer)
 void cLuxDemoEnd::Update(float afTimeStep)
 {
 	mfTime += afTimeStep;
-	
+
 	if(mbExiting)
 	{
 		mfFadeAlpha += afTimeStep*0.7f;
@@ -359,7 +359,7 @@ void cLuxDemoEnd::SetUpButtonLabel(cWidgetLabel* apLabel, float* apFadeValue, tG
 bool cLuxDemoEnd::BuyNowOnPressed(iWidget* apWidget, const cGuiMessageData& aData)
 {
 	Exit(true);
-	
+
 	return true;
 }
 kGuiCallbackDeclaredFuncEnd(cLuxDemoEnd, BuyNowOnPressed);

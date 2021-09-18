@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -78,7 +78,7 @@ void cLuxHandObject_LightSource::LoadImplementedVars(cXmlElement *apVarsElem)
 	mfMaxSwayVel = apVarsElem->GetAttributeFloat("MaxSwayVel", 0);
 	mvSwayAngleLimits = cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayAngleLimits", 0));
 	mvSwayDownAngleLimits= cMath::Vector2ToRad(apVarsElem->GetAttributeVector2f("SwayDownAngleLimits", 0));
-	
+
 	mfSwayGravity = apVarsElem->GetAttributeFloat("SwayGravity", 0);
 	mfSwayFriction = apVarsElem->GetAttributeFloat("SwayFriction", 0);
 	mvSwayPinDir = apVarsElem->GetAttributeVector3f("SwayPinDir", 1);
@@ -86,7 +86,7 @@ void cLuxHandObject_LightSource::LoadImplementedVars(cXmlElement *apVarsElem)
 	mfSwayPlayerSpeedMul = apVarsElem->GetAttributeFloat("SwayPlayerSpeedMul", 0);
 	mfSwayCameraRollMul = apVarsElem->GetAttributeFloat("SwayCameraRollMul", 0);
 
-    
+
 	msSkipSwaySubMesh = apVarsElem->GetAttributeString("SkipSwaySubMesh", "");
 }
 
@@ -120,7 +120,7 @@ void cLuxHandObject_LightSource::ImplementedCreateEntity(cLuxMap *apMap)
 	{
 		mvDefaultLightMatrix[i] = mvLights[i]->GetLocalMatrix();
 	}
-		
+
 	mvDefaultBillboardMatrix.resize(mvBillboards.size());
 	for(size_t i=0; i<mvBillboards.size(); ++i)
 	{
@@ -148,12 +148,12 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
 {
 	bool bUpdate = true;
 	float fAlpha = 1;
-	
+
     ///////////////////
 	// Sway Physics
-    if(mbHasSwayPhysics)	
+    if(mbHasSwayPhysics)
 	{
-		UpdateSwayPhysics(afTimeStep);	
+		UpdateSwayPhysics(afTimeStep);
 	}
 
 	///////////////////
@@ -186,7 +186,7 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
 	///////////////////
 	// Flickering
 	float fFlicker = UpdateFlickering(afTimeStep);
-	
+
 	///////////////////
 	// Set alpha
 	if(bUpdate) fAlpha = mpHands->mfHandObjectAlpha * fFlicker;
@@ -200,28 +200,28 @@ void cLuxHandObject_LightSource::Update(float afTimeStep)
 			mvLightFadeOutColor[i] = mvLights[i]->GetDiffuseColor();
 		}
 	}
-	
+
 
 	///////////////////
 	// Set alpha
 	if(bUpdate)
 	{
 		if ( mpMeshEntity ) mpMeshEntity->SetIlluminationAmount(fAlpha);
-       
+
 		for(size_t i=0; i<mvBillboards.size(); ++i)
 		{
 			cColor col = mvBillboards[i]->GetColor();
 			col.a = fAlpha;
 			mvBillboards[i]->SetColor(col);
 		}
-		
+
 		for(size_t i=0; i<mvParticleSystems.size(); ++i)
 		{
 			cColor col = mvParticleSystems[i]->GetColor();
 			col.a = fAlpha;
 			mvParticleSystems[i]->SetColor(col);
 		}
-		
+
 		for(size_t i=0; i<mvLights.size(); ++i)
 		{
 			if(mpHands->GetState() == eLuxHandsState_Holster)
@@ -293,7 +293,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
 		/////////////////////////////
 		// Player velocity
         iCharacterBody *pCharBody = gpBase->mpPlayer->GetCharacterBody();
-        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();	
+        float fPlayerSpeed = pCharBody->GetVelocity(gpBase->mpEngine->GetStepSize()).Length();
 		if(pCharBody->GetMoveSpeed(eCharDir_Forward)<0) fPlayerSpeed = -fPlayerSpeed;
 
 		mfSwayVel += -fPlayerSpeed * mfSwayPlayerSpeedMul;
@@ -323,7 +323,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
 		mfSwayVel =0;
 		mfSwayAngle = mvSwayAngleLimits.y;
 	}
-	
+
 	/////////////////////////////
 	// Update Model matrix
 	cMatrixf mtxSway = cMath::MatrixRotate(mvSwayPinDir * mfSwayAngle, eEulerRotationOrder_XYZ);
@@ -338,7 +338,7 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
 			cSubMeshEntity *pSubEnt = mpMeshEntity->GetSubMeshEntity(i);
 			if(pSubEnt->GetSubMesh()->GetName() == msSkipSwaySubMesh) continue;
 			//Log("'%s'\n",pSubEnt->GetSubMesh()->GetName().c_str());
-		
+
 			pSubEnt->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultSubMeshMatrix[i]) );
 		}
 		mpMeshEntity->SetMatrix(m_mtxOffset);
@@ -348,12 +348,12 @@ void cLuxHandObject_LightSource::UpdateSwayPhysics(float afTimeStep)
 	{
 		mvLights[i]->SetMatrix(cMath::MatrixMul(mtxSwayLight, mvDefaultLightMatrix[i]) );
 	}
-	
+
 	for(size_t i=0; i<mvBillboards.size(); ++i)
 	{
 		mvBillboards[i]->SetMatrix(cMath::MatrixMul(mtxSway, mvDefaultBillboardMatrix[i]) );
 	}
-	// Update 
+	// Update
 }
 
 //----------------------------------------------------------------------
@@ -411,8 +411,8 @@ float cLuxHandObject_LightSource::UpdateFlickering(float afTimeStep)
 	if(bEnemyInSpotLight)
 	{
 		//Make sure within bounds
-		if(mfFlickerTime<0.01) mfFlickerTime = 0.025f; 
-		if(mfFlickerTime>0.1) mfFlickerTime = 0.1f; 
+		if(mfFlickerTime<0.01) mfFlickerTime = 0.025f;
+		if(mfFlickerTime>0.1) mfFlickerTime = 0.1f;
 
 		//Puase
 		if(mfFlickerPauseTime>0)
@@ -420,13 +420,13 @@ float cLuxHandObject_LightSource::UpdateFlickering(float afTimeStep)
 			mfFlickerPauseTime-=afTimeStep;
 			return mfFlickerAmount;
 		}
-		
+
 		////////////////////////////
 		// Fade in
 		if(mlFlickeringState==1)
 		{
 			mfFlickerAmount += afTimeStep*(1.0f/mfFlickerTime);
-			if(mfFlickerAmount>=1) 
+			if(mfFlickerAmount>=1)
 			{
 				mfFlickerAmount=1;
 				mfFlickerTime = cMath::RandRectf(0.1f, 1.0f);

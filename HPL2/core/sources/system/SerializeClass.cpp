@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -38,7 +38,7 @@
 namespace hpl {
 
 	#define kSavedDataCRCKey (0x12AD11A1)
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// SERIALIZEABLE
 	//////////////////////////////////////////////////////////////////////////
@@ -198,7 +198,7 @@ namespace hpl {
 				pField->mType, pField->mlOffset);
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cSerializeClass::ResetGeneration()
@@ -244,7 +244,7 @@ namespace hpl {
 			bool bRet = pXmlDoc->SaveFile(pFile);
 			if(bRet==false)
 				Error("Couldn't save class to '%s'\n", asFile.c_str());
-		
+
 			if(pFile) fclose(pFile);
 
 			hplDelete(pXmlDoc);
@@ -284,7 +284,7 @@ namespace hpl {
 			return true;
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cSerializeClass::SaveElementToFile(TiXmlDocument* apXmlDoc, const tWString &asFile,bool abCompressAndCRC)
@@ -307,7 +307,7 @@ namespace hpl {
 			bool bRet = apXmlDoc->SaveFile(pFile);
 			if(bRet==false)
 				Error("Couldn't save class to '%s'\n", asFile.c_str());
-		
+
 			if(pFile) fclose(pFile);
 
 			return bRet;
@@ -370,7 +370,7 @@ namespace hpl {
 			pClassElem = static_cast<TiXmlElement*>(apParent->InsertEndChild(XmlClassElem));
 		}
 
-		
+
 		//Set attributes
 		pClassElem->SetAttribute("type",apData->Serialize_GetTopClass().c_str());
 		pClassElem->SetAttribute("name",asName.c_str());
@@ -378,11 +378,11 @@ namespace hpl {
 		if(gbLog) Log("---Saving class '%s' Begin---\n",apData->Serialize_GetTopClass().c_str());
 
 		cSerializeMemberFieldIterator classIt = GetMemberFieldIterator(apData);
-		
+
 		while(classIt.HasNext())
 		{
 			cSerializeMemberField *pField = classIt.GetNext();
-		
+
 			if(gbLog) Log(" Field : '%s', MainType: %d Type: %d\n",pField->msName.c_str(), pField->mMainType, pField->mType);
 
 			switch(pField->mMainType)
@@ -457,7 +457,7 @@ namespace hpl {
 			cBinaryBuffer compBuffer;
 			if(compBuffer.Load(asFile)==false)
 			{
-				hplDelete(pXmlDoc);	
+				hplDelete(pXmlDoc);
 				Error("Unable to open serialized file '%s'!\n", cString::To8Char(asFile).c_str());
 				return false;
 			}
@@ -466,7 +466,7 @@ namespace hpl {
 			// Check CRC
 			if(compBuffer.CheckInternalCRC(kSavedDataCRCKey)==false)
 			{
-				hplDelete(pXmlDoc);	
+				hplDelete(pXmlDoc);
 				Error("CRC check for serialized file '%s' failed!\n", cString::To8Char(asFile).c_str());
 				return false;
 			}
@@ -554,13 +554,13 @@ namespace hpl {
 	cSerializeSavedClass * cSerializeClass::GetClass(const tString &asName)
 	{
 		SetUpData();
-		
+
 		tSerializeSavedClassMapIt it = m_mapSavedClasses.find(asName);
 		if(it == m_mapSavedClasses.end()) {
 			Warning("Serialize class '%s' not found!\n",asName.c_str());
 			return NULL;
 		}
-        
+
 		return &it->second;
 	}
 

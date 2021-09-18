@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -155,7 +155,7 @@ void cLuxEnemy_Tesla::UpdateEnemySpecific(float afTimeStep)
             cMath::MatrixMul( cMath::MatrixTranslate( mTranslationOffset ), cMath::MatrixRotate( mAngleOffset, eEulerRotationOrder_XYZ ) )
             );
     }
-    
+
     mfPulseTimer += cMath::RandRectf(0.4f,0.8f) * afTimeStep;
     this->GetMeshEntity()->SetShaderTimer( mfPulseTimer );
 
@@ -302,7 +302,7 @@ void cLuxEnemy_Tesla::UpdateLightList(tLightList & alstAddedLights, tLightList &
     cLuxMap *pCurrentMap = gpBase->mpMapHandler->GetCurrentMap();
 	if(pCurrentMap==NULL) return;
 
-    tLightList lstIntersectingLights; 
+    tLightList lstIntersectingLights;
 
 	cWorld *pWorld = pCurrentMap->GetWorld();
 	iPhysicsWorld *pPhysicsWorld = pCurrentMap->GetPhysicsWorld();
@@ -310,13 +310,13 @@ void cLuxEnemy_Tesla::UpdateLightList(tLightList & alstAddedLights, tLightList &
     gpBase->mpMapHelper->GetLightsAtNode(pWorld->GetRenderableContainer(eWorldContainerType_Static)->GetRoot(), lstIntersectingLights, GetCharacterBody()->GetPosition(), mfDarkeningRadius, true, true);
 	gpBase->mpMapHelper->GetLightsAtNode(pWorld->GetRenderableContainer(eWorldContainerType_Dynamic)->GetRoot(), lstIntersectingLights, GetCharacterBody()->GetPosition(), mfDarkeningRadius, true, true);
 
-    tLightList lstStrobeIntersectingLights; 
+    tLightList lstStrobeIntersectingLights;
 
     gpBase->mpMapHelper->GetLightsAtNode(pWorld->GetRenderableContainer(eWorldContainerType_Static)->GetRoot(), lstStrobeIntersectingLights, GetCharacterBody()->GetPosition(), mfStrobeRadius, true, false);
 	gpBase->mpMapHelper->GetLightsAtNode(pWorld->GetRenderableContainer(eWorldContainerType_Dynamic)->GetRoot(), lstStrobeIntersectingLights, GetCharacterBody()->GetPosition(), mfStrobeRadius, true, false);
 
     mlstStrobeLights = lstStrobeIntersectingLights;
-    
+
     mlstStrobeLamps.clear();
 
     tLightListIt it = mlstStrobeLights.begin();
@@ -464,7 +464,7 @@ void cLuxEnemy_Tesla::UpdateStrobeState(float afTimeStep)
         {
             // we are in a flash. see if next up is a repeated flash or not
             mbInfluencedLightsOn = false;
-            
+
             if ( mnRepeatedFlashCount > 0 )
             {
                 mnRepeatedFlashCount--;

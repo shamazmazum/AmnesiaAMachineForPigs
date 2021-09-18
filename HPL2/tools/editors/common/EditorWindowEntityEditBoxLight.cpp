@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -162,9 +162,9 @@ void cEditorWindowEntityEditBoxLight::AddPropertyDiffuseColor(cWidgetTab* apPare
 
 	mpGroupDiffuse= mpSet->CreateWidgetDummy(0,apParentTab);
 	AddWidget(mpGroupDiffuse);
-	
+
 	mpInpDiffuse = CreateInputColorFrame(cVector3f(0,0,0.1f), _W("Diffuse color"), "", mpGroupDiffuse);
-	
+
 	mpInpBrightness = CreateInputNumber(cVector3f(0,16,0.1f), _W("Brightness"), "", mpGroupDiffuse);
 	mpInpFalloff = CreateInputNumber(cVector3f(0,48,0.1f), _W("Falloff"), "", mpGroupDiffuse);
 }
@@ -203,7 +203,7 @@ void cEditorWindowEntityEditBoxLight::AddPropertySetFlicker(cWidgetTab* apParent
 	cVector3f vPos = cVector3f(10,30,0.1f);
 
 	mpInpFlickerActive = CreateInputBool(vPos, _W("Flicker Active"), "", apParentTab);
-	
+
 	///////////////////////////////////////
 	// On Parameters
 	vPos.y += mpInpFlickerActive->GetSize().y;
@@ -211,7 +211,7 @@ void cEditorWindowEntityEditBoxLight::AddPropertySetFlicker(cWidgetTab* apParent
 	AddWidget(mpGFlickerOn);
 
 	vPos = cVector3f(0,0,0.1f);
-	
+
 	mpInpFlickerOnMinLength = CreateInputNumber(vPos, _W("On Min time"), "", mpGFlickerOn,50, 0.1f);
 	mpInpFlickerOnMinLength->SetLowerBound(true, 0);
 	vPos.x += mpInpFlickerOnMinLength->GetSize().x + 10;
@@ -259,7 +259,7 @@ void cEditorWindowEntityEditBoxLight::AddPropertySetFlicker(cWidgetTab* apParent
 	////////////////////////////////////////
 	// Fade Parameters
 	vPos = mpGFlickerOff->GetLocalPosition() + cVector3f(0,mpGFlickerOff->GetSize().y + 10,0);
-	
+
 	mpGFlickerFade = mpSet->CreateWidgetDummy(vPos, apParentTab);
 	AddWidget(mpGFlickerFade);
 
@@ -274,7 +274,7 @@ void cEditorWindowEntityEditBoxLight::AddPropertySetFlicker(cWidgetTab* apParent
 	vPos.x += mpInpFlickerFadeOnMinLength->GetSize().x+10;
 	mpInpFlickerFadeOnMaxLength = CreateInputNumber(vPos, _W("On Max time"), "", mpGFlickerFade,50, 0.1f);
 	mpInpFlickerFadeOnMaxLength->SetLowerBound(true, 0);
-	
+
 	vPos.x = 0;
 	vPos.y += mpInpFlickerFadeOnMaxLength->GetSize().y+10;
 
@@ -390,7 +390,7 @@ void cEditorWindowEntityEditBoxLight::OnUpdate(float afTimeStep)
 				mpInpShadowRes->SetValue(i, false);
 				break;
 			}
-		}	
+		}
 		mpInpShadowAffectStatic->SetValue(mpLight->GetShadowsAffectStatic(),false);
 		mpInpShadowAffectDynamic->SetValue(mpLight->GetShadowsAffectDynamic(),false);
 	}
@@ -398,7 +398,7 @@ void cEditorWindowEntityEditBoxLight::OnUpdate(float afTimeStep)
 	mpInpDiffuse->SetValue(mpLight->GetDiffuseColor(), false);
 
 	mpInpFlickerActive->SetValue(mpLight->GetFlickerActive(), false);
-	
+
 	mpInpFlickerOnMinLength->SetValue(mpLight->GetFlickerOnMinLength(), false);
 	mpInpFlickerOnMaxLength->SetValue(mpLight->GetFlickerOnMaxLength(), false);
 	mpInpFlickerOnSound->SetValue(cString::To16Char(mpLight->GetFlickerOnSound()), false);
@@ -411,14 +411,14 @@ void cEditorWindowEntityEditBoxLight::OnUpdate(float afTimeStep)
 
 	mpInpFlickerOffRadius->SetValue(mpLight->GetFlickerOffRadius(), false);
 	mpInpFlickerOffColor->SetValue(mpLight->GetFlickerOffColor(), false);
-	
+
 	mpInpFlickerFade->SetValue(mpLight->GetFlickerFade(), false);
 
 	mpInpFlickerFadeOnMinLength->SetValue(mpLight->GetFlickerOnFadeMinLength(), false);
 	mpInpFlickerFadeOnMaxLength->SetValue(mpLight->GetFlickerOnFadeMaxLength(), false);
 	mpInpFlickerFadeOffMinLength->SetValue(mpLight->GetFlickerOffFadeMinLength(), false);
 	mpInpFlickerFadeOffMaxLength->SetValue(mpLight->GetFlickerOffFadeMaxLength(), false);
-	
+
 	mpInpBrightness->SetValue(mpLight->GetBrightness(), false);
 	mpInpFalloff->SetValue(mpLight->GetFalloff(), false);
 
@@ -452,7 +452,7 @@ bool cEditorWindowEntityEditBoxLight::InputCallback(iWidget* apWidget, const cGu
 	tString strFilename = cString::To8Char(apWidget->GetText());
 	bool bEmptyString = (strFilename=="");
 
-	
+
 	///////////////////////////////////////////////
 	// Boxlight Blend Func
 	if(apWidget==mpComboBoxBlendFunc)
@@ -492,7 +492,7 @@ bool cEditorWindowEntityEditBoxLight::WindowSpecificInputCallback(iEditorInput* 
 											eEditorTextureResourceType_CubeMap :
 											eEditorTextureResourceType_2D;
 
-		
+
 		if(strFilename=="" || cEditorHelper::LoadTextureResource(texType, strFilename, NULL))
 		{
 			pAction = mpEntity->CreateSetPropertyActionString(eLightStr_Gobo, strFilename);

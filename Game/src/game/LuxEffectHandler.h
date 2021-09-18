@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -67,7 +67,7 @@ public:
 
 	void Start(const tString &asTalker,const tString &asTopic, const tString &asFile, int alIconId);
 	void Stop();
-	
+
 	void Update(float afTimeStep);
 	void OnDraw(float afFrameTime);
 	void Reset();
@@ -77,7 +77,7 @@ private:
 	//Data
 	cSoundHandler *mpSoundHandler;
 	cMusicHandler *mpMusicHandler;
-	
+
 	//////////////////////
 	//Variables
 	cSoundEntry *mpSoundEntry;
@@ -105,11 +105,11 @@ public:
     void Reset() {};
 
 private:
-	
+
     //////////////////////
 	//Data
 	cGuiSet * mpGuiSet;
-	
+
 	tString msTextureName;
 
     cGuiGfxElement * mpTextureGfx;
@@ -140,10 +140,10 @@ public:
 
 	void Start(const tString &asTextCat, const tString &asTextEntry, const tString &asSound);
 	void Reset();
-	
+
 	void Update(float afTimeStep);
 	void OnDraw(float afFrameTime);
-	
+
 	void DoAction(eLuxPlayerAction aAction, bool abPressed);
 
 private:
@@ -155,7 +155,7 @@ private:
 
 	int mlStep;
 	float mfCount;
-	
+
 	float mfTextAlpha;
 	float mfTextTime;
 	tWStringVec mvTextRows;
@@ -201,7 +201,7 @@ private:
 //public:
 //	cLuxEffect_ViewportImage();
 //
-//	void ShowImage(string & imageFileName, float xPos, float yPos, float xSize, float ySize, bool applyPostProcessEffects); 
+//	void ShowImage(string & imageFileName, float xPos, float yPos, float xSize, float ySize, bool applyPostProcessEffects);
 //
 //	virtual bool IsAlwaysOn() { return false; }
 //
@@ -210,7 +210,7 @@ private:
 //	void Reset();
 //
 //private:
-//	
+//
 //};
 
 //----------------------------------------------
@@ -349,7 +349,7 @@ public:
 
 private:
 	cGuiGfxElement *mpWhiteGfx;
-	
+
 	float mfGoalAlpha;
 	float mfAlpha;
 	float mfFadeSpeed;
@@ -397,7 +397,7 @@ class cLuxEffect_Flash : public iLuxEffect
 public:
 	cLuxEffect_Flash();
 	~cLuxEffect_Flash();
-	
+
 	void Start(float afFadeIn, float afWhite, float afFadeOut);
 	void Reset();
 
@@ -431,7 +431,7 @@ public:
 
 	void StopVoices(float afFadeOutSpeed);
 	void AddVoice(	const tString& asVoiceFile, const tString& asEffectFile,
-					const tString& asTextCat, const tString& asTextEntry, bool abUsePostion, 
+					const tString& asTextCat, const tString& asTextEntry, bool abUsePostion,
 					const cVector3f& avPosition, float afMinDistance, float afMaxDistance, int alPriority = 0, bool abRemoveInterrupted = true);
 
 	// yes, there are much more elegant ways, but I have a 2 hour deadline and a save system that doesn't like stringlists.
@@ -444,7 +444,7 @@ public:
 		const tString& asText5Entry, float afText5Delay,
 		const tString& asText6Entry, float afText6Delay,
 		const tString& asText7Entry, float afText7Delay,
-		bool abUsePostion, 
+		bool abUsePostion,
 		const cVector3f& avPosition, float afMinDistance, float afMaxDistance, int alPriority = 0, bool abRemoveInterrupted = true
 		);
 
@@ -491,7 +491,7 @@ private:
 
 class cLuxEffectHandler : public iLuxUpdateable
 {
-public:	
+public:
 	cLuxEffectHandler();
 	~cLuxEffectHandler();
 
@@ -509,7 +509,7 @@ public:
 	void OnDraw(float afFrameTime);
 
 	void DoAction(eLuxPlayerAction aAction, bool abPressed);
-	
+
 	///////////////////////////
 	// Properties
 	bool GetPlayerIsPaused(){ return mbPlayerIsPaused;}
@@ -544,7 +544,7 @@ private:
 	cLuxEffect_PlayCommentary *mpPlayCommentary;
 	cLuxEffect_ScreenImage *mpScreenImage;
 
-	std::vector<iLuxEffect*> mvEffects;	
+	std::vector<iLuxEffect*> mvEffects;
 
 	bool mbPlayerIsPaused;
 };

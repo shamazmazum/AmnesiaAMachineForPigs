@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -137,7 +137,7 @@ namespace hpl {
 	static cLogWriter gUpdateLogWriter(_W("hpl_update.log"));
 
 	//-----------------------------------------------------------------------
-	
+
 	cLogWriter::cLogWriter(const tWString& asFileName)
 	{
 		msFileName = asFileName;
@@ -152,7 +152,7 @@ namespace hpl {
 	void cLogWriter::Write(const tString& asMessage)
 	{
 		if(!mpFile) ReopenFile();
-		
+
 		if(mpFile)
 		{
 			fprintf(mpFile, "%s", asMessage.c_str());
@@ -183,7 +183,7 @@ namespace hpl {
 	void cLogWriter::ReopenFile()
 	{
 		if(mpFile) fclose(mpFile);
-						
+
 		#ifdef WIN32
 			mpFile = _wfopen(msFileName.c_str(),_W("w"));
 		#else
@@ -197,13 +197,13 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// LOG FUNCTIONS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	static tLogOutputOverrideFunction gpOutputOverrideFunc=NULL;
 
 	//-----------------------------------------------------------------------
-	
+
 	void SetLogFile(const tWString &asFile)
 	{
 		gLogWriter.SetFileName(asFile);
@@ -214,9 +214,9 @@ namespace hpl {
 	void FatalError(const char* fmt,... )
 	{
 		char text[4096];
-		va_list ap;	
+		va_list ap;
 		if (fmt == NULL)
-			return;	
+			return;
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
@@ -246,9 +246,9 @@ namespace hpl {
 	void Error(const char* fmt, ...)
 	{
 		char text[2048];
-		va_list ap;	
+		va_list ap;
 		if (fmt == NULL)
-			return;	
+			return;
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
@@ -267,9 +267,9 @@ namespace hpl {
 	void Warning(const char* fmt, ...)
 	{
 		char text[2048];
-		va_list ap;	
+		va_list ap;
 		if (fmt == NULL)
-			return;	
+			return;
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
@@ -288,9 +288,9 @@ namespace hpl {
 	void Log(const char* fmt, ...)
 	{
 		char text[4096];
-		va_list ap;	
+		va_list ap;
 		if (fmt == NULL)
-			return;	
+			return;
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
@@ -335,9 +335,9 @@ namespace hpl {
 		if(!gbUpdateLogIsActive) return;
 
 		char text[2048];
-		va_list ap;	
+		va_list ap;
 		if (fmt == NULL)
-			return;	
+			return;
 		va_start(ap, fmt);
 		vsprintf(text, fmt, ap);
 		va_end(ap);
@@ -358,7 +358,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// SCRIPT OUTPUT
 	//////////////////////////////////////////////////////////////////////////
@@ -370,9 +370,9 @@ namespace hpl {
 		char sMess[1024];
 
 		tString type = "ERR ";
-		if( msg->type == asMSGTYPE_WARNING ) 
+		if( msg->type == asMSGTYPE_WARNING )
 			type = "WARN";
-		else if( msg->type == asMSGTYPE_INFORMATION ) 
+		else if( msg->type == asMSGTYPE_INFORMATION )
 			type = "INFO";
 
 		sprintf(sMess,"%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type.c_str(), msg->message);
@@ -404,10 +404,10 @@ namespace hpl {
 	{
 		msMessage = "";
 	}
-	
+
 	//-----------------------------------------------------------------------
 
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// CONSTRUCTORS
 	//////////////////////////////////////////////////////////////////////////
@@ -421,17 +421,17 @@ namespace hpl {
 		{
 			Error("Failed to start angel script!\n");
 		}
-		
+
 		mpScriptOutput = hplNew( cScriptOutput, () );
 		mpScriptEngine->SetMessageCallback(asMETHOD(cScriptOutput,AddMessage), mpScriptOutput, asCALL_THISCALL);
 
 		RegisterStdString(mpScriptEngine);
 		RegisterScriptArray(mpScriptEngine, true);
-	
+
 		mlHandleCount = 0;
 
 		Log("-------- THE HPL ENGINE LOG ------------\n");
-		//Log("Engine build ID %s\n\n", 
+		//Log("Engine build ID %s\n\n",
 		//	GetBuildID_HPL2_0());
 
 		//const char* pASLibOptions = asGetLibraryOptions();
@@ -443,7 +443,7 @@ namespace hpl {
 	cLowLevelSystemSDL::~cLowLevelSystemSDL()
 	{
 		/*Release all runnings contexts */
-		
+
 		mpScriptEngine->Release();
 		hplDelete(mpScriptOutput);
 
@@ -457,10 +457,10 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
-	
+
 	iScript* cLowLevelSystemSDL::CreateScript(const tString& asName)
 	{
 		return hplNew( cSqScript, (asName,mpScriptEngine,mpScriptOutput,mlHandleCount++) );
@@ -478,7 +478,7 @@ namespace hpl {
 
 		return true;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cLowLevelSystemSDL::AddScriptVar(const tString& asVarDecl, void *pVar)
@@ -491,12 +491,12 @@ namespace hpl {
 
 		return true;
 	}
-	
+
 	//-----------------------------------------------------------------------
 	//////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	//-----------------------------------------------------------------------

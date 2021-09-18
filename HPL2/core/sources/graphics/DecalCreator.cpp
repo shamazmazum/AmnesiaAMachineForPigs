@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -79,7 +79,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	//-----------------------------------------------------------------------
 
 	bool cDecalCreator::AddSubMesh(cSubMeshEntity* apSubMesh)
@@ -297,7 +297,7 @@ namespace hpl {
 			cVector3f vAxes[] = { mvDecalRight, mvDecalUp, mvDecalForward };
 			float vSign[] = { 1.0f, -1.0f };
 
-			
+
 			mvMatrices.clear();
 			mvTransformedBases.clear();
 			mvClipPlanes.clear();
@@ -310,13 +310,13 @@ namespace hpl {
 					//Log("ClipPlane %i %s %f\n",i+j, mvClipPlanes.back().GetNormal().ToFileString().c_str(), mvClipPlanes.back().d);
 				}
 			}
-			
+
 			if(mpDecalVB)
 			{
 				hplDelete(mpDecalVB);
 				mpDecalVB = NULL;
 			}
-			
+
 			mpDecalVB = mpLowLevelGraphics->CreateVertexBuffer(eVertexBufferType_Hardware,
 																eVertexBufferDrawType_Tri,
 																eVertexBufferUsageType_Static);
@@ -324,7 +324,7 @@ namespace hpl {
 			mpDecalVB->CreateElementArray(eVertexBufferElement_Color0, eVertexBufferElementFormat_Float, 4);
 			mpDecalVB->CreateElementArray(eVertexBufferElement_Texture0, eVertexBufferElementFormat_Float, 3);
 			mpDecalVB->CreateElementArray(eVertexBufferElement_Normal, eVertexBufferElementFormat_Float, 3);
-						
+
 			///////////////////////////////////////////
 			// Clip near triangles
 			for(size_t i=0;i<mvMeshes.size();++i)
@@ -344,7 +344,7 @@ namespace hpl {
 			cVector2f vInvSubDivSize = cVector2f(1.0f/mvSubDiv.x,1.0f/mvSubDiv.y);
 			float fStartU = (float)(mlCurrentSubDiv%mvSubDiv.x);
 			float fStartV = (float)(mlCurrentSubDiv/mvSubDiv.x);
-			
+
 			for(int i=0;i<mpDecalVB->GetVertexNum();++i)
 			{
 				int lBaseIdx = i*mpDecalVB->GetElementNum(eVertexBufferElement_Position);
@@ -363,7 +363,7 @@ namespace hpl {
 
 		return mbCompiled;
 	}
-	
+
 	bool cDecalCreator::CanCreateDecal()
 	{
 		mbCanCreate = Compile();
@@ -382,7 +382,7 @@ namespace hpl {
 		if(pMat==NULL)
 			return NULL;
 
-		cMesh *pMesh = hplNew( cMesh, ("", _W(""), mpResources->GetMaterialManager(), mpResources->GetAnimationManager()) ); 
+		cMesh *pMesh = hplNew( cMesh, ("", _W(""), mpResources->GetMaterialManager(), mpResources->GetAnimationManager()) );
 		cSubMesh* pSubMesh = pMesh->CreateSubMesh("Decal");
 		pSubMesh->SetVertexBuffer(mpDecalVB->CreateCopy(eVertexBufferType_Hardware, eVertexBufferUsageType_Static, mpDecalVB->GetVertexElementFlags()));
 		pSubMesh->SetMaterial(pMat);
@@ -413,7 +413,7 @@ namespace hpl {
 					apFunctions->SetTexture(i, pTexture);
 
 				}
-				
+
 				apFunctions->SetVertexBuffer(mpDecalVB);
 
 				apFunctions->DrawCurrent();
@@ -482,8 +482,8 @@ namespace hpl {
 			mDecalBV.SetPosition(mvDecalPosition);
 			mDecalBV.SetSize(mvDecalSize);
 		}
-			
-		return &mDecalBV; 
+
+		return &mDecalBV;
 	}
 
 
@@ -505,7 +505,7 @@ namespace hpl {
 
 	//-----------------------------------------------------------------------
 
-	bool cDecalCreator::AddPolygon(	int alVertexCount, const cVector3f* apVertices, const cVector3f* apNormals, iVertexBuffer* apDecalVB, 
+	bool cDecalCreator::AddPolygon(	int alVertexCount, const cVector3f* apVertices, const cVector3f* apNormals, iVertexBuffer* apDecalVB,
 									const cMatrixf& amtxWorldMatrix, const cMatrixf& amtxWorldNormalRot)
 	{
 		int lCount = mlDecalVertexCount;
@@ -565,7 +565,7 @@ namespace hpl {
 		cMatrixf mtxSubMeshWorldMatrix = apSubMesh->GetWorldMatrix();
 		cMatrixf mtxInvSubMeshWorldMatrix = cMath::MatrixInverse(mtxSubMeshWorldMatrix);
 		cMatrixf mtxSubMeshWorldNormalRot = mtxInvSubMeshWorldMatrix.GetRotation().GetTranspose();
-		
+
 
 		//////////////////////////////////////////////////
 		// Transform clip planes to local submesh coordinates
@@ -590,7 +590,7 @@ namespace hpl {
 		{
 			cVector3f vTriangle[3];
 			cVector3f vNormal[3];
-			
+
 			for(int k=0;k<3;++k)
 			{
 				int lPosBaseIdx = pIndices[j+k]*lPosStride;
@@ -623,7 +623,7 @@ namespace hpl {
 			// Clip triangle against planes
 			int lCount = ClipPolygon(3, vNewVertices, vNewNormals, vNewVertices, vNewNormals, vTransformedPlanes);
 			if((lCount!=0) && (AddPolygon(lCount, vNewVertices, vNewNormals, apDecalVB, mtxSubMeshWorldMatrix,mtxSubMeshWorldNormalRot)==false)) break;
-		}		
+		}
 	}
 
 	//-----------------------------------------------------------------------
@@ -658,14 +658,14 @@ namespace hpl {
 				}
 			}
 		}
-		
+
 		return lCount;
 	}
 
 	//-----------------------------------------------------------------------
 
-	int cDecalCreator::ClipPolygonAgainstPlane(const cPlanef& aPlane, int alVertexCount, 
-											   const cVector3f* apVertices, const cVector3f* apNormals, 
+	int cDecalCreator::ClipPolygonAgainstPlane(const cPlanef& aPlane, int alVertexCount,
+											   const cVector3f* apVertices, const cVector3f* apNormals,
 											   cVector3f* apNewVertices, cVector3f* apNewNormals)
 	{
 		//Log("\nClipping poly against plane %s %f\n", aPlane.GetNormal().ToFileString().c_str(), aPlane.d);
@@ -705,8 +705,8 @@ namespace hpl {
 					float t = cMath::PlaneToPointDist(aPlane, v1)/cMath::Vector3Dot(vPlaneNormal, vEdge);
 					apNewVertices[lCount] = v1*(1.0f-t) + v2*t;
 
-					//Log("\tIntersection pos: (%s) (t: %f)\n", apNewVertices[lCount].ToFileString().c_str(), t); 
-					
+					//Log("\tIntersection pos: (%s) (t: %f)\n", apNewVertices[lCount].ToFileString().c_str(), t);
+
 					const cVector3f& n1 = apNormals[j];
 					const cVector3f& n2 = apNormals[i];
 					apNewNormals[lCount] = n1*(1.0f-t) + n2*t;
@@ -729,13 +729,13 @@ namespace hpl {
 					float t = cMath::PlaneToPointDist(aPlane, v1)/cMath::Vector3Dot(vPlaneNormal, vEdge);
 					apNewVertices[lCount] = v1*(1.0f-t) + v2*t;
 
-					//Log("\tIntersection pos: (%s) (t: %f)\n", apNewVertices[lCount].ToFileString().c_str(), t); 
-					
+					//Log("\tIntersection pos: (%s) (t: %f)\n", apNewVertices[lCount].ToFileString().c_str(), t);
+
 					const cVector3f& n1 = apNormals[i];
 					const cVector3f& n2 = apNormals[j];
 					apNewNormals[lCount] = n1*(1.0f-t) + n2*t;
 					apNewNormals[lCount].Normalize();
-					
+
 					++lCount;
 				}
 				//else
@@ -744,7 +744,7 @@ namespace hpl {
 				apNewVertices[lCount] = apVertices[i];
 				apNewNormals[lCount] = apNormals[i];
 
-				//Log("\tAdding Vertex (%s)\n", apNewVertices[lCount].ToFileString().c_str()); 
+				//Log("\tAdding Vertex (%s)\n", apNewVertices[lCount].ToFileString().c_str());
 
 				++lCount;
 			}

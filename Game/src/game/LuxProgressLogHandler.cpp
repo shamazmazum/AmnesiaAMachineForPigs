@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -68,14 +68,14 @@ void cLuxProgressLogHandler::SaveUserConfig()
 
 void cLuxProgressLogHandler::OnStart()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
 
 void cLuxProgressLogHandler::Reset()
 {
-	
+
 }
 
 //-----------------------------------------------------------------------
@@ -156,7 +156,7 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
 	tString sInfection = cString::ToString(pPlayer->GetInfection(),0);
 	tString sTinderboxes = cString::ToString(pPlayer->GetTinderboxes());
 	tString sCoins = cString::ToString(pPlayer->GetCoins());
-	
+
 	tString sFinalMess = "# "+LevelToString(aLevel)+" # "+ sTemp;
 	sFinalMess += " | "+sMapName + " | H:"+sHealth+ " | S:"+sInfection+ " | T:"+sTinderboxes+ " | C:"+sCoins +" \n > ";
 	for(size_t i=0; i<asMessage.size(); ++i)
@@ -169,7 +169,7 @@ void cLuxProgressLogHandler::AddLog(eLuxProgressLogLevel aLevel, const tString& 
 		}
 	}
 	sFinalMess += "\n";
-	
+
 	fprintf(mpFile, "%s", sFinalMess.c_str());
 	fflush(mpFile);
 }

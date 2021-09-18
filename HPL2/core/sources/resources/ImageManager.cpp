@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -96,7 +96,7 @@ namespace hpl {
 					EndLoad();
 					return NULL;
 				}
-				
+
 				pImage = AddToFrame(pBmp, sPath, alFrameHandle);
 
 				hplDelete(pBmp);
@@ -104,7 +104,7 @@ namespace hpl {
 				if(pImage==NULL){
 					Error("Imagemanager couldn't create image '%s'\n", asName.c_str());
 				}
-				
+
 				if(pImage) AddResource(pImage);
  			}
 		}
@@ -120,11 +120,11 @@ namespace hpl {
 		}
 		//Log("Loaded image %s, it has %d users!\n", pImage->GetName().c_str(),pImage->GetUserCount());
 		//Log(" frame has %d pics\n", pImage->GetFrameTexture()->GetPicCount());
-		
+
         EndLoad();
         return pImage;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cFrameSubImage* cImageManager::CreateImage(const tString& asName, int alFrameHandle)
@@ -156,14 +156,14 @@ namespace hpl {
 	cFrameTexture* cImageManager::CreateCustomFrame(iTexture *apTexture)
 	{
 		cFrameTexture *pTFrame = hplNew( cFrameTexture, (apTexture,mlFrameHandle,this,true) );
-		
+
 		m_mapTextureFrames.insert(tFrameTextureMap::value_type(mlFrameHandle, pTFrame));
 		++mlFrameHandle;
 
 		return pTFrame;
 	}
 	//-----------------------------------------------------------------------
-	
+
 	void cImageManager::Unload(iResourceBase* apResource)
 	{
 
@@ -179,27 +179,27 @@ namespace hpl {
 		cFrameBitmap *pBmpFrame = pImage->GetFrameBitmap();
 
 		//pImage->GetFrameBitmap()->FlushToTexture(); Not needed?
-		
-		
+
+
 		//Log("  Users Before: %d\n",pImage->GetUserCount());
 		//Log("  Framepics Before: %d\n",pFrame->GetPicCount());
 
 		pImage->DecUserCount();//dec frame count as well.. is that ok?
-		
+
 		//Log("---\n");
 		//Log("  Destroyed Image: '%s' Users: %d\n",pImage->GetName().c_str(),pImage->GetUserCount());
 		//Log("  Frame %d has left Pics: %d\n",pFrame,pFrame->GetPicCount());
-		
+
 		if(pImage->HasUsers()==false)
 		{
 			pFrame->DecPicCount(); // Doing it here now instead.
 			if(pBmpFrame) pBmpFrame->DecPicCount();
 			RemoveResource(apResource);
 			hplDelete(pImage);
-			
+
 			//Log("  deleting image and dec frame to %d images!\n",pFrame->GetPicCount());
 		}
-		
+
 		if(pFrame->IsEmpty())
 		{
 			//Log("  Deleting frame...\n");
@@ -221,7 +221,7 @@ namespace hpl {
 					}
 				}
 			}
-			
+
 
 			//delete from list
 			m_mapTextureFrames.erase(pFrame->GetHandle());
@@ -229,7 +229,7 @@ namespace hpl {
 			//Log("  Deleted frame!\n");
 		}
 		//Log("---\n");
-		
+
 	}
 
 	//-----------------------------------------------------------------------
@@ -240,12 +240,12 @@ namespace hpl {
 		{
 			cFrameBitmap* pFrameBmp = *it;
 			pFrameBmp->Reorganize();
-			
+
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
-	
+
 	int cImageManager::FlushAll()
 	{
 		//Log("Flushing...");
@@ -266,7 +266,7 @@ namespace hpl {
 	{
 		tFrameTextureMapIt it = m_mapTextureFrames.find(alHandle);
 		if(it == m_mapTextureFrames.end()) return NULL;
-		
+
 		return it->second;
 	}
 
@@ -275,19 +275,19 @@ namespace hpl {
 	int cImageManager::CreateFrame(cVector2l avSize)
 	{
 		cFrameBitmap *pBFrame = CreateBitmapFrame(avSize);
-		
+
 		if(pBFrame==NULL) return -1;
-		
+
 		return pBFrame->GetHandle();
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	void cImageManager::SetFrameLocked(int alHandle, bool abLocked)
 	{
 		tFrameBitmapListIt it = mlstBitmapFrames.begin();
 		while(it != mlstBitmapFrames.end())
-		{	
+		{
 			if((*it)->GetHandle() == alHandle){
 				(*it)->SetLocked(abLocked);
 				break;
@@ -355,7 +355,7 @@ namespace hpl {
 		if(mlstBitmapFrames.size()==0){
 			CreateBitmapFrame(mvFrameSize);
 		}
-		
+
 		if(alFrameHandle<0)
 		{
 			//Search the frames til one is find that fits the bitmap
@@ -367,7 +367,7 @@ namespace hpl {
 					pImage = pFrame->AddBitmap(apBmp, asFullPath, NULL);
 					//if not fit, reorganize and see if that helps
 					if(pImage==NULL && pFrame->GetAdditionsSinceReorganization() > 1)
-					{	
+					{
 						pFrame->Reorganize();
 						pImage = pFrame->AddBitmap(apBmp, asFullPath, NULL);
 					}
@@ -385,7 +385,7 @@ namespace hpl {
 				//Log("No fit!\n");
 				//not 100% it fits in this one...if so maybe the bitmap size of the frame
 				//should be changed? Nahh.. 510x510 is a good upper size
-				
+
 				//pImage = CreateBitmapFrame(mvFrameSize)->AddBitmap(apBmp);
 				cFrameBitmap * pFrame = CreateBitmapFrame(mvFrameSize);
 				if(pFrame)
@@ -402,10 +402,10 @@ namespace hpl {
 		{
 			tFrameBitmapListIt it = mlstBitmapFrames.begin();
 			while(it != mlstBitmapFrames.end())
-			{	
+			{
 				if((*it)->GetHandle() == alFrameHandle)
 				{
-					pImage = (*it)->AddBitmap(apBmp, asFullPath, NULL);			
+					pImage = (*it)->AddBitmap(apBmp, asFullPath, NULL);
 					break;
 				}
 				it++;
@@ -418,7 +418,7 @@ namespace hpl {
 	}
 
 	//-----------------------------------------------------------------------
-	
+
 	cFrameBitmap *cImageManager::CreateBitmapFrame(cVector2l avSize)
 	{
 		iTexture *pTex = mpLowLevelGraphics->CreateTexture("ImageFrame",eTextureType_2D,eTextureUsage_Normal);
@@ -429,7 +429,7 @@ namespace hpl {
 		cFrameBitmap *pBFrame = hplNew(  cFrameBitmap, (pBmp,pTFrame,mlFrameHandle) );
 
 		mlstBitmapFrames.push_back(pBFrame);
-		
+
 		std::pair<tFrameTextureMap::iterator, bool> ret = m_mapTextureFrames.insert(tFrameTextureMap::value_type(mlFrameHandle, pTFrame));
 		if(ret.second == false)
 		{

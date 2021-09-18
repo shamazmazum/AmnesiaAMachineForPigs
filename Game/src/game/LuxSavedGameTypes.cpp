@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -405,7 +405,7 @@ void cLuxEffectHandler_SaveData::FromEffectHandler(cLuxEffectHandler *apEffects)
 		mfVoice_MinDistance = pVoice->mpVoiceEntry->GetSoundChannel()->GetMinDistance();
 		mfVoice_MaxDistance =pVoice->mpVoiceEntry->GetSoundChannel()->GetMaxDistance();
 		mvVoice_Position = pVoice->mpVoiceEntry->GetSoundChannel()->GetPosition();
-		
+
 		msEffect_Name = "";
 		if(pVoice->mpSoundHandler->IsValid(pVoice->mpEffectEntry, pVoice->mlEffectEntryID))
 		{
@@ -495,7 +495,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 	// Play sound
 	if(msVoice_Name != "")
 	{
-		if(mbVoice_3D==false)	
+		if(mbVoice_3D==false)
 		{
 			apEffects->GetPlayVoice()->mpVoiceEntry = apEffects->GetPlayVoice()->mpSoundHandler->PlayGuiStream(msVoice_Name,false, 1.0f);
 			if(apEffects->GetPlayVoice()->mpVoiceEntry)
@@ -507,7 +507,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 			if(msEffect_Name != "")
 			{
 				apEffects->GetPlayVoice()->mpEffectEntry = apEffects->GetPlayVoice()->mpSoundHandler->PlayGuiStream(msEffect_Name,false, 1.0f);
-				if(apEffects->GetPlayVoice()->mpEffectEntry) 
+				if(apEffects->GetPlayVoice()->mpEffectEntry)
 				{
 					apEffects->GetPlayVoice()->mlEffectEntryID = apEffects->GetPlayVoice()->mpEffectEntry->GetId();
 					apEffects->GetPlayVoice()->mpEffectEntry->GetSoundChannel()->SetElapsedTime(mfVoice_ElapsedTime);
@@ -525,12 +525,12 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 				apEffects->GetPlayVoice()->mlVoiceEntryID = apEffects->GetPlayVoice()->mpVoiceEntry->GetId();
 				apEffects->GetPlayVoice()->mpVoiceEntry->GetSoundChannel()->SetElapsedTime(mfVoice_ElapsedTime);
 			}
-		
+
 			if(msEffect_Name!="")
 			{
 				apEffects->GetPlayVoice()->mpEffectEntry = apEffects->GetPlayVoice()->mpSoundHandler->Play(msEffect_Name,false, 1.0f, mvVoice_Position,mfVoice_MinDistance, mfVoice_MaxDistance,
 														eSoundEntryType_Gui,false,true,0, true);
-				if(apEffects->GetPlayVoice()->mpEffectEntry) 
+				if(apEffects->GetPlayVoice()->mpEffectEntry)
 				{
 					apEffects->GetPlayVoice()->mlEffectEntryID = apEffects->GetPlayVoice()->mpEffectEntry->GetId();
 					apEffects->GetPlayVoice()->mpEffectEntry->GetSoundChannel()->SetElapsedTime(mfVoice_ElapsedTime);
@@ -538,7 +538,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 			}
 		}
 	}
-	
+
 	//////////////////////
 	// Sound volume and speed mul
 	cSoundHandler *pSoundHandler = gpBase->mpEngine->GetSound()->GetSoundHandler();
@@ -549,7 +549,7 @@ void cLuxEffectHandler_SaveData::ToEffectHandler(cLuxMap *apMap, cLuxEffectHandl
 
 		mvGlobalSoundVolumeMul[i].ToEntry(i, pSoundHandler->GetGlobalVolumeSettingsHandler() );
 	}
-	
+
 	for(size_t i=0; i<mvGlobalSoundSpeedMul.Size(); ++i)
 	{
 		if(i == eLuxGlobalVolumeType_Commentary)continue;
@@ -685,12 +685,12 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
 	{
 		bool bRet = apMusic->mpMusicHandler->Play(msCurrentMusic,mfCurrentMusicMaxVolume,0.1f, mbCurrentMusicLoop, false);
 		if(bRet)
-		{	
+		{
 			cMusicEntry *pMusicEntry = apMusic->mpMusicHandler->GetCurrentSong();
 			if(pMusicEntry)
 			{
 				pMusicEntry->mfMaxVolume = mfCurrentMusicMaxVolume;
-				pMusicEntry->mfVolume = mfCurrentMusicVolume; 
+				pMusicEntry->mfVolume = mfCurrentMusicVolume;
 				pMusicEntry->mfVolumeAdd = mfCurrentMusicVolumeAdd;
 				pMusicEntry->mpStream->SetElapsedTime(mfCurrentMusicTime);
 				pMusicEntry->mbLoop = mbCurrentMusicLoop;
@@ -705,7 +705,7 @@ void cLuxMusicHandler_SaveData::ToMusicHandler(cLuxMap *apMap, cLuxMusicHandler 
 	apMusic->mbEnemyPlaying[eLuxEnemyMusic_Attack] = mbAttackPlaying;
 	apMusic->mbEnemyPlaying[eLuxEnemyMusic_Search] = mbSearchPlaying;
 
-	
+
 	///////////////////
 	// Music
 	for(size_t i=0; i<mvMusic.Size(); ++i)
@@ -979,7 +979,7 @@ kEndSerialize()
 
 
 //////////////////////////////////////////////////////////////////////////
-// INVENTORY 
+// INVENTORY
 //////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------
@@ -1018,7 +1018,7 @@ void cLuxInventory_SaveData::FromInventory(cLuxInventory *apInventory)
 		for(; it != apInventory->mlstCombineCallbacks.end(); ++it)
 		{
 			cLuxCombineItemsCallback *pCallback = *it;
-			mvCombineCallbacks.Add(*pCallback);	
+			mvCombineCallbacks.Add(*pCallback);
 		}
 	}
 }
@@ -1047,7 +1047,7 @@ void cLuxInventory_SaveData::ToInventory(cLuxMap *apMap, cLuxInventory *apInvent
 	{
 		cLuxInventory_Item_SaveData& saveItem = mvItems[i];
 
-		cLuxInventory_Item *pItem = apInventory->AddItem(	saveItem.msName, (eLuxItemType)saveItem.mlType, saveItem.msSubType, 
+		cLuxInventory_Item *pItem = apInventory->AddItem(	saveItem.msName, (eLuxItemType)saveItem.mlType, saveItem.msSubType,
 															saveItem.msImageFile, saveItem.mfAmount, saveItem.msVal, saveItem.msExtraVal);
 		pItem->SetGameNameEntry(saveItem.msGameNameEntry);
 		pItem->SetGameDescEntry(saveItem.msGameDescEntry);
@@ -1084,7 +1084,7 @@ kEndSerialize()
 void cLuxPlayerHands_SaveData::FromPlayerHands(cLuxPlayerHands *apPlayerHands)
 {
 	mlState = apPlayerHands->mHandState;
-	
+
 	if(apPlayerHands->mpCurrentHandObject)
 		msCurrentHandObject = apPlayerHands->mpCurrentHandObject->GetName();
 	else
@@ -1224,7 +1224,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
 	/// SpawnPS
 	mbSpawnPSActive = apPlayer->GetHelperSpawnPS()->IsActive();
 	mbSpawnPSFile = apPlayer->GetHelperSpawnPS()->GetFileName();
-	
+
 	//////////////////////
 	/// Flashback
 	mbFlashbackActive = apPlayer->GetHelperFlashback()->mbActive;
@@ -1258,16 +1258,16 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
     mbVoiceFlashback_IsPlaying			= apPlayer->GetHelperVoiceFlashback()->mbIsPlaying;
     mbVoiceFlashback_UseEffects			= apPlayer->GetHelperVoiceFlashback()->mbUseEffects;
     mbVoiceFlashback_ObstructMovement	= apPlayer->GetHelperVoiceFlashback()->mbObstructMovement;
-    
-	mfVoiceFlashback_EffectFadeInTime			= apPlayer->GetHelperVoiceFlashback()->mfEffectFadeInTime;		
-	mfVoiceFlashback_EffectFadeOutTime			= apPlayer->GetHelperVoiceFlashback()->mfEffectFadeOutTime;	
-	mfVoiceFlashback_SepiaAmount				= apPlayer->GetHelperVoiceFlashback()->mfSepiaAmount;		
+
+	mfVoiceFlashback_EffectFadeInTime			= apPlayer->GetHelperVoiceFlashback()->mfEffectFadeInTime;
+	mfVoiceFlashback_EffectFadeOutTime			= apPlayer->GetHelperVoiceFlashback()->mfEffectFadeOutTime;
+	mfVoiceFlashback_SepiaAmount				= apPlayer->GetHelperVoiceFlashback()->mfSepiaAmount;
 	mfVoiceFlashback_LightFadeAmount			= apPlayer->GetHelperVoiceFlashback()->mfLightFadeAmount;
-	mfVoiceFlashback_ImageTrailAmount			= apPlayer->GetHelperVoiceFlashback()->mfImageTrailAmount;	
-	mfVoiceFlashback_BlurStartDistance			= apPlayer->GetHelperVoiceFlashback()->mfBlurStartDistance;	
-	mfVoiceFlashback_BlurAmount					= apPlayer->GetHelperVoiceFlashback()->mfBlurAmount;				
-	mfVoiceFlashback_FovMultiplier				= apPlayer->GetHelperVoiceFlashback()->mfFovMultiplier;			
-	mfVoiceFlashback_MoveSpeedMultiplier		= apPlayer->GetHelperVoiceFlashback()->mfMoveSpeedMultiplier;	
+	mfVoiceFlashback_ImageTrailAmount			= apPlayer->GetHelperVoiceFlashback()->mfImageTrailAmount;
+	mfVoiceFlashback_BlurStartDistance			= apPlayer->GetHelperVoiceFlashback()->mfBlurStartDistance;
+	mfVoiceFlashback_BlurAmount					= apPlayer->GetHelperVoiceFlashback()->mfBlurAmount;
+	mfVoiceFlashback_FovMultiplier				= apPlayer->GetHelperVoiceFlashback()->mfFovMultiplier;
+	mfVoiceFlashback_MoveSpeedMultiplier		= apPlayer->GetHelperVoiceFlashback()->mfMoveSpeedMultiplier;
 	mfVoiceFlashback_MouseSensitivityModifier	= apPlayer->GetHelperVoiceFlashback()->mfMouseSensitivityModifier;
 
     msVoiceFlashback_StopSound					= apPlayer->GetHelperVoiceFlashback()->m_sStopSound;
@@ -1342,7 +1342,7 @@ void cLuxPlayer_SaveData::FromPlayer(cLuxPlayer *apPlayer)
 	//////////////////////
 	///Body
 	mCharBody.FromBody(apPlayer->mpCharBody);
-	
+
 	//////////////////////
 	///Camera
 	cCamera *pCam = apPlayer->GetCamera();
@@ -1401,7 +1401,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
 	apPlayer->mfHealth = mfHealth;
 	apPlayer->mfInfection = mfInfection;
-	
+
 	apPlayer->mfTerror = mfTerror;
 	apPlayer->mlCoins = mlCoins;
 	apPlayer->mlTinderboxes = mlTinderboxes;
@@ -1431,13 +1431,13 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 	/// SpawnPS
 	if(mbSpawnPSActive)
 	{
-		apPlayer->GetHelperSpawnPS()->Start(mbSpawnPSFile); 
+		apPlayer->GetHelperSpawnPS()->Start(mbSpawnPSFile);
 	}
 	else
 	{
 		apPlayer->GetHelperSpawnPS()->Stop();
 	}
-	 
+
 	//////////////////////
 	/// Flashback
 	apPlayer->GetHelperFlashback()->mbActive = mbFlashbackActive;
@@ -1445,7 +1445,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 	apPlayer->GetHelperFlashback()->mfFlashDelay = mfFlashDelay;
 	apPlayer->GetHelperFlashback()->msFlashbackFile = msFlashbackFile;
 	apPlayer->GetHelperFlashback()->msCallback = msFlashbackCallback;
-	
+
 	apPlayer->GetHelperFlashback()->mlstFlashbackQueue.clear();
 	cContainerListIterator<cLuxFlashbackData_SaveData> flashIt =mlstFlashbackQueue.GetIterator();
 	while(flashIt.HasNext())
@@ -1464,20 +1464,20 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 
 	//////////////////
 	//Voice flashback
-    apPlayer->GetHelperVoiceFlashback()->mbIsDelaying		  =	 mbVoiceFlashback_IsDelaying;		
-    apPlayer->GetHelperVoiceFlashback()->mbIsPlaying		  =	 mbVoiceFlashback_IsPlaying;		
-    apPlayer->GetHelperVoiceFlashback()->mbUseEffects		  =	 mbVoiceFlashback_UseEffects;		
+    apPlayer->GetHelperVoiceFlashback()->mbIsDelaying		  =	 mbVoiceFlashback_IsDelaying;
+    apPlayer->GetHelperVoiceFlashback()->mbIsPlaying		  =	 mbVoiceFlashback_IsPlaying;
+    apPlayer->GetHelperVoiceFlashback()->mbUseEffects		  =	 mbVoiceFlashback_UseEffects;
     apPlayer->GetHelperVoiceFlashback()->mbObstructMovement =	 mbVoiceFlashback_ObstructMovement;
-    
-	apPlayer->GetHelperVoiceFlashback()->mfEffectFadeInTime		   = mfVoiceFlashback_EffectFadeInTime;		
-	apPlayer->GetHelperVoiceFlashback()->mfEffectFadeOutTime		   = mfVoiceFlashback_EffectFadeOutTime;			
-	apPlayer->GetHelperVoiceFlashback()->mfSepiaAmount			   = mfVoiceFlashback_SepiaAmount	;			
-	apPlayer->GetHelperVoiceFlashback()->mfLightFadeAmount			   = mfVoiceFlashback_LightFadeAmount;			
-	apPlayer->GetHelperVoiceFlashback()->mfImageTrailAmount		   = mfVoiceFlashback_ImageTrailAmount	;		
-	apPlayer->GetHelperVoiceFlashback()->mfBlurStartDistance		   = mfVoiceFlashback_BlurStartDistance	;		
-	apPlayer->GetHelperVoiceFlashback()->mfBlurAmount			   = mfVoiceFlashback_BlurAmount;					
-	apPlayer->GetHelperVoiceFlashback()->mfFovMultiplier			   = mfVoiceFlashback_FovMultiplier	;			
-	apPlayer->GetHelperVoiceFlashback()->mfMoveSpeedMultiplier	   = mfVoiceFlashback_MoveSpeedMultiplier;		
+
+	apPlayer->GetHelperVoiceFlashback()->mfEffectFadeInTime		   = mfVoiceFlashback_EffectFadeInTime;
+	apPlayer->GetHelperVoiceFlashback()->mfEffectFadeOutTime		   = mfVoiceFlashback_EffectFadeOutTime;
+	apPlayer->GetHelperVoiceFlashback()->mfSepiaAmount			   = mfVoiceFlashback_SepiaAmount	;
+	apPlayer->GetHelperVoiceFlashback()->mfLightFadeAmount			   = mfVoiceFlashback_LightFadeAmount;
+	apPlayer->GetHelperVoiceFlashback()->mfImageTrailAmount		   = mfVoiceFlashback_ImageTrailAmount	;
+	apPlayer->GetHelperVoiceFlashback()->mfBlurStartDistance		   = mfVoiceFlashback_BlurStartDistance	;
+	apPlayer->GetHelperVoiceFlashback()->mfBlurAmount			   = mfVoiceFlashback_BlurAmount;
+	apPlayer->GetHelperVoiceFlashback()->mfFovMultiplier			   = mfVoiceFlashback_FovMultiplier	;
+	apPlayer->GetHelperVoiceFlashback()->mfMoveSpeedMultiplier	   = mfVoiceFlashback_MoveSpeedMultiplier;
 	apPlayer->GetHelperVoiceFlashback()->mfMouseSensitivityModifier  = mfVoiceFlashback_MouseSensitivityModifier	;
 
 	apPlayer->GetHelperVoiceFlashback()->m_sStopSound = msVoiceFlashback_StopSound;
@@ -1560,7 +1560,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 	cCamera *pCam = apPlayer->GetCamera();
 	pCam->SetPitchLimits(mfPitchMinLimit, mfPitchMaxLimit);
 	pCam->SetYawLimits(mfYawMinLimit, mfYawMaxLimit);
-	
+
 	pCam->SetPitch(mvCameraAngles.x);
 	pCam->SetYaw(mvCameraAngles.y);
 	pCam->SetRoll(mvCameraAngles.z);
@@ -1572,7 +1572,7 @@ void cLuxPlayer_SaveData::ToPlayer(cLuxMap *apMap,cLuxPlayer *apPlayer)
 		for(size_t i=0; i<apPlayer->mvHeadPosAdds.size(); ++i)
 			apPlayer->mvHeadPosAdds[i] = mvHeadPosAdds[i];
 	}
-	
+
 	///////////////////
 	// Terror Enemies
 	for(size_t i=0; i<mvTerrorEnemyIDs.Size(); ++i)
@@ -1701,14 +1701,14 @@ kSerializeVar(mfInfectionCollapse_HeightAdd, eSerializeType_Float32)
 kSerializeVar(mfInfectionCollapse_Roll, eSerializeType_Float32)
 kSerializeVar(mfInfectionCollapse_Timer, eSerializeType_Float32)
 
-kSerializeVar(mfVoiceFlashback_EffectFadeInTime, eSerializeType_Float32)	
-kSerializeVar(mfVoiceFlashback_EffectFadeOutTime, eSerializeType_Float32)		
-kSerializeVar(mfVoiceFlashback_SepiaAmount, eSerializeType_Float32)		
-kSerializeVar(mfVoiceFlashback_LightFadeAmount, eSerializeType_Float32)	
-kSerializeVar(mfVoiceFlashback_ImageTrailAmount, eSerializeType_Float32)		
-kSerializeVar(mfVoiceFlashback_BlurStartDistance, eSerializeType_Float32)		
-kSerializeVar(mfVoiceFlashback_BlurAmount, eSerializeType_Float32)		
-kSerializeVar(mfVoiceFlashback_FovMultiplier, eSerializeType_Float32)	
+kSerializeVar(mfVoiceFlashback_EffectFadeInTime, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_EffectFadeOutTime, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_SepiaAmount, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_LightFadeAmount, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_ImageTrailAmount, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_BlurStartDistance, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_BlurAmount, eSerializeType_Float32)
+kSerializeVar(mfVoiceFlashback_FovMultiplier, eSerializeType_Float32)
 kSerializeVar(mfVoiceFlashback_MoveSpeedMultiplier, eSerializeType_Float32)
 kSerializeVar(mfVoiceFlashback_MouseSensitivityModifier, eSerializeType_Float32)
 kSerializeVar(mbVoiceFlashback_IsDelaying, eSerializeType_Bool)

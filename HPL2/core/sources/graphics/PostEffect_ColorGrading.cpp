@@ -1,18 +1,18 @@
 /*
  * Copyright © 2011-2020 Frictional Games
- * 
+ *
  * This file is part of Amnesia: A Machine For Pigs.
- * 
+ *
  * Amnesia: A Machine For Pigs is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version. 
+ * (at your option) any later version.
 
  * Amnesia: A Machine For Pigs is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
@@ -39,7 +39,7 @@
 #include "system/Platform.h"
 
 namespace hpl {
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// PROGRAM VARS
 	//////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ namespace hpl {
 	//////////////////////////////////////////////////////////////////////////
 
 	//-----------------------------------------------------------------------
-	
+
 	cPostEffectType_ColorGrading::cPostEffectType_ColorGrading(cGraphics *apGraphics, cResources *apResources) : iPostEffectType("ColorGrading",apGraphics,apResources)
 	{
 		///////////////////////////
@@ -73,7 +73,7 @@ namespace hpl {
 			}
 		}
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	cPostEffectType_ColorGrading::~cPostEffectType_ColorGrading()
@@ -90,7 +90,7 @@ namespace hpl {
 
 		return pEffect;
 	}
-	
+
 	//-----------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ namespace hpl {
 	cPostEffect_ColorGrading::cPostEffect_ColorGrading(cGraphics *apGraphics,cResources *apResources, iPostEffectType *apType) : iPostEffect(apGraphics,apResources,apType)
 	{
 		mpSpecificType = static_cast<cPostEffectType_ColorGrading*>(mpType);
-		
+
 		mpLUT1 = NULL;
 		mpLUT2 = NULL;
 	}
@@ -130,7 +130,7 @@ namespace hpl {
             {
                 mpResources->GetTextureManager()->Destroy(it->second);
             }
-            
+
             mLUTMap.clear();
         }
 
@@ -215,9 +215,9 @@ namespace hpl {
 		    mpCurrentComposite->SetProgram(mpSpecificType->mpProgram[1]);
 		    mpSpecificType->mpProgram[1]->SetFloat(kVar_afCrossFadeAlpha,fAlpha);
         }
-		
+
 		DrawQuad(0,1,apInputTexture, true);
-		
+
 		return apFinalTempBuffer->GetColorBuffer(0)->ToTexture();
 	}
 
