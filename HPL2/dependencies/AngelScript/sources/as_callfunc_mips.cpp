@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -41,7 +41,7 @@
 
 #include "as_config.h"
 
-#ifndef AS_MAX_PORTABILITY
+#ifndef MAX_PORTABILITY
 #ifdef AS_MIPS
 
 #include "as_callfunc.h"
@@ -66,8 +66,7 @@ BEGIN_AS_NAMESPACE
 // the +1 is for when CallThis (object methods) is used
 // extra +1 when returning in memory
 extern "C" {
-// TODO: This array shouldn't be global. It should be a local array in CallSystemFunctionNative
-asDWORD mipsArgs[AS_MIPS_MAX_ARGS + 1 + 1];
+static asDWORD mipsArgs[AS_MIPS_MAX_ARGS + 1 + 1];
 }
 
 // Loads all data into the correct places and calls the function.

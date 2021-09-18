@@ -47,7 +47,7 @@ enum eTokenType
 {
 	ttUnrecognizedToken,
 
-	ttEnd,                 // End of file
+	ttEnd,				   // End of file
 
 	// White space and comments
 	ttWhiteSpace,          // ' ', '\t', '\r', '\n', UTF8 byte-order-mark
@@ -127,7 +127,7 @@ enum eTokenType
 	// Reserved keywords
 	ttIf,                  // if
 	ttElse,                // else
-	ttFor,                 // for
+	ttFor,				   // for
 	ttWhile,               // while
 	ttBool,                // bool
 	ttFuncDef,             // funcdef
@@ -149,12 +149,12 @@ enum eTokenType
 	ttFalse,               // false
 	ttReturn,              // return
 	ttNot,                 // not
-	ttAnd,                 // and
-	ttOr,                  // or
+	ttAnd,				   // and
+	ttOr,				   // or
 	ttXor,                 // xor
 	ttBreak,               // break
 	ttContinue,            // continue
-	ttConst,               // const
+	ttConst,			   // const
 	ttDo,                  // do
 	ttDouble,              // double
 	ttSwitch,              // switch
@@ -169,8 +169,7 @@ enum eTokenType
 	ttEnum,                // enum
 	ttCast,                // cast
 	ttPrivate,             // private
-	ttNamespace,           // namespace
-	ttMixin                // mixin
+	ttNamespace            // namespace
 };
 
 struct sTokenWord
@@ -263,7 +262,6 @@ sTokenWord const tokenWords[] =
 	{"int64"     , ttInt64},
 	{"interface" , ttInterface},
 	{"is"        , ttIs},
-	{"mixin"     , ttMixin},
 	{"namespace" , ttNamespace},
 	{"not"       , ttNot},
 	{"null"      , ttNull},

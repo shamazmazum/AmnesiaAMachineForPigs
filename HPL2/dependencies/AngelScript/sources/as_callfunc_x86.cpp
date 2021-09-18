@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -51,8 +51,8 @@ BEGIN_AS_NAMESPACE
 
 //
 // With some compile level optimizations the functions don't clear the FPU
-// stack themselves. So we have to do it as part of calling the native functions,
-// as the compiler will not be able to predict when it is supposed to do it by
+// stack themselves. So we have to do it as part of calling the native functions, 
+// as the compiler will not be able to predict when it is supposed to do it by 
 // itself due to the dynamic nature of scripts
 //
 // - fninit clears the FPU stack and the FPU control word
@@ -115,14 +115,6 @@ asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, 
 #endif
 				{
 					// Copy the object's memory to the buffer
-					// TODO: bug: Must call the object's copy constructor instead of doing a memcpy, 
-					//            as the object may hold a pointer to itself. It's not enough to 
-					//            change only this memcpy as the assembler routine also makes a copy
-					//            of paramBuffer to the final stack location. To avoid the second 
-					//            copy the C++ routine should point paramBuffer to the final stack
-					//            position and copy the values directly to that location. The assembler
-					//            routines then don't need to copy anything, and will just be 
-					//            responsible for setting up the registers and the stack frame appropriately.
 					memcpy(&paramBuffer[dpos], *(void**)(args+spos), descr->parameterTypes[n].GetSizeInMemoryBytes());
 
 					// Delete the original memory
@@ -245,7 +237,7 @@ asQWORD CallSystemFunctionNative(asCContext *context, asCScriptFunction *descr, 
 
 asQWORD NOINLINE CallCDeclFunction(const asDWORD *args, int paramSize, asFUNCTION_t func)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -291,13 +283,13 @@ endcopy:
 #elif defined ASM_AT_N_T
 
 	// It is not possible to rely on ESP or BSP to refer to variables or arguments on the stack
-	// depending on compiler settings BSP may not even be used, and the ESP is not always on the
+	// depending on compiler settings BSP may not even be used, and the ESP is not always on the 
 	// same offset from the local variables. Because the code adjusts the ESP register it is not
 	// possible to inform the arguments through symbolic names below.
 
 	// It's not also not possible to rely on the memory layout of the function arguments, because
-	// on some compiler versions and settings the arguments may be copied to local variables with a
-	// different ordering before they are accessed by the rest of the code.
+	// on some compiler versions and settings the arguments may be copied to local variables with a 
+	// different ordering before they are accessed by the rest of the code. 
 
 	// I'm copying the arguments into this array where I know the exact memory layout. The address
 	// of this array will then be passed to the inline asm in the EDX register.
@@ -306,7 +298,7 @@ endcopy:
 	asm __volatile__(
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -337,9 +329,9 @@ endcopy:
 
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -356,7 +348,7 @@ endcopy:
 
 asQWORD NOINLINE CallCDeclFunctionObjLast(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -410,7 +402,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -442,9 +434,9 @@ endcopy:
 
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -461,7 +453,7 @@ endcopy:
 
 asQWORD NOINLINE CallCDeclFunctionObjFirst(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -515,7 +507,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -547,9 +539,9 @@ endcopy:
 
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -566,7 +558,7 @@ endcopy:
 
 asQWORD NOINLINE CallCDeclFunctionRetByRefObjFirst(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func, void *retPtr)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -629,7 +621,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -665,9 +657,9 @@ endcopy:
 #endif
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -683,7 +675,7 @@ endcopy:
 
 asQWORD NOINLINE CallCDeclFunctionRetByRef(const asDWORD *args, int paramSize, asFUNCTION_t func, void *retPtr)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -743,7 +735,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -776,9 +768,9 @@ endcopy:
 #endif
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -795,7 +787,7 @@ endcopy:
 
 asQWORD NOINLINE CallCDeclFunctionRetByRefObjLast(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func, void *retPtr)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -856,7 +848,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -892,9 +884,9 @@ endcopy:
 #endif
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -911,7 +903,7 @@ endcopy:
 
 asQWORD NOINLINE CallSTDCallFunction(const asDWORD *args, int paramSize, asFUNCTION_t func)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -960,7 +952,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -989,9 +981,9 @@ endcopy:
 
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -1009,7 +1001,7 @@ endcopy:
 
 asQWORD NOINLINE CallThisCallFunction(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -1073,7 +1065,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)    "\n"
 		"pushl %%ebx            \n"
-		"movl  %%edx, %%ebx     \n"
+		"movl  %%edx, %%ebx     \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -1099,21 +1091,16 @@ endcopy:
 		"jne   copyloop1        \n"
 		"endcopy1:              \n"
 		"movl  0(%%ebx), %%ecx  \n" // move obj into ECX
-#ifdef THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
 		"pushl %%ecx            \n" // push obj on the stack
-#endif
 		"call  *12(%%ebx)       \n"
-#ifndef THISCALL_CALLEE_POPS_ARGUMENTS
 		"addl  8(%%ebx), %%esp  \n" // pop arguments
-#ifdef THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
 		"addl  $4, %%esp        \n" // pop obj
-#endif
-#endif
+
 		// Pop the alignment bytes
 		"popl  %%esp            \n"
-		"popl  %%ebx            \n"
+		"popl  %%ebx            \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"
@@ -1130,7 +1117,7 @@ endcopy:
 
 asQWORD NOINLINE CallThisCallFunctionRetByRef(const void *obj, const asDWORD *args, int paramSize, asFUNCTION_t func, void *retPtr)
 {
-	volatile asQWORD retQW = 0;
+	volatile asQWORD retQW;
 
 #if defined ASM_INTEL
 
@@ -1202,7 +1189,7 @@ endcopy:
 	asm __volatile__ (
 		_S(CLEAR_FPU_STACK)   "\n"
 		"pushl %%ebx           \n"
-		"movl  %%edx, %%ebx    \n"
+		"movl  %%edx, %%ebx    \n"	
 
 		// Need to align the stack pointer so that it is aligned to 16 bytes when making the function call.
 		// It is assumed that when entering this function, the stack pointer is already aligned, so we need
@@ -1227,35 +1214,21 @@ endcopy:
 		"subl  $4, %%ecx       \n"
 		"jne   copyloop3       \n"
 		"endcopy3:             \n"
-#if defined(__MINGW32__) && ((__GNUC__ == 4 && __GNUC_MINOR__ >= 7) || __GNUC__ > 4)
-        // MinGW made some strange choices with 4.7, and the thiscall calling convention
-        // when returning an object in memory is completely different from when not returning
-        // in memory
-        "pushl 0(%%ebx)        \n" // push obj on the stack
-        "movl 16(%%ebx), %%ecx \n" // move the return pointer into ECX
-        "call  *12(%%ebx)      \n" // call the function
-#else
 		"movl  0(%%ebx), %%ecx \n" // move obj into ECX
-#ifdef THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
 		"pushl %%ecx           \n" // push obj on the stack
-#endif
 		"pushl 16(%%ebx)       \n" // push retPtr on the stack
 		"call  *12(%%ebx)      \n"
 #ifndef THISCALL_CALLEE_POPS_HIDDEN_RETURN_POINTER
 		"addl  $4, %%esp       \n" // pop return pointer
 #endif
-#ifndef THISCALL_CALLEE_POPS_ARGUMENTS
 		"addl  8(%%ebx), %%esp \n" // pop arguments
-#ifdef THISCALL_PASS_OBJECT_POINTER_ON_THE_STACK
 		"addl  $4, %%esp       \n" // pop the object pointer
-#endif
-#endif
-#endif // MINGW
+		                           // the return pointer was popped by the callee
 		// Pop the alignment bytes
 		"popl  %%esp           \n"
-		"popl  %%ebx           \n"
+		"popl  %%ebx           \n" 
 
-		// Copy EAX:EDX to retQW. As the stack pointer has been
+		// Copy EAX:EDX to retQW. As the stack pointer has been 
 		// restored it is now safe to access the local variable
 		"leal  %1, %%ecx        \n"
 		"movl  %%eax, 0(%%ecx)  \n"

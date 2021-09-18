@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -92,7 +92,6 @@ struct asSTypeBehaviour
 		gcEnumReferences = 0; 
 		gcReleaseAllReferences = 0;
 		templateCallback = 0;
-		getWeakRefFlag = 0;
 	}
 
 	int factory;
@@ -105,17 +104,14 @@ struct asSTypeBehaviour
 	int addref;
 	int release;
 	int templateCallback;
-
+	
 	// GC behaviours
 	int gcGetRefCount;
 	int gcSetFlag;
 	int gcGetFlag;
 	int gcEnumReferences;
 	int gcReleaseAllReferences;
-
-	// Weakref behaviours
-	int getWeakRefFlag;
-
+	
 	asCArray<int> factories;
 	asCArray<int> constructors;
 	asCArray<int> operators;
@@ -128,7 +124,6 @@ struct asSEnumValue
 };
 
 class asCScriptEngine;
-struct asSNameSpace;
 
 void RegisterObjectTypeGCBehaviours(asCScriptEngine *engine);
 
@@ -141,7 +136,6 @@ public:
 	asIScriptEngine *GetEngine() const;
 	const char      *GetConfigGroup() const;
 	asDWORD          GetAccessMask() const;
-	asIScriptModule *GetModule() const;
 
 	// Memory management
 	int AddRef() const;
@@ -155,9 +149,8 @@ public:
 	asDWORD          GetFlags() const;
 	asUINT           GetSize() const;
 	int              GetTypeId() const;
-	int              GetSubTypeId(asUINT subtypeIndex = 0) const;
-	asIObjectType   *GetSubType(asUINT subtypeIndex = 0) const;
-	asUINT			 GetSubTypeCount() const;
+	int              GetSubTypeId() const;
+	asIObjectType   *GetSubType() const;
 
 	// Interfaces
 	asUINT           GetInterfaceCount() const;
@@ -166,11 +159,22 @@ public:
 
 	// Factories
 	asUINT             GetFactoryCount() const;
+#ifdef AS_DEPRECATED
+	// Deprecated since 2.24.0 - 2012-05-25
+	int                GetFactoryIdByIndex(asUINT index) const;
+	int                GetFactoryIdByDecl(const char *decl) const;
+#endif
 	asIScriptFunction *GetFactoryByIndex(asUINT index) const;
 	asIScriptFunction *GetFactoryByDecl(const char *decl) const;
 
 	// Methods
 	asUINT             GetMethodCount() const;
+#ifdef AS_DEPRECATED
+	// Deprecated since 2.24.0 - 2012-05-25
+	int                GetMethodIdByIndex(asUINT index, bool getVirtual) const;
+	int                GetMethodIdByName(const char *name, bool getVirtual) const;
+	int                GetMethodIdByDecl(const char *decl, bool getVirtual) const;
+#endif
 	asIScriptFunction *GetMethodByIndex(asUINT index, bool getVirtual) const;
 	asIScriptFunction *GetMethodByName(const char *name, bool getVirtual) const;
 	asIScriptFunction *GetMethodByDecl(const char *decl, bool getVirtual) const;
@@ -192,10 +196,10 @@ public:
 // Internal
 //===========================================
 public:
+	asCObjectType(); 
 	asCObjectType(asCScriptEngine *engine);
 	~asCObjectType();
 
-	void Orphan(asCModule *module);
 	int  GetRefCount();
 	void SetGCFlag();
 	bool GetGCFlag();
@@ -208,10 +212,9 @@ public:
 	bool IsShared() const;
 
 	asCObjectProperty *AddPropertyToClass(const asCString &name, const asCDataType &dt, bool isPrivate);
-	void ReleaseAllProperties();
 
 	asCString                    name;
-	asSNameSpace                *nameSpace;
+	asCString                    nameSpace;
 	int                          size;
 	asCArray<asCObjectProperty*> properties;
 	asCArray<int>                methods;
@@ -226,18 +229,14 @@ public:
 	asSTypeBehaviour beh;
 
 	// Used for template types
-	asCArray<asCDataType> templateSubTypes;
-	bool                  acceptValueSubType;
-	bool                  acceptRefSubType;
+	asCDataType    templateSubType;
+	bool           acceptValueSubType;
+	bool           acceptRefSubType;
 
 	asCScriptEngine  *engine;
-	asCModule        *module;
 	asCArray<asPWORD> userData;
 
 protected:
-	friend class asCScriptEngine;
-	asCObjectType();
-
 	mutable asCAtomic refCount;
 	mutable bool      gcFlag;
 };

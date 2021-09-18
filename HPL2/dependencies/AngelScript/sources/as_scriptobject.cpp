@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -33,7 +33,6 @@
 #include "as_config.h"
 #include "as_scriptengine.h"
 #include "as_scriptobject.h"
-#include "as_texts.h"
 
 BEGIN_AS_NAMESPACE
 
@@ -44,8 +43,8 @@ asIScriptObject *ScriptObjectFactory(const asCObjectType *objType, asCScriptEngi
 	int r = 0;
 	bool isNested = false;
 
-	// TODO: runtime optimize: There should be a pool for the context so it doesn't 
-	//                         have to be allocated just for creating the script object
+	// TODO: optimize: There should be a pool for the context so it doesn't 
+	//                 have to be allocated just for creating the script object
 
 	// TODO: It must be possible for the application to debug the creation of the object too
 
@@ -93,19 +92,7 @@ asIScriptObject *ScriptObjectFactory(const asCObjectType *objType, asCScriptEngi
 	if( r != asEXECUTION_FINISHED )
 	{
 		if( isNested )
-		{
 			ctx->PopState();
-
-			// If the execution was aborted or an exception occurred,
-			// then we should forward that to the outer execution.
-			if( r == asEXECUTION_EXCEPTION )
-			{
-				// TODO: How to improve this exception
-				ctx->SetException(TXT_EXCEPTION_IN_NESTED_CALL);
-			}
-			else if( r == asEXECUTION_ABORTED )
-				ctx->Abort();
-		}
 		else
 			ctx->Release();
 		return 0;
@@ -181,32 +168,29 @@ void RegisterScriptObject(asCScriptEngine *engine)
 	engine->scriptTypeBehaviours.flags = asOBJ_SCRIPT_OBJECT | asOBJ_REF | asOBJ_GC;
 	engine->scriptTypeBehaviours.name = "_builtin_object_";
 #ifndef AS_MAX_PORTABILITY
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_CONSTRUCT, "void f(int&in)", asFUNCTION(ScriptObject_Construct), asCALL_CDECL_OBJLAST, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCScriptObject,AddRef), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCScriptObject,Release), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_CONSTRUCT, "void f(int&in)", asFUNCTION(ScriptObject_Construct), asCALL_CDECL_OBJLAST); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ADDREF, "void f()", asMETHOD(asCScriptObject,AddRef), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASE, "void f()", asMETHOD(asCScriptObject,Release), asCALL_THISCALL); asASSERT( r >= 0 );
 	r = engine->RegisterMethodToObjectType(&engine->scriptTypeBehaviours, "int &opAssign(int &in)", asFUNCTION(ScriptObject_Assignment), asCALL_CDECL_OBJLAST); asASSERT( r >= 0 );
 
-	// Weakref behaviours
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GET_WEAKREF_FLAG, "int &f()", asMETHOD(asCScriptObject,GetWeakRefFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	
 	// Register GC behaviours
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCScriptObject,GetRefCount), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCScriptObject,SetFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCScriptObject,GetFlag), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCScriptObject,EnumReferences), asCALL_THISCALL, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCScriptObject,ReleaseAllHandles), asCALL_THISCALL, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(asCScriptObject,GetRefCount), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(asCScriptObject,SetFlag), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(asCScriptObject,GetFlag), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHOD(asCScriptObject,EnumReferences), asCALL_THISCALL); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHOD(asCScriptObject,ReleaseAllHandles), asCALL_THISCALL); asASSERT( r >= 0 );
 #else
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_CONSTRUCT, "void f(int&in)", asFUNCTION(ScriptObject_Construct_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(ScriptObject_AddRef_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(ScriptObject_Release_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_CONSTRUCT, "void f(int&in)", asFUNCTION(ScriptObject_Construct_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ADDREF, "void f()", asFUNCTION(ScriptObject_AddRef_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASE, "void f()", asFUNCTION(ScriptObject_Release_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
 	r = engine->RegisterMethodToObjectType(&engine->scriptTypeBehaviours, "int &opAssign(int &in)", asFUNCTION(ScriptObject_Assignment_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
 
 	// Register GC behaviours
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(ScriptObject_GetRefCount_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(ScriptObject_SetFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(ScriptObject_GetFlag_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(ScriptObject_EnumReferences_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
-	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(ScriptObject_ReleaseAllHandles_Generic), asCALL_GENERIC, 0); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETREFCOUNT, "int f()", asFUNCTION(ScriptObject_GetRefCount_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_SETGCFLAG, "void f()", asFUNCTION(ScriptObject_SetFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_GETGCFLAG, "bool f()", asFUNCTION(ScriptObject_GetFlag_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_ENUMREFS, "void f(int&in)", asFUNCTION(ScriptObject_EnumReferences_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
+	r = engine->RegisterBehaviourToObjectType(&engine->scriptTypeBehaviours, asBEHAVE_RELEASEREFS, "void f(int&in)", asFUNCTION(ScriptObject_ReleaseAllHandles_Generic), asCALL_GENERIC); asASSERT( r >= 0 );
 #endif
 }
 
@@ -234,63 +218,26 @@ asCScriptObject::asCScriptObject(asCObjectType *ot, bool doInitialize)
 	objType = ot;
 	objType->AddRef();
 	isDestructCalled = false;
-	weakRefFlag = 0;
 
 	// Notify the garbage collector of this object
 	if( objType->flags & asOBJ_GC )
 		objType->engine->gc.AddScriptObjectToGC(this, objType);
 
-	if( doInitialize )
+	// Construct all properties
+	asCScriptEngine *engine = objType->engine;
+	for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
 	{
-#ifndef AS_NO_MEMBER_INIT
-		// The actual initialization will be done by the bytecode, so here we should just clear the
-		// memory to guarantee that no pointers with have scratch values in case of an exception
-		// TODO: runtime optimize: Is it quicker to just do a memset on the entire object? 
-		for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
+		asCObjectProperty *prop = objType->properties[n];
+		if( prop->type.IsObject() )
 		{
-			asCObjectProperty *prop = objType->properties[n];
-			if( prop->type.IsObject() )
-			{
-				asPWORD *ptr = reinterpret_cast<asPWORD*>(reinterpret_cast<asBYTE*>(this) + prop->byteOffset);
+			asPWORD *ptr = (asPWORD*)(((char*)this) + prop->byteOffset);
+
+			if( prop->type.IsObjectHandle() )
 				*ptr = 0;
-			}
-		}
-#else
-		// When member initialization is disabled the constructor must make sure
-		// to allocate and initialize all members with the default constructor
-		for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
-		{
-			asCObjectProperty *prop = objType->properties[n];
-			if( prop->type.IsObject() )
+			else
 			{
-				asPWORD *ptr = reinterpret_cast<asPWORD*>(reinterpret_cast<asBYTE*>(this) + prop->byteOffset);
-				if( prop->type.IsObjectHandle() )
-					*ptr = 0;
-				else
-				{
-					if( prop->type.GetObjectType()->flags & asOBJ_SCRIPT_OBJECT )
-						*ptr = (asPWORD)ScriptObjectFactory(prop->type.GetObjectType(), ot->engine);
-					else
-						*ptr = (asPWORD)AllocateUninitializedObject(prop->type.GetObjectType(), ot->engine);
-				}
-			}
-		}
-#endif
-	}
-	else
-	{
-		// When the object is created without initialization, all non-handle members must be allocated, but not initialized
-		asCScriptEngine *engine = objType->engine;
-		for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
-		{
-			asCObjectProperty *prop = objType->properties[n];
-			if( prop->type.IsObject() )
-			{
-				asPWORD *ptr = reinterpret_cast<asPWORD*>(reinterpret_cast<asBYTE*>(this) + prop->byteOffset);
-				if( prop->type.IsObjectHandle() )
-					*ptr = 0;
-				else
-					*ptr = (asPWORD)AllocateUninitializedObject(prop->type.GetObjectType(), engine);
+				// Allocate the object and call it's constructor
+				*ptr = (asPWORD)AllocateObject(prop->type.GetObjectType(), engine, doInitialize);
 			}
 		}
 	}
@@ -307,8 +254,7 @@ void asCScriptObject::Destruct()
 
 asCScriptObject::~asCScriptObject()
 {
-	if( weakRefFlag )
-		weakRefFlag->Release();
+	objType->Release();
 
 	// The engine pointer should be available from the objectType
 	asCScriptEngine *engine = objType->engine;
@@ -328,30 +274,6 @@ asCScriptObject::~asCScriptObject()
 			}
 		}
 	}
-
-	objType->Release();
-}
-
-asILockableSharedBool *asCScriptObject::GetWeakRefFlag() const
-{
-	if( weakRefFlag )
-		return weakRefFlag;
-
-	// Lock globally so no other thread can attempt
-	// to create a shared bool at the same time.
-	// TODO: runtime optimize: Instead of locking globally, it would be possible to have 
-	//                         a critical section per object type. This would reduce the 
-	//                         chances of two threads lock on the same critical section.
-	asAcquireExclusiveLock();
-
-	// Make sure another thread didn't create the 
-	// flag while we waited for the lock
-	if( !weakRefFlag )
-		weakRefFlag = asNEW(asCLockableSharedBool);
-
-	asReleaseExclusiveLock();
-
-	return weakRefFlag;
 }
 
 asIScriptEngine *asCScriptObject::GetEngine() const
@@ -370,21 +292,6 @@ int asCScriptObject::Release() const
 {
 	// Clear the flag set by the GC
 	gcFlag = false;
-
-	// If the weak ref flag exists it is because someone held a weak ref
-	// and that someone may add a reference to the object at any time. It
-	// is ok to check the existance of the weakRefFlag without locking here
-	// because if the refCount is 1 then no other thread is currently 
-	// creating the weakRefFlag.
-	if( refCount.get() == 1 && weakRefFlag )
-	{
-		// Set the flag to tell others that the object is no longer alive
-		// We must do this before decreasing the refCount to 0 so we don't
-		// end up with a race condition between this thread attempting to 
-		// destroy the object and the other that temporary added a strong
-		// ref from the weak ref.
-		weakRefFlag->Set(true);
-	}
 
 	// Call the script destructor behaviour if the reference counter is 1.
 	if( refCount.get() == 1 && !isDestructCalled )
@@ -407,12 +314,8 @@ int asCScriptObject::Release() const
 
 void asCScriptObject::CallDestructor()
 {
-	// Only allow the destructor to be called once
-	if( isDestructCalled ) return;
-
 	asIScriptContext *ctx = 0;
 	bool isNested = false;
-	bool doAbort = false;
 
 	// Make sure the destructor is called once only, even if the  
 	// reference count is increased and then decreased again
@@ -462,15 +365,8 @@ void asCScriptObject::CallDestructor()
 						break;
 				}
 
-				// Exceptions in the destructor will be ignored, as there is not much
-				// that can be done about them. However a request to abort the execution
-				// will be forwarded to the outer execution, in case of a nested call.
-				if( r == asEXECUTION_ABORTED )
-					doAbort = true;
-
-				// Observe, even though the current destructor was aborted or an exception
-				// occurred, we still try to execute the base class' destructor if available
-				// in order to free as many resources as possible.
+				// There's not much to do if the execution doesn't 
+				// finish, so we just ignore the result
 			}
 		}
 
@@ -480,13 +376,7 @@ void asCScriptObject::CallDestructor()
 	if( ctx )
 	{
 		if( isNested )
-		{
 			ctx->PopState();
-
-			// Forward any request to abort the execution to the outer call
-			if( doAbort )
-				ctx->Abort();
-		}
 		else
 			ctx->Release();
 	}
@@ -608,106 +498,27 @@ asCScriptObject &asCScriptObject::operator=(const asCScriptObject &other)
 	{
 		asASSERT( other.objType->DerivesFrom(objType) );
 
-		// If the script class implements the opAssign method, it should be called
 		asCScriptEngine *engine = objType->engine;
-		asCScriptFunction *func = engine->scriptFunctions[objType->beh.copy];
-		if( func->funcType == asFUNC_SYSTEM )
+
+		// Copy all properties
+		for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
 		{
-			// Copy all properties
-			for( asUINT n = 0; n < objType->properties.GetLength(); n++ )
+			asCObjectProperty *prop = objType->properties[n];
+			if( prop->type.IsObject() )
 			{
-				asCObjectProperty *prop = objType->properties[n];
-				if( prop->type.IsObject() )
-				{
-					void **dst = (void**)(((char*)this) + prop->byteOffset);
-					void **src = (void**)(((char*)&other) + prop->byteOffset);
-					if( !prop->type.IsObjectHandle() )
-						CopyObject(*src, *dst, prop->type.GetObjectType(), engine);
-					else
-						CopyHandle((asPWORD*)src, (asPWORD*)dst, prop->type.GetObjectType(), engine);
-				}
+				void **dst = (void**)(((char*)this) + prop->byteOffset);
+				void **src = (void**)(((char*)&other) + prop->byteOffset);
+				if( !prop->type.IsObjectHandle() )
+					CopyObject(*src, *dst, prop->type.GetObjectType(), engine);
 				else
-				{
-					void *dst = ((char*)this) + prop->byteOffset;
-					void *src = ((char*)&other) + prop->byteOffset;
-					memcpy(dst, src, prop->type.GetSizeInMemoryBytes());
-				}
+					CopyHandle((asPWORD*)src, (asPWORD*)dst, prop->type.GetObjectType(), engine);
 			}
-		}
-		else
-		{
-			// Reuse the active context or create a new one to call the script class' opAssign method
-			asIScriptContext *ctx = 0;
-			int r = 0;
-			bool isNested = false;
-
-			ctx = asGetActiveContext();
-			if( ctx )
-			{
-				r = ctx->PushState();
-				if( r == asSUCCESS )
-					isNested = true;
-				else
-					ctx = 0;
-			}
-
-			if( ctx == 0 )
-			{
-				r = engine->CreateContext(&ctx, true);
-				if( r < 0 )
-					return *this;
-			}
-
-			r = ctx->Prepare(engine->scriptFunctions[objType->beh.copy]);
-			if( r < 0 )
-			{
-				if( isNested )
-					ctx->PopState();
-				else
-					ctx->Release();
-				return *this;
-			}
-
-			r = ctx->SetArgAddress(0, const_cast<asCScriptObject*>(&other));
-			asASSERT( r >= 0 );
-			r = ctx->SetObject(this);
-			asASSERT( r >= 0 );
-
-			for(;;)
-			{
-				r = ctx->Execute();
-
-				// We can't allow this execution to be suspended 
-				// so resume the execution immediately
-				if( r != asEXECUTION_SUSPENDED )
-					break;
-			}
-
-			if( r != asEXECUTION_FINISHED )
-			{
-				if( isNested )
-				{
-					ctx->PopState();
-
-					// If the execution was aborted or an exception occurred,
-					// then we should forward that to the outer execution.
-					if( r == asEXECUTION_EXCEPTION )
-					{
-						// TODO: How to improve this exception
-						ctx->SetException(TXT_EXCEPTION_IN_NESTED_CALL);
-					}
-					else if( r == asEXECUTION_ABORTED )
-						ctx->Abort();
-				}
-				else
-					ctx->Release();
-				return *this;
-			}
-
-			if( isNested )
-				ctx->PopState();
 			else
-				ctx->Release();
+			{
+				void *dst = ((char*)this) + prop->byteOffset;
+				void *src = ((char*)&other) + prop->byteOffset;
+				memcpy(dst, src, prop->type.GetSizeInMemoryBytes());
+			}
 		}
 	}
 
@@ -726,14 +537,19 @@ int asCScriptObject::CopyFrom(asIScriptObject *other)
 	return 0;
 }
 
-void *asCScriptObject::AllocateUninitializedObject(asCObjectType *objType, asCScriptEngine *engine)
+void *asCScriptObject::AllocateObject(asCObjectType *objType, asCScriptEngine *engine, bool doInitialize)
 {
 	void *ptr = 0;
 
 	if( objType->flags & asOBJ_SCRIPT_OBJECT )
 	{
-		ptr = engine->CallAlloc(objType);
-		ScriptObject_ConstructUnitialized(objType, reinterpret_cast<asCScriptObject*>(ptr));
+		if( doInitialize )
+			ptr = ScriptObjectFactory(objType, engine);
+		else
+		{
+			ptr = engine->CallAlloc(objType);
+			ScriptObject_ConstructUnitialized(objType, reinterpret_cast<asCScriptObject*>(ptr));
+		}
 	}
 	else if( objType->flags & asOBJ_TEMPLATE )
 	{
@@ -775,84 +591,23 @@ void asCScriptObject::FreeObject(void *ptr, asCObjectType *objType, asCScriptEng
 
 void asCScriptObject::CopyObject(void *src, void *dst, asCObjectType *objType, asCScriptEngine *engine)
 {
+	// TODO: If the object doesn't have the copy behaviour, and it is not a 
+	//       POD object then the copy must not be performed
 	int funcIndex = objType->beh.copy;
+
 	if( funcIndex )
-	{
-		asCScriptFunction *func = engine->scriptFunctions[objType->beh.copy];
-		if( func->funcType == asFUNC_SYSTEM )
-			engine->CallObjectMethod(dst, src, funcIndex);
-		else
-		{
-			// Call the script class' opAssign method
-			asASSERT( objType->flags & asOBJ_SCRIPT_OBJECT );
-			reinterpret_cast<asCScriptObject*>(dst)->CopyFrom(reinterpret_cast<asCScriptObject*>(src));
-		}
-	}
-	else if( objType->size && (objType->flags & asOBJ_POD) )
+		engine->CallObjectMethod(dst, src, funcIndex);
+	else
 		memcpy(dst, src, objType->size);
 }
 
 void asCScriptObject::CopyHandle(asPWORD *src, asPWORD *dst, asCObjectType *objType, asCScriptEngine *engine)
 {
-	// asOBJ_NOCOUNT doesn't have addref or release behaviours
-	asASSERT( (objType->flags & asOBJ_NOCOUNT) || (objType->beh.release && objType->beh.addref) );
-
-	if( *dst && objType->beh.release )
+	if( *dst )
 		engine->CallObjectMethod(*(void**)dst, objType->beh.release);
 	*dst = *src;
-	if( *dst && objType->beh.addref )
+	if( *dst )
 		engine->CallObjectMethod(*(void**)dst, objType->beh.addref);
-}
-
-// TODO: weak: Should move to its own file
-asCLockableSharedBool::asCLockableSharedBool() : value(false) 
-{
-	refCount.set(1);
-}
-
-int asCLockableSharedBool::AddRef() const
-{
-	return refCount.atomicInc();
-}
-
-int asCLockableSharedBool::Release() const
-{
-	int r = refCount.atomicDec();
-	if( r == 0 )
-		asDELETE(const_cast<asCLockableSharedBool*>(this), asCLockableSharedBool);
-	return r;
-}
-
-bool asCLockableSharedBool::Get() const
-{
-	return value;
-}
-
-void asCLockableSharedBool::Set(bool v)
-{
-	// Make sure the value is not changed while another thread  
-	// is inspecting it and taking a decision on what to do.
-	Lock();
-	value = v;
-	Unlock();
-}
-
-void asCLockableSharedBool::Lock() const
-{
-	ENTERCRITICALSECTION(lock);
-}
-
-void asCLockableSharedBool::Unlock() const
-{
-	LEAVECRITICALSECTION(lock);
-}
-
-// Interface
-// Auxiliary function to allow applications to create shared 
-// booleans without having to implement the logic for them
-AS_API asILockableSharedBool *asCreateLockableSharedBool()
-{
-	return asNEW(asCLockableSharedBool);
 }
 
 END_AS_NAMESPACE

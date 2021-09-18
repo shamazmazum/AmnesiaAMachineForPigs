@@ -19,7 +19,6 @@ endif (NOT DEFINED SYSTEMWIDE_RESOURCES_LOCATION)
 add_definitions(
   -DUSE_OALWRAPPER
   -DUSE_SDL2
-  -DAS_DEPRECATED
 )
 
 add_subdirectory(../../HPL2/core core2)

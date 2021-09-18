@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied 
    warranty. In no event will the authors be held liable for any 
@@ -54,23 +54,19 @@ class asCGarbageCollector
 {
 public:
 	asCGarbageCollector();
-	~asCGarbageCollector();
 
-	int    GarbageCollect(asDWORD flags);
-	void   GetStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
-	void   GCEnumCallback(void *reference);
-	int    AddScriptObjectToGC(void *obj, asCObjectType *objType);
-	int    GetObjectInGC(asUINT idx, asUINT *seqNbr, void **obj, asIObjectType **type);
-	bool   IsObjectInGC(void *obj);
+	int  GarbageCollect(asDWORD flags);
+	void GetStatistics(asUINT *currentSize, asUINT *totalDestroyed, asUINT *totalDetected, asUINT *newObjects, asUINT *totalNewDestroyed) const;
+	void GCEnumCallback(void *reference);
+	void AddScriptObjectToGC(void *obj, asCObjectType *objType);
 
-	int    ReportAndReleaseUndestroyedObjects();
+	int ReportAndReleaseUndestroyedObjects();
 
 	asCScriptEngine *engine;
 
 protected:
-	struct asSObjTypePair {void *obj; asCObjectType *type; asUINT seqNbr;};
+	struct asSObjTypePair {void *obj; asCObjectType *type; int count;};
 	struct asSIntTypePair {int i; asCObjectType *type;};
-	typedef asSMapNode<void*, asSIntTypePair> asSMapNode_t;
 
 	enum egcDestroyState
 	{
@@ -105,6 +101,7 @@ protected:
 	void           RemoveNewObjectAtIdx(int idx);
 	void           RemoveOldObjectAtIdx(int idx);
 	void           MoveObjectToOldList(int idx);
+	void           IncreaseCounterForNewObject(int idx);
 
 	// Holds all the objects known by the garbage collector
 	asCArray<asSObjTypePair>           gcNewObjects;
@@ -127,15 +124,7 @@ protected:
 	egcDetectState                     detectState;
 	asUINT                             detectIdx;
 	asUINT                             numDetected;
-	asUINT                             numAdded;
-	asUINT                             seqAtSweepStart[3];
-	asSMapNode_t                      *gcMapCursor;
-	bool                               isProcessing;
-
-	// We'll keep a pool of nodes to avoid allocating memory all the time
-	asSMapNode_t            *GetNode(void *obj, asSIntTypePair it);
-	void                     ReturnNode(asSMapNode_t *node);
-	asCArray<asSMapNode_t*>  freeNodes;
+	asSMapNode<void*, asSIntTypePair> *gcMapCursor;
 
 	// Critical section for multithreaded access
 	DECLARECRITICALSECTION(gcCritical)   // Used for adding/removing objects

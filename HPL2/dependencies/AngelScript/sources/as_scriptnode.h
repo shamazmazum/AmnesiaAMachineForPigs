@@ -74,6 +74,7 @@ enum eScriptNode
 	snDoWhile,
 	snAssignment,
 	snCondition,
+	snGlobalVar,
 	snSwitch,
 	snCase,
 	snImport,
@@ -86,8 +87,7 @@ enum eScriptNode
 	snVariableAccess,
 	snFuncDef,
 	snVirtualProperty,
-	snNamespace,
-	snMixin
+	snNamespace
 };
 
 struct sToken
@@ -105,7 +105,6 @@ public:
 	asCScriptNode(eScriptNode nodeType);
 
 	void Destroy(asCScriptEngine *engine);
-	asCScriptNode *CreateCopy(asCScriptEngine *engine);
 
 	void SetToken(sToken *token);
 	void AddChildLast(asCScriptNode *node);

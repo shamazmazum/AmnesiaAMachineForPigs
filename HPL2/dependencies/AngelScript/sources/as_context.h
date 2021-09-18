@@ -1,6 +1,6 @@
 /*
    AngelCode Scripting Library
-   Copyright (c) 2003-2013 Andreas Jonsson
+   Copyright (c) 2003-2012 Andreas Jonsson
 
    This software is provided 'as-is', without any express or implied
    warranty. In no event will the authors be held liable for any
@@ -63,6 +63,10 @@ public:
 
 	// Execution
 	int             Prepare(asIScriptFunction *func);
+#ifdef AS_DEPRECATED
+	// Deprecated since 2.24.0 - 2012-05-25
+	int             Prepare(int functionId);
+#endif
 	int             Unprepare();
 	int             Execute();
 	int             Abort();
@@ -143,7 +147,6 @@ public:
 	void ExecuteNext();
 	void CleanStack();
 	void CleanStackFrame();
-	void CleanArgsOnStack();
 	void CleanReturnObject();
 	void DetermineLiveObjects(asCArray<int> &liveObjects, asUINT stackLevel);
 
@@ -182,11 +185,9 @@ public:
 
 	// Exception handling
 	bool      m_isStackMemoryNotAllocated;
-	bool      m_needToCleanupArgs;
 	bool      m_inExceptionHandler;
 	asCString m_exceptionString;
 	int       m_exceptionFunction;
-	int       m_exceptionSectionIdx;
 	int       m_exceptionLine;
 	int       m_exceptionColumn;
 
