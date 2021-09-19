@@ -1,17 +1,62 @@
-Amnesia: A Machine For Pigs Source Code
+Amnesia: A Machine For Pigs
 =======================
 
-Currently the engine uses fbx sdk 2012 which isn't avalable anymore which means the engine wont compile. If you want to give a shot anyway you can find the sdk here:
-https://www.autodesk.com/fbx
+## Disclaimer
 
+This is still WIP. The game is not playable to the end (just to the centrifuge
+room).
 
-Other than that, here is almost everything you need to build  Amnesia: A Machine For Pigs. Included are project files for Visual Studio 2010 and CMake for Linux & macOS.
+## Readme
 
-Contributing Code
------------------
-We encourage everyone to contribute code to this project, so just sign up for a github account, create a fork and hack away at the codebase.
+This is a port of Amnesia: A Machine For Pigs by Frictional Games to Linux/BSD
+systems. It's 100% binary blob free (thanks to buzer2020's port). Only few
+dependencies are bundled with this fork:
 
-License Information
--------------------
-All code is under the GPL Version 3 license. Read the LICENSE file for terms of use of the license.
+* OALWrapper. It's easier to bundle it because it's specific to Frictional
+  Games.
+* Newton Dynamics Engine. Finding the sources for this particular version was a
+  pain (again, thanks to buzer2020 here on GitHub).
+* AngelScript. There is `lang/angelscript` port in FreeBSD ports collection, but
+  that version is too new for this game.
+  
+## Building
 
+Just run
+
+~~~~
+mkdir build && cd build
+cmake ../amnesia/src
+make
+~~~~
+
+or, alternatively, if you want your game assets installed system-wide:
+
+~~~~
+mkdir build && cd build
+cmake -DSYSTEMWIDE_RESOURCES=ON -DSYSTEMWIDE_RESOURCES_LOCATION="/path/to/game/assets" ../amnesia/src
+make
+~~~~
+
+This will produce a single executable, `AmnesiaAMFP` which you need to run to play
+the game.
+
+## Dependencies
+
+In addition to those ancient bundled dependencies, the game needs a few newer
+ones:
+
+* OpenGL
+* SDL2
+* libtheora
+* libvorbis
+* libvorbisfile
+* DevIL
+* GLEW
+
+All this libraries can be found in FreeBSD ports.
+
+## Additional notes
+
+The original repository has a bunch of additional tools like level and model
+editors. Because these tools are not suitable for my Wayland environment and
+require X libraries, I do not build them. The sources are still here, however.
