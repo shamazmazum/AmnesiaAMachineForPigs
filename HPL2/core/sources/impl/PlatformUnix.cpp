@@ -17,10 +17,10 @@
  * along with Amnesia: A Machine For Pigs.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "ResourcesLocation.h"
+
 #include "system/Platform.h"
-
 #include "system/String.h"
-
 #include "system/LowLevelSystem.h"
 
 #include <sys/stat.h>
