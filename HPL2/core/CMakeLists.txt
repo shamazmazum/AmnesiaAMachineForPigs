@@ -150,10 +150,13 @@ function(GenerateBuildID outvar idname includedir sourcedir)
 endfunction()
 
 GenerateBuildID(version_source
-    HPL2_0
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/sources
-)
+  HPL2_0
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/sources)
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ResourcesLocation.h.in
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/ResourcesLocation.h)
 
 # setup source groups
 source_group("Implementation Specific" REGULAR_EXPRESSION "\\/impl\\/.+")

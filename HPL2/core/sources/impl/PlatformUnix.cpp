@@ -364,9 +364,13 @@ namespace hpl {
 	//-----------------------------------------------------------------------
     tString cPlatform::GetDataDir()
     {
-        char buff[MAXPATHLEN];
+#if defined(SYSTEMWIDE_RESOURCES)
+		return SYSTEMWIDE_RESOURCES_LOCATION;
+#else
+		char buff[MAXPATHLEN];
 		getcwd(buff, MAXPATHLEN);
 		return tString(buff);
+#endif
     }
 
 	//-----------------------------------------------------------------------
