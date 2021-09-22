@@ -1,5 +1,5 @@
-Amnesia: A Machine For Pigs
-=======================
+# Amnesia: A Machine For Pigs
+[![CI](https://github.com/shamazmazum/AmnesiaAMachineForPigs/actions/workflows/build.yml/badge.svg)](https://github.com/shamazmazum/AmnesiaAMachineForPigs/actions/workflows/build.yml)
 
 ## Before you play
 
