@@ -1,16 +1,26 @@
 Amnesia: A Machine For Pigs
 =======================
 
-## Disclaimer
+## Before you play
 
-This is still WIP. The game is not playable to the end (just to the centrifuge
-room).
+This port is still WIP. To play the game you will need to modify the files from
+the original game following these instructions:
+
+* Download and install [Autodesk FBX converter](https://www.autodesk.com/developer-network/platform-technologies/fbx-converter-archives). 
+  You may need to install Windows on some VM for that.
+* Convert all `.FBX` models in the game directory to Collada format (file
+  extension `.dae`).
+* From the top directory where the game assets are invoke the following command:
+  `find . -name "*.ent" -print0 | xargs -0 sed -i.bak 's/\.FBX/\.dae/'`.
+
+If you do something wrong you will not see manpigs and children in the beginning
+of the game.
 
 ## Readme
 
-This is a port of Amnesia: A Machine For Pigs by Frictional Games to Linux/BSD
-systems. It's 100% binary blob free (thanks to buzer2020's port). Only few
-dependencies are bundled with this fork:
+This is a port of Amnesia: A Machine For Pigs developed by The Chinese Room and
+published by Frictional Games to Linux/BSD systems. It's 100% binary blob free
+(thanks to buzer2020's port). Only few dependencies are bundled with this fork:
 
 * OALWrapper. It's easier to bundle it because it's specific to Frictional
   Games.
@@ -25,7 +35,7 @@ Just run
 
 ~~~~
 mkdir build && cd build
-cmake ../amnesia/src
+cmake ../Game/src
 make
 ~~~~
 
