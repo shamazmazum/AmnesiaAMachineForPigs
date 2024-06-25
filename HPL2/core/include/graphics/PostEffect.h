@@ -91,7 +91,7 @@ namespace hpl {
 	{
 	public:
 		iPostEffect(cGraphics *apGraphics, cResources *apResources, iPostEffectType *apType);
-		~iPostEffect();
+		virtual ~iPostEffect();
 
 		iTexture* Render(cPostEffectComposite *apComposite, iTexture *apInputTexture, iFrameBuffer *apFinalTempBuffer, bool abLastEffect);
 

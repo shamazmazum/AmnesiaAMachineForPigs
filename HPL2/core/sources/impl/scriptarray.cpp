@@ -809,16 +809,15 @@ bool CScriptArray::operator==(const CScriptArray &other) const
 			break;
 		}
 
-	if( cmpContext )
-		if( isNested )
-		{
+	if( cmpContext ) {
+		if( isNested ) {
 			asEContextState state = cmpContext->GetState();
 			cmpContext->PopState();
 			if( state == asEXECUTION_ABORTED )
 				cmpContext->Abort();
 		}
-		else
-			cmpContext->Release();
+		else cmpContext->Release();
+	}
 
 	return isEqual;
 }
@@ -961,16 +960,15 @@ int CScriptArray::Find(asUINT index, void *value) const
 		}
 	}
 
-	if( cmpContext )
-		if( isNested )
-		{
+	if( cmpContext ) {
+		if( isNested ) {
 			asEContextState state = cmpContext->GetState();
 			cmpContext->PopState();
 			if( state == asEXECUTION_ABORTED )
 				cmpContext->Abort();
 		}
-		else
-			cmpContext->Release();
+		else cmpContext->Release();
+	}
 
 	return ret;
 }
@@ -1125,16 +1123,15 @@ void CScriptArray::Sort(asUINT index, asUINT count, bool asc)
 		Copy(GetArrayItemPointer(j + 1), tmp);
 	}
 
-	if( cmpContext )
-		if( isNested )
-		{
+	if( cmpContext ) {
+		if( isNested ) {
 			asEContextState state = cmpContext->GetState();
 			cmpContext->PopState();
 			if( state == asEXECUTION_ABORTED )
 				cmpContext->Abort();
 		}
-		else
-			cmpContext->Release();
+		else cmpContext->Release();
+	}
 }
 
 // internal

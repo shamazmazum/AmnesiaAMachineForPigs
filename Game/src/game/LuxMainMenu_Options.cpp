@@ -767,17 +767,17 @@ void cLuxMainMenu_Options::AddAdvancedGfxOptions(cWidgetDummy* apDummy)
 
 	//////////////
 	// Setup gamepad navigation
-	mpCBTextureFilter; mpCBAnisotropy; mpCBParallaxQuality;
+	// mpCBTextureFilter; mpCBAnisotropy; mpCBParallaxQuality;
 
-	mpChBShadows; mpCBShadowQuality; mpCBShadowRes;
+	// mpChBShadows; mpCBShadowQuality; mpCBShadowRes;
 
-	mpChBBloom; mpChBSepia; //mpChBInsanity;
-	mpChBImageTrail; mpChBRadialBlur;
+	// mpChBBloom; mpChBSepia; mpChBInsanity;
+	// mpChBImageTrail; mpChBRadialBlur;
 
-	mpChBSSAO; mpCBSSAOSamples; mpCBSSAOResolution;
+	// mpChBSSAO; mpCBSSAOSamples; mpCBSSAOResolution;
 
-	mpChEdgeSmooth;  mpChBWorldReflection;
-	mpChBRefraction;
+	// mpChEdgeSmooth;  mpChBWorldReflection;
+	// mpChBRefraction;
 
 	{
 		mpCBTextureFilter->SetFocusNavigation(eUIArrow_Right, mpCBAnisotropy);
